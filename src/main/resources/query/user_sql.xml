@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.user">
+	<insert id="insert" parameterType="user">
+		insert into user(id, pw, phone, name)
+		values (#{id}, #{pw}, #{phone}, #{name})
+	</insert>
+	
+	<select id="searchById" parameterType="string" resultType="user">
+		select * 
+		from user
+		where id = #{id}
+	</select>
+	
+	<select id="login" parameterType="user" resultType="user">
+		select *
+		from user
+		where id = #{id} and pw = #{pw}
+	</select>
+	
+	<update id="update" parameterType="user">
+		update user
+		set pw = #{pw},
+			phone = #{phone},
+			name = #{name}
+		where id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="user">
+		delete from user
+		where id = #{id} and pw = #{pw}
+	</delete>
+</mapper>
