@@ -7,7 +7,7 @@ import com.hs.review.dao.UserDao;
 import com.hs.review.dto.User;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 	
