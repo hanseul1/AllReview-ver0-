@@ -3,6 +3,8 @@ package com.hs.review.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hs.review.dto.User;
@@ -35,10 +36,18 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
-		if(userService.login(user) == true)
+	public ResponseEntity<Map<String, Object>> login(@RequestBody User user, HttpSession session){
+		if(userService.login(user) == true) {
+			session.setAttribute("id", user.getId());
 			return handleSuccess("success");
+		}
 		else return handleSuccess("not success");
+	}
+	
+	@GetMapping("/user/logout")
+	public ResponseEntity<Map<String, Object>> logout(HttpSession session){
+		session.invalidate();
+		return handleSuccess("success");
 	}
 	
 	@PostMapping("/user/update")
