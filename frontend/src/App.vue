@@ -1,8 +1,9 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <img src="./assets/logo.png">
     <router-view/>
-  </div>
+    <v-btn color="success">success</v-btn>
+  </v-app>
 </template>
 
 <script>
