@@ -106,6 +106,39 @@
     #spring.mvc.view.suffix=.html
     ```
 
+- npm run build 명령 실행 => 설정한 경로에 html 파일이 생성되고, spring boot application을 실행하면 해당 페이지를 볼 수 있다.
+
 - Vue webpack 프로젝트 생성 참고 : https://blog.naver.com/PostView.nhn?blogId=spdlqjdudghl&logNo=221349293910&categoryNo=0&parentCategoryNo=0&viewDate=&currentPage=1&postListTopCurrentPage=1&from=postView
 
+
+
+#### Vuetify 라이브러리 설치
+
+- npm install vuetify
+
+- main.js 수정
+
+  ```js
+  import Vuetify from 'vuetify'
   
+  Vue.use(Vuetify)
+  export default new Vuetify({})
+  
+  new Vue({
+      vuetify: new Vuetify(),
+      ...
+  })
+  ```
+
+- App.vue 수정
+
+  ```vue
+  <template>
+  	<v-app id="app">
+          ...
+      </v-app>
+  </template>
+  ```
+
+  
+
