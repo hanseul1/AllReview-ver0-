@@ -7,7 +7,11 @@ import Vuetify from 'vuetify'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
-export default new Vuetify({})
+export default new Vuetify({
+  icons: {
+    iconfont: 'mdiSvg'
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
