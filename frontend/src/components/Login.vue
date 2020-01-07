@@ -29,19 +29,39 @@
           <v-btn
             text
             color="primary"
-            @click="dialog = false"
+            @click="login"
           >Login</v-btn>
         </v-card-actions>
       </v-card>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Login',
   data () {
     return {
       id: '',
       pw: ''
+    }
+  },
+  methods: {
+    login () {
+      var loginData = {
+        'id': this.id,
+        'pw': this.pw
+      }
+
+      axios
+        .post('http://127.0.0.1:8080/user/login', loginData)
+        .then(response => {
+          if (response.data.data === 'success') {
+            this.$session.set('id', this.id)
+            window.location.reload()
+          } else {
+            alert('login fail')
+          }
+        })
     }
   }
 }

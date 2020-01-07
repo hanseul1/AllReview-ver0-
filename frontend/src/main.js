@@ -4,9 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
+import VueSession from 'vue-session'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
+
+var sessionOptions = {
+  persist: true
+}
+Vue.use(VueSession, sessionOptions)
+
 export default new Vuetify({
   icons: {
     iconfont: 'mdiSvg'

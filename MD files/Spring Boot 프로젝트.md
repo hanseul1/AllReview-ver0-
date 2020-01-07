@@ -90,6 +90,16 @@
 
        => 실행시 별도의 서버가 필요함
 
+3. HTTP 요청 CORS 에러
+
+   - 해결방법 : Spring boot 프로젝트의 controller에 CrossOrigin annotation 추가
+
+     ```
+     @CrossOrigin(origins = {"*"}, maxAge = 6000)
+     ```
+
+     
+
 #### Vue.js 연동
 
 - Vue.js를 활용한 Front-End 개발을 위해 Vue 프로젝트를 생성하여 Spring Boot 프로젝트 폴더 하위에 위치시킨다.
@@ -139,6 +149,4 @@
       </v-app>
   </template>
   ```
-
-  
 

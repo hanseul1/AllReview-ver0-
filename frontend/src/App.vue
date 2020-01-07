@@ -15,7 +15,8 @@
         prepend-inner-icon="search"
       />
       <v-spacer />
-      <v-btn text color="black" @click="openDialog">Login</v-btn>
+      <v-btn v-if="user_id == null" text color="black" @click="openDialog">Login</v-btn>
+      <v-btn v-else text color="black" @click='logout'>Logout</v-btn>
       <v-dialog
       v-model="dialog"
       width="500px"
@@ -115,12 +116,20 @@ export default {
       { icon: 'help', text: 'Help' },
       { icon: 'phonelink', text: 'App downloads' },
       { icon: 'keyboard', text: 'Keyboard shortcuts' }
-    ]
+    ],
+    user_id: ''
   }),
+  mounted () {
+    this.user_id = this.$session.get('id')
+  },
   methods: {
     openDialog () {
       this.dialog = true
       router.push('/login')
+    },
+    logout () {
+      this.$session.destroy()
+      window.location.reload()
     }
   }
 }
