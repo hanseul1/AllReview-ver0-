@@ -23,7 +23,7 @@
     >
       <router-view></router-view>
     </v-dialog>
-      <v-btn text color="black">Sign in</v-btn>
+      <v-btn v-if="user_id == null" text color="black">Sign up</v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -57,12 +57,6 @@
               >edit</v-btn>
             </v-col>
           </v-row>
-          <v-divider
-            v-else-if="item.divider"
-            :key="i"
-            dark
-            class="my-4"
-          />
           <v-list-item
             v-else
             :key="i"
@@ -102,9 +96,9 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: 'lightbulb_outline', text: 'Notes' },
-      { icon: 'touch_app', text: 'Reminders' },
-      { divider: true },
+      { icon: 'restaurant', text: 'Food' },
+      { icon: 'filter_vintage', text: 'Beauty' },
+      { icon: 'desktop_mac', text: 'Electronic' },
       { heading: 'Labels' },
       { icon: 'add', text: 'Create new label' },
       { divider: true },
@@ -113,9 +107,7 @@ export default {
       { divider: true },
       { icon: 'settings', text: 'Settings' },
       { icon: 'chat_bubble', text: 'Trash' },
-      { icon: 'help', text: 'Help' },
-      { icon: 'phonelink', text: 'App downloads' },
-      { icon: 'keyboard', text: 'Keyboard shortcuts' }
+      { icon: 'help', text: 'Help' }
     ],
     user_id: ''
   }),
