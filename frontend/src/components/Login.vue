@@ -11,12 +11,14 @@
             >
               <v-text-field
                 prepend-icon="account_circle"
+                v-model="id"
                 placeholder="ID"
               />
             </v-col>
             <v-col cols="12">
               <v-text-field
                 prepend-icon="lock"
+                v-model="pw"
                 placeholder="Password"
               />
             </v-col>
@@ -35,7 +37,13 @@
 
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  data () {
+    return {
+      id: '',
+      pw: ''
+    }
+  }
 }
 </script>
 
