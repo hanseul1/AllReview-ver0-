@@ -15,43 +15,12 @@
         prepend-inner-icon="search"
       />
       <v-spacer />
-      <v-btn text color="black" @click="dialog = !dialog">Login</v-btn>
+      <v-btn text color="black" @click="openDialog">Login</v-btn>
       <v-dialog
       v-model="dialog"
       width="500px"
     >
-      <v-card>
-        <v-card-title class="grey darken-2">
-          Login
-        </v-card-title>
-        <v-container>
-          <v-row class="mx-2">
-            <v-col
-              class="align-center justify-space-between"
-              cols="12"
-            >
-              <v-text-field
-                prepend-icon="account_circle"
-                placeholder="ID"
-              />
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                prepend-icon="lock"
-                placeholder="Password"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            text
-            color="primary"
-            @click="dialog = false"
-          >Login</v-btn>
-        </v-card-actions>
-      </v-card>
+      <router-view></router-view>
     </v-dialog>
       <v-btn text color="black">Sign in</v-btn>
     </v-app-bar>
@@ -122,6 +91,7 @@
 </template>
 
 <script>
+import router from './router'
 export default {
   name: 'App',
   props: {
@@ -146,7 +116,13 @@ export default {
       { icon: 'phonelink', text: 'App downloads' },
       { icon: 'keyboard', text: 'Keyboard shortcuts' }
     ]
-  })
+  }),
+  methods: {
+    openDialog () {
+      this.dialog = true
+      router.push('/login')
+    }
+  }
 }
 </script>
 
