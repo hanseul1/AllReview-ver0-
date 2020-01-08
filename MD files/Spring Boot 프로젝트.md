@@ -167,3 +167,66 @@ npm install --save axios vue-session
   - 기존 package.json에 설정된 의존성에 맞게 모듈 설치할 필요가 있음
   - npm install : 프로젝트에 포함된 package.json의 설정에 맞게 모듈을 설치하는 명령어
 
+
+
+#### MongoDB 연동
+
+- maven dependency 추가 - pom.xml
+
+  ```xml
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-mongodb</artifactId>
+  </dependency>
+  ```
+
+- DB 연결 정보 설정 - application.properties
+
+  ```properties
+  spring.data.mongodb.uri=mongodb://localhost:27017
+  spring.data.mongodb.database=allreview 
+  spring.data.mongodb.username=root
+  spring.data.mongodb.password=12345
+  ```
+
+- DTO 클래스에 annotation 추가 - @Document("document_name")
+
+  - MongoDB는 schemaless한 특징을 가지고 있는데, 미리 정의한 DTO의 attribute에 포함되지 않는 필드가 있는 경우는 어떻게 처리해야 할까?
+
+    => Map<String, Object> 타입의 attribute로 한번에 dynamic field를 저장하도록 한다.
+
+    ```java
+    Map<String, Object> additions;	// 추가 내용(동적 필드)
+    ```
+
+- Service 클래스 작성 - MongoDB 쿼리 수행 (2가지 방법)
+
+  1. MongoTemplate bean 주입 후 활용
+
+     - Query 타입의 쿼리문을 생성 후 find(Query, entityClass) 함수를 호출하여 쿼리 수행
+     - Query는 Criteria 클래스로 조건을 생성한다.
+
+     ```java
+     @Autowired
+     private MongoTemplate mongoTemplate;
+     ```
+
+  2. MongoRepository<DataType, SerializeType> 클래스 상속받은 Repo 인터페이스 생성 후 활용
+
+     - 쿼리가 단순한 경우 사용 가능
+
+     - MongoDB에서 제공하는 쿼리 action(find, update 등)과 Document DTO에 선언한 속성 이름을 기준으로 함수 이름을 선언
+
+       => 지정한 함수 이름에 맞게 알아서 쿼리 수행
+
+     ```java
+     public interface ReviewRepo extends MongoRepository<Review, String>{
+         // 해당 model 값을 가지고있는 리뷰들을 찾는 쿼리문 수행
+         List<Review> findByModel(String model);
+     }
+     ```
+
+     
+
+  
+

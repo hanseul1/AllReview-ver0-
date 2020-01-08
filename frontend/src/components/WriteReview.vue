@@ -36,7 +36,7 @@
           label="리뷰 내용"
           color="rgb(203, 203, 77)"
           outlined
-          v-model="contents"
+          v-model="context"
         />
       </v-col>
     </v-row>
@@ -66,7 +66,7 @@ export default {
       title: '',
       model: '',
       rating: 0,
-      contents: '',
+      context: '',
       additions: []
     }
   }

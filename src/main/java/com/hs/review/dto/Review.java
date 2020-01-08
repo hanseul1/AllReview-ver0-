@@ -1,16 +1,21 @@
 package com.hs.review.dto;
 
 import java.sql.Date;
+import java.util.Map;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("review")
 public class Review {
-	private int no;  			// 리뷰 번호
-	protected String title;		// 제목
-	protected String writer; 	// 작성자 아이디
-	protected int productNo;  	// 제품 및 서비스 번호
-	protected Date regDate;   	// 작성일
-	protected Date useDate;   	// 제품 및 서비스 이용 날짜
-	protected double rating; 	// 평점
-	protected String context;  	// 내용
+	private   String _id;  							// 리뷰 번호
+	protected String title;							// 제목
+	protected String writer; 						// 작성자 아이디
+	protected int productNo;  						// 제품 및 서비스 번호
+	protected Date regDate;   						// 작성일
+	protected Date useDate;   						// 제품 및 서비스 이용 날짜
+	protected double rating; 						// 평점
+	protected String context;  						// 내용
+	protected Map<String, Object> additions;		// 추가내용
 	
 	public Review() {}
 
@@ -25,10 +30,10 @@ public class Review {
 		this.context = context;
 	}
 
-	public Review(int no, String title, String writer, int productNo, Date regDate, Date useDate, double rating,
+	public Review(String _id, String title, String writer, int productNo, Date regDate, Date useDate, double rating,
 			String context) {
 		super();
-		this.no = no;
+		this._id = _id;
 		this.title = title;
 		this.writer = writer;
 		this.productNo = productNo;
@@ -38,12 +43,12 @@ public class Review {
 		this.context = context;
 	}
 
-	public int getNo() {
-		return no;
+	public String getId() {
+		return _id;
 	}
 
-	public void setNo(int no) {
-		this.no = no;
+	public void setId(String _id) {
+		this._id = _id;
 	}
 
 	public String getTitle() {
