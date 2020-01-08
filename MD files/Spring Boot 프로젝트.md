@@ -150,3 +150,20 @@
   </template>
   ```
 
+
+
+#### Vue axios / Vue-session 설치
+
+```
+npm install --save axios vue-session
+```
+
+- --save : 설치한 라이브러리의 의존성을 package.json에 자동 저장하는 명령
+
+- node_modules의 경우 git에 push할 필요 없음(용량이 크기 때문에 ignore하는 것이 좋음)
+
+  => 해당 프로젝트 git clone 했을 때 node_modules 필요
+
+  - 기존 package.json에 설정된 의존성에 맞게 모듈 설치할 필요가 있음
+  - npm install : 프로젝트에 포함된 package.json의 설정에 맞게 모듈을 설치하는 명령어
+
