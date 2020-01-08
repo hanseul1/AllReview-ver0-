@@ -61,6 +61,7 @@
             v-else
             :key="i"
             link
+            :to="item.link"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -80,6 +81,7 @@
         fluid
         class="grey lighten-4 fill-height"
       >
+      <router-view></router-view>
       </v-container>
     </v-content>
   </v-app>
@@ -96,6 +98,7 @@ export default {
     dialog: false,
     drawer: null,
     items: [
+      {icon: 'add_box', text: 'Write Review', link: '/writeReview'},
       { icon: 'restaurant', text: 'Food' },
       { icon: 'filter_vintage', text: 'Beauty' },
       { icon: 'desktop_mac', text: 'Electronic' },
