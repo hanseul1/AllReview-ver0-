@@ -6,7 +6,7 @@
       color="rgb(203, 203, 77)"
     >
       <v-app-bar-nav-icon @click="drawer = !drawer" />
-      <span class="title ml-3 mr-5">AllReview.com</span>
+      <span class="title ml-3 mr-5" @click="reloading">AllReview.com</span>
       <v-text-field
         solo-inverted
         flat
@@ -15,14 +15,8 @@
         prepend-inner-icon="search"
       />
       <v-spacer />
-      <v-btn v-if="user_id == null" text color="black" @click="openDialog">Login</v-btn>
+      <v-btn v-if="user_id == null" text color="black" @click="login">Login</v-btn>
       <v-btn v-else text color="black" @click='logout'>Logout</v-btn>
-      <v-dialog
-      v-model="dialog"
-      width="500px"
-    >
-      <router-view></router-view>
-    </v-dialog>
       <v-btn v-if="user_id == null" text color="black">Sign up</v-btn>
     </v-app-bar>
 
@@ -95,7 +89,6 @@ export default {
     source: String
   },
   data: () => ({
-    dialog: false,
     drawer: null,
     items: [
       {icon: 'add_box', text: 'Write Review', link: '/writeReview'},
@@ -118,12 +111,15 @@ export default {
     this.user_id = this.$session.get('id')
   },
   methods: {
-    openDialog () {
-      this.dialog = true
+    login () {
       router.push('/login')
     },
     logout () {
       this.$session.destroy()
+      window.location.reload()
+    },
+    reloading () {
+      router.push('/')
       window.location.reload()
     }
   }

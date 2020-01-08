@@ -1,13 +1,12 @@
 <template>
-    <v-card>
-        <v-card-title class="grey darken-2">
-          Login
-        </v-card-title>
         <v-container>
-          <v-row class="mx-2">
+          <v-row align="center">
+            <h2>로그인</h2>
+          </v-row>
+          <v-row>
             <v-col
               class="align-center justify-space-between"
-              cols="12"
+              cols="4"
             >
               <v-text-field
                 prepend-icon="account_circle"
@@ -15,7 +14,9 @@
                 placeholder="ID"
               />
             </v-col>
-            <v-col cols="12">
+          </v-row>
+          <v-row>
+            <v-col cols="4">
               <v-text-field
                 prepend-icon="lock"
                 v-model="pw"
@@ -23,16 +24,14 @@
               />
             </v-col>
           </v-row>
+          <v-row class="mx-2">
+            <v-btn
+              outlined
+              color="primary"
+              @click="login"
+            >Login</v-btn>
+          </v-row>
         </v-container>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            text
-            color="primary"
-            @click="login"
-          >Login</v-btn>
-        </v-card-actions>
-      </v-card>
 </template>
 
 <script>
@@ -57,7 +56,7 @@ export default {
         .then(response => {
           if (response.data.data === 'success') {
             this.$session.set('id', this.id)
-            window.location.reload()
+            this.$router.push('/')
           } else {
             alert('login fail')
           }

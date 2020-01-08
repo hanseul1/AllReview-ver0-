@@ -10,7 +10,7 @@ public class Review {
 	private   String _id;  							// 리뷰 번호
 	protected String title;							// 제목
 	protected String writer; 						// 작성자 아이디
-	protected int productNo;  						// 제품 및 서비스 번호
+	protected String model;  						// 모델명
 	protected Date regDate;   						// 작성일
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점
@@ -19,28 +19,18 @@ public class Review {
 	
 	public Review() {}
 
-	public Review(String title, String writer, int productNo, Date regDate, Date useDate, double rating,
-			String context) {
-		this.title = title;
-		this.writer = writer;
-		this.productNo = productNo;
-		this.regDate = regDate;
-		this.useDate = useDate;
-		this.rating = rating;
-		this.context = context;
-	}
-
-	public Review(String _id, String title, String writer, int productNo, Date regDate, Date useDate, double rating,
-			String context) {
+	public Review(String _id, String title, String writer, String model, Date regDate, Date useDate, double rating,
+			String context, Map<String, Object> additions) {
 		super();
 		this._id = _id;
 		this.title = title;
 		this.writer = writer;
-		this.productNo = productNo;
+		this.model = model;
 		this.regDate = regDate;
 		this.useDate = useDate;
 		this.rating = rating;
 		this.context = context;
+		this.additions = additions;
 	}
 
 	public String getId() {
@@ -67,12 +57,20 @@ public class Review {
 		this.writer = writer;
 	}
 
-	public int getProductNo() {
-		return productNo;
+	public String getModel() {
+		return model;
 	}
 
-	public void setProductNo(int productNo) {
-		this.productNo = productNo;
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public Map<String, Object> getAdditions() {
+		return additions;
+	}
+
+	public void setAdditions(Map<String, Object> additions) {
+		this.additions = additions;
 	}
 
 	public Date getRegDate() {

@@ -13,15 +13,45 @@
       </v-col>
     </v-row>
     <v-row class="mx-2" align="center">
-      <v-col cols="4">
+      <v-col cols="3">
         <v-text-field
           label="모델명"
           v-model="model"
           color="rgb(203, 203, 77)"
         />
       </v-col>
-      <v-col cols="4">
-        <span>평점</span>
+      <v-col cols="3">
+        <v-layout row wrap>
+        <v-menu
+          lazy
+          :close-on-content-click="false"
+          v-model="menu"
+          transition="scale-transition"
+          offset-y
+          full-width
+          :nudge-right="40"
+          max-width="290px"
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              label="사용 날짜"
+              prepend-icon="event"
+              readonly
+              :value="useDate"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="useDate"
+            no-title
+            color="rgb(203, 203, 77)"
+            @input="menu = false"
+            scrollable></v-date-picker>
+        </v-menu>
+        </v-layout>
+      </v-col>
+      <v-col cols="3">
         <v-rating
           v-model="rating"
           background-color="rgb(203, 203, 77)"
@@ -66,6 +96,8 @@ export default {
       title: '',
       model: '',
       rating: 0,
+      menu: false,
+      useDate: new Date().toISOString().substr(0, 10),
       context: '',
       additions: []
     }
