@@ -323,3 +323,28 @@ db.users.remove({"name":"Sue"});
   - read/write 이벤트가 시작되어도 해당 모듈을 반환할 수 있다.
   - 다른 작업이 가능한 준비상태로 전환함
   - 동기식보다 빠르고 메모리도 적게 차지함
+
+
+
+#### MongoDB Query
+
+- 사용자 계정 생성 
+
+  ```
+  use [collections];
+  db.createUser({
+  	user: "username",
+  	pwd: "password",
+  	roles: ["dbAdmin"]
+  });
+  ```
+
+  roles 종류 : "readWrite", "dbAdmin", "clusterAdmin", ...
+
+- 데이터 삽입 쿼리 : insert / save
+
+  ```
+  
+  ```
+
+  

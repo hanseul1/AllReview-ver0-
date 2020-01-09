@@ -167,6 +167,63 @@
 npm install --save axios vue-session
 ```
 
+- axios : javascript용 서버 HTTP통신 라이브러리
+
+  - Promise 기반의 API 형식으로 비동기 처리 방식 사용
+
+    - Promise란?
+
+      - Javascript는 대부분 비동기적으로 작업 수행
+
+        즉, 어떤 작업을 요청하면서 callback 함수를 등록하면, 작업 수행 후 결과를 callback 함수를 통해 리턴하는 식이다.
+
+      - Promise는 이러한 비동기 작업의 수행 후 결과 처리를 좀 더 수월하게 하기 위한 handler 객체이다.
+
+        => callback 함수 대신 활용 가능
+
+      - Promise의 생성과 실행
+
+        ```javascript
+        // 프로미스 생성
+        const testFunction = function(param){
+          return new Promise(function(resolve,reject){
+            if(param){
+              resolve("성공");
+            }
+            else{
+              reject("실패");
+            }
+          });
+        }
+        // 프로미스 실행
+        testFunction(true).then(function(result){
+          console.log(result);	// 성공
+        },function(err){
+          console.log(err);		// 실패
+        });
+        ```
+
+        - resolve : 비동기 함수의 결과가 성공일 때 수행되는 함수
+
+          reject : 비동기 함수의 결과가 실패일 때 수행되는 함수
+
+        ```javascript
+        new Promise(function (resolve, reject) {
+        }).then(function (resolve) {
+            //resolve 값 처리
+        }).catch(function (reject) {
+            //reject 값 처리
+        }).finally(function(){
+            //항상 처리
+        });
+        ```
+
+        - 함수 결과가 성공이면 resolve 함수를 호출하여 resolve 함수의 parameter를 then으로 받는다.
+
+          함수 결과가 실패이면 reject 함수를 호출하여 reject 함수의 parameter를 catch로 받는다.
+
+  - get / post / put / delete 함수 사용
+
 - --save : 설치한 라이브러리의 의존성을 package.json에 자동 저장하는 명령
 
 - node_modules의 경우 git에 push할 필요 없음(용량이 크기 때문에 ignore하는 것이 좋음)
@@ -194,7 +251,7 @@ npm install --save axios vue-session
   ```properties
   spring.data.mongodb.uri=mongodb://localhost:27017
   spring.data.mongodb.database=allreview 
-  spring.data.mongodb.username=root
+  spring.data.mongodb.username=hs
   spring.data.mongodb.password=12345
   ```
 
@@ -243,8 +300,4 @@ npm install --save axios vue-session
          List<Review> findByModel(String model);
      }
      ```
-
-     
-
-  
 
