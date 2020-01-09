@@ -1,9 +1,12 @@
 <template>
-  <v-container>
-    <v-row class="mx-2" align="center">
+  <v-container
+    fluid
+    align-baseline="true"
+    class="grey lighten-4 fill-height container">
+    <v-row class="mx-2">
       <h2>리뷰 작성</h2>
     </v-row>
-    <v-row class="mx-2" align="center">
+    <v-row class="mx-2">
       <v-col cols="8">
         <v-text-field
           label="제목"
@@ -40,6 +43,7 @@
               readonly
               :value="useDate"
               v-on="on"
+              color="rgb(203, 203, 77)"
             ></v-text-field>
           </template>
           <v-date-picker
@@ -138,5 +142,7 @@ export default {
 </script>
 
 <style>
-
+  .container {
+    margin-top: 20px;
+  }
 </style>

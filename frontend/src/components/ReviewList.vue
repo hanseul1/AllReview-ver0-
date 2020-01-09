@@ -1,8 +1,11 @@
 <template>
-  <v-container>
+  <v-container
+    fluid
+    align-baseline="true"
+    class="grey lighten-4 fill-height">
     <v-row class="mx-2 mb-4">
-      <v-col cols="4"><h2>리뷰 리스트 - 전체</h2></v-col>
-      <v-col cols="4">
+      <v-col cols="6"><h2>리뷰 리스트 - 전체</h2></v-col>
+      <v-col cols="6">
         <v-btn-toggle
             v-model="display"
             mandatory
@@ -23,7 +26,7 @@
         :headers="headers"
         :items="reviewList"
         :items-per-page="10"
-        class="elevation-1"
+        class="elevation-1 list-table"
       ></v-data-table>
       <template v-else v-for="(review, index) in reviewList">
         <v-card
@@ -47,18 +50,13 @@
             <v-card-text>{{review.context}}</v-card-text>
 
             <v-card-actions>
-            <v-btn
-                text
+              <v-rating
+                v-model="review.rating"
+                background-color="rgb(203, 203, 77)"
+                size="35"
                 color="rgb(203, 203, 77)"
-            >
-                Read
-            </v-btn>
-            <v-btn
-                text
-                color="rgb(203, 203, 77)"
-            >
-                Bookmark
-            </v-btn>
+                readonly
+              ></v-rating>
             <v-spacer></v-spacer>
             <v-btn icon @click="clickHeart(index)">
                 <v-icon>mdi-heart</v-icon>
@@ -111,5 +109,7 @@ export default {
 </script>
 
 <style>
-
+  .list-table {
+    width: 1200px;
+  }
 </style>
