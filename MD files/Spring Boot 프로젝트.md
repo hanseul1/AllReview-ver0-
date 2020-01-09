@@ -102,6 +102,15 @@
 
 #### Vue.js 연동
 
+- **GUI Framework에서 중요하게 봐야 할 4가지 요소
+
+  ```
+  - Component
+  - Render
+  - Life cycle
+  - User event
+  ```
+
 - Vue.js를 활용한 Front-End 개발을 위해 Vue 프로젝트를 생성하여 Spring Boot 프로젝트 폴더 하위에 위치시킨다.
 
 - Vue가 빌드한 html을 렌더링하기 위해서는 프로젝트를 jar로 바꿔줘야 한다.
@@ -189,7 +198,16 @@ npm install --save axios vue-session
   spring.data.mongodb.password=12345
   ```
 
-- DTO 클래스에 annotation 추가 - @Document("document_name")
+- DTO 클래스 수정
+
+  ```java
+  @Document("review")  // Document annotation 추가
+  public class Review{
+      // 각 Document의 unique한 primary key 역할의 _id 필드와 매칭되는 속성임을 annotation으로 지정한다.
+  	@Id
+      private ObjectId id;
+  }
+  ```
 
   - MongoDB는 schemaless한 특징을 가지고 있는데, 미리 정의한 DTO의 attribute에 포함되지 않는 필드가 있는 경우는 어떻게 처리해야 할까?
 
@@ -204,7 +222,7 @@ npm install --save axios vue-session
   1. MongoTemplate bean 주입 후 활용
 
      - Query 타입의 쿼리문을 생성 후 find(Query, entityClass) 함수를 호출하여 쿼리 수행
-     - Query는 Criteria 클래스로 조건을 생성한다.
+     - Query는 Criteria 클래스로 쿼리 조건을 생성한다.
 
      ```java
      @Autowired

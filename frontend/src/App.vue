@@ -109,6 +109,7 @@ export default {
   }),
   mounted () {
     this.user_id = this.$session.get('id')
+    router.push('/')
   },
   methods: {
     login () {

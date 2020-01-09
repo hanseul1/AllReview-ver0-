@@ -1,13 +1,18 @@
 package com.hs.review.dto;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document("review")
 public class Review {
-	private   String _id;  							// 리뷰 번호
+	@Id
+	private   ObjectId _id;  						// 리뷰 번호
 	protected String title;							// 제목
 	protected String writer; 						// 작성자 아이디
 	protected String model;  						// 모델명
@@ -19,7 +24,7 @@ public class Review {
 	
 	public Review() {}
 
-	public Review(String _id, String title, String writer, String model, Date regDate, Date useDate, double rating,
+	public Review(ObjectId _id, String title, String writer, String model, Date regDate, Date useDate, double rating,
 			String context, Map<String, Object> additions) {
 		super();
 		this._id = _id;
@@ -33,11 +38,11 @@ public class Review {
 		this.additions = additions;
 	}
 
-	public String getId() {
+	public ObjectId get_id() {
 		return _id;
 	}
 
-	public void setId(String _id) {
+	public void set_id(ObjectId _id) {
 		this._id = _id;
 	}
 

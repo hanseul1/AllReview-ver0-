@@ -56,7 +56,7 @@ export default {
         .then(response => {
           if (response.data.data === 'success') {
             this.$session.set('id', this.id)
-            this.$router.push('/')
+            window.location.reload()
           } else {
             alert('login fail')
           }

@@ -74,6 +74,7 @@
       <v-col cols="8">
         <v-file-input
           multiple
+          color="rgb(203, 203, 77)"
           label="사진 업로드"
         >
         </v-file-input>
@@ -82,13 +83,17 @@
     <v-row>
       <v-spacer/>
       <v-col cols="5">
-        <v-btn color="rgb(203, 203, 77)">submit</v-btn>
+        <v-btn
+          color="rgb(203, 203, 77)"
+          @click="writeReview">
+          submit</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'WriteReview',
   data () {
@@ -99,7 +104,34 @@ export default {
       menu: false,
       useDate: new Date().toISOString().substr(0, 10),
       context: '',
-      additions: []
+      additions: [
+        {'test': 'testvalue'},
+        {'test2': 'testvalue2'}
+      ]
+    }
+  },
+  methods: {
+    writeReview () {
+      var reviewData = {
+        'title': this.title,
+        'writer': this.$session.get('id'),
+        'model': this.model,
+        'regDate': new Date(),
+        'useDate': this.useDate,
+        'rating': this.rating,
+        'context': this.context
+      }
+
+      axios
+        .post('http://localhost:8080/review/save', reviewData)
+        .then(response => {
+          if (response.data.data === 'success') {
+            alert('리뷰가 등록되었습니다.')
+            this.$router.push('/')
+          } else {
+            alert('리뷰 등록에 실패했습니다.')
+          }
+        })
     }
   }
 }

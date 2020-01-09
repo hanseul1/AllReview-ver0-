@@ -6,25 +6,36 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hs.review.dto.Review;
 import com.hs.review.service.ReviewService;
 
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	
-	@GetMapping("/review/getReview/{id}")
+	@GetMapping("/review/{id}")
 	public ResponseEntity<Map<String, Object>> getReview(@PathVariable String id){
 		return handleSuccess(reviewService.getReview(id));
 	}
 	
-	@GetMapping("/review/getReviewsByModel/{model}")
-	public ResponseEntity<Map<String,Object>> getReviewsByModel(@PathVariable int model){
-		return handleSuccess(reviewService.getReviewsByProductNo(model));
+	@GetMapping("/review/model/{model}")
+	public ResponseEntity<Map<String,Object>> getReviewsByModel(@PathVariable String model){
+		return handleSuccess(reviewService.getReviewsByModel(model));
+	}
+	
+	@PostMapping("/review/save")
+	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
+		reviewService.saveReview(review);
+		return handleSuccess("success");
 	}
 	
 	public ResponseEntity<Map<String,Object>> handleSuccess(Object data){

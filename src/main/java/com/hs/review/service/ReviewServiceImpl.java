@@ -2,6 +2,7 @@ package com.hs.review.service;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,8 +22,14 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/** 제품 번호로 리뷰 리스트 검색 */
-	public List<Review> getReviewsByProductNo(int productNo){
-		Query query = new Query(new Criteria("productNo").is(productNo));
+	public List<Review> getReviewsByModel(String model){
+		Query query = new Query(new Criteria("model").is(model));
 		return mongoTemplate.find(query, Review.class);
+	}
+	
+	/** 리뷰 정보 저장*/
+	public void saveReview(Review review) {
+		review.set_id(ObjectId.get());
+		mongoTemplate.save(review, "review");
 	}
 }
