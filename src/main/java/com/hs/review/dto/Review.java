@@ -1,13 +1,10 @@
 package com.hs.review.dto;
 
-import java.sql.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.web.multipart.MultipartFile;
 
 @Document("review")
 public class Review {
@@ -20,12 +17,11 @@ public class Review {
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점
 	protected String context;  						// 내용
-	protected Map<String, Object> additions;		// 추가내용
 	
 	public Review() {}
 
 	public Review(ObjectId _id, String title, String writer, String model, Date regDate, Date useDate, double rating,
-			String context, Map<String, Object> additions) {
+			String context) {
 		super();
 		this._id = _id;
 		this.title = title;
@@ -35,7 +31,6 @@ public class Review {
 		this.useDate = useDate;
 		this.rating = rating;
 		this.context = context;
-		this.additions = additions;
 	}
 
 	public ObjectId get_id() {
@@ -69,15 +64,7 @@ public class Review {
 	public void setModel(String model) {
 		this.model = model;
 	}
-
-	public Map<String, Object> getAdditions() {
-		return additions;
-	}
-
-	public void setAdditions(Map<String, Object> additions) {
-		this.additions = additions;
-	}
-
+	
 	public Date getRegDate() {
 		return regDate;
 	}

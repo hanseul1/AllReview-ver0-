@@ -92,6 +92,7 @@ export default {
     drawer: null,
     items: [
       {icon: 'add_box', text: 'Write Review', link: '/writeReview'},
+      {icon: 'assignment', text: 'all', link: '/reviewList'},
       { icon: 'restaurant', text: 'Food' },
       { icon: 'filter_vintage', text: 'Beauty' },
       { icon: 'desktop_mac', text: 'Electronic' },

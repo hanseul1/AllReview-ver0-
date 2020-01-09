@@ -3,6 +3,7 @@ package com.hs.review.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,19 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	
-	@GetMapping("/review/{id}")
-	public ResponseEntity<Map<String, Object>> getReview(@PathVariable String id){
+	@PostMapping("/review")
+	public ResponseEntity<Map<String, Object>> getReview(@RequestBody ObjectId id){
 		return handleSuccess(reviewService.getReview(id));
 	}
 	
 	@GetMapping("/review/model/{model}")
 	public ResponseEntity<Map<String,Object>> getReviewsByModel(@PathVariable String model){
 		return handleSuccess(reviewService.getReviewsByModel(model));
+	}
+	
+	@GetMapping("/review")
+	public ResponseEntity<Map<String,Object>> getReviews(){
+		return handleSuccess(reviewService.getReviews());
 	}
 	
 	@PostMapping("/review/save")
