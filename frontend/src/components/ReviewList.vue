@@ -1,11 +1,9 @@
 <template>
   <v-container
-    fluid
-    align-baseline="true"
-    class="grey lighten-4 fill-height">
+    align-baseline="true">
     <v-row class="mx-2 mb-4">
       <v-col cols="6"><h2>리뷰 리스트 - 전체</h2></v-col>
-      <v-col cols="6">
+      <v-col cols="4">
         <v-btn-toggle
             v-model="display"
             mandatory

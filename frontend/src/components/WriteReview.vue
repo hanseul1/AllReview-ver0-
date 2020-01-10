@@ -1,8 +1,7 @@
 <template>
   <v-container
-    fluid
     align-baseline="true"
-    class="grey lighten-4 fill-height container">
+    class="container">
     <v-row class="mx-2">
       <h2>리뷰 작성</h2>
     </v-row>

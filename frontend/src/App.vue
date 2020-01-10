@@ -17,7 +17,7 @@
       <v-spacer />
       <v-btn v-if="user_id == null" text color="black" @click="login">Login</v-btn>
       <v-btn v-else text color="black" @click='logout'>Logout</v-btn>
-      <v-btn v-if="user_id == null" text color="black">Sign up</v-btn>
+      <v-btn v-if="user_id == null" text color="black" @click='signup'>Sign up</v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -114,6 +114,9 @@ export default {
     logout () {
       this.$session.destroy()
       window.location.reload()
+    },
+    signup () {
+      router.push('/signup')
     },
     reloading () {
       router.push('/')
