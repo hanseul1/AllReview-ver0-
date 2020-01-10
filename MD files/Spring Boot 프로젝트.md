@@ -217,11 +217,13 @@ npm install --save axios vue-session
 
   - MongoDB는 schemaless한 특징을 가지고 있는데, 미리 정의한 DTO의 attribute에 포함되지 않는 필드가 있는 경우는 어떻게 처리해야 할까?
 
-    => Map<String, Object> 타입의 attribute로 한번에 dynamic field를 저장하도록 한다.
+    - 첫번째 해결 시도 :  Map<String, Object> 타입의 attribute로 한번에 dynamic field를 저장하도록 한다.
 
-    ```java
+      ```java
     Map<String, Object> additions;	// 추가 내용(동적 필드)
-    ```
+      ```
+      
+      => Vue 컴포넌트에서 post로 http 요청할 때 RequestBody의 데이터 타입과 맞지 않아 400 Error 발생(Bad Request)
 
 - Service 클래스 작성 - MongoDB 쿼리 수행 (2가지 방법)
 
@@ -250,3 +252,62 @@ npm install --save axios vue-session
      }
      ```
 
+
+
+#### Vuex 라이브러리
+
+- 복잡한 어플리케이션의 컴포넌트들을 관리하는 '상태 관리 라이브러리'
+
+- React.js의 Flux 패턴에서 기인한 상태관리 패턴
+
+  => MVC 패턴의 복잡한 데이터 흐름 관리 문제를 해결하는 개발 패턴으로, 단일 방향 Flow를 가진다.
+
+  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/07.PNG?raw=true)
+
+  ```
+  1. actions : view에서 발생하는 이벤트 또는 사용자 입력
+  2. dispatcher : 데이터를 변경하는 방법, 메서드 (model 데이터를 변경하는 역할)
+  3. model : 화면에 표시할 데이터
+  4. view : 사용자에게 비춰지는 화면.(즉, 이 화면에서 다시 actions을 호출한다.)
+  ```
+
+  - MVC 패턴의 문제점
+
+    - view와 model이 양방향 통신이 가능하다.
+
+      => 하나의 view가 model을 변경하면, 해당 model이 연관된 view를 업데이트 한다.
+
+      ​	(view에서 model을 이용하기 때문에 view와 model은 의존적이게 됨)
+
+      ​	=> 업데이트된 view가 연관된 model을 다시 업데이트하고,... ----> 반복 -> 복잡한 업데이트 루프
+
+    ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/06.PNG?raw=true)
+
+
+
+- 컴포넌트간 데이터 전달 역할 수행
+
+  - 부모-자식 관계의 컴포넌트의 경우 props도 가능하지만 컴포넌트가 많아질 경우 props를 하위 컴포넌트로 계속해서 전달해야하는 경우가 생길 수 있다.
+
+  - 이벤트 버스도 사용 가능하지만 역시 컴포넌트가 많아질 경우 어디서 이벤트를 보내고 받는지 찾기 어려운 문제가 생긴다.
+
+    => 즉, 컴포넌트 간 데이터 전달이 명시적이거나 효율적이지 않다.
+
+- 컨셉
+  - State : 컴포넌트 간 공유하는 데이터 - data()
+  - View : 데이터를 표시하는 화면 - template
+  - Actions : 사용자의 입력에 따라 데이터를 변경하는 함수 - methods
+
+- 구조
+
+  ```
+  Vue component => 비동기 로직(Actions) => 동기 로직(Mutations) => State
+  ```
+
+  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/10.PNG?raw=true)
+
+  - Vue 컴포넌트에서 비동기 로직(methods에서 API 콜하는 함수 등)인 Actions를 수행한다.
+  - Actions는 비동기 로직만 처리할 뿐 State(data)를 직접 변경하지 않는다.
+  - Actions에서 동기 로직(data를 변경하는 역할)인 Mutations를 호출한다.
+
+- Vuex 개념 정리 참고 : https://ict-nroo.tistory.com/106
