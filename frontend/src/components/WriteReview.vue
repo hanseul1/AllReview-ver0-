@@ -10,7 +10,7 @@
         <v-text-field
           label="제목"
           v-model="title"
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
         />
       </v-col>
     </v-row>
@@ -19,7 +19,7 @@
         <v-text-field
           label="모델명"
           v-model="model"
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
         />
       </v-col>
       <v-col cols="3">
@@ -57,9 +57,9 @@
       <v-col cols="3">
         <v-rating
           v-model="rating"
-          background-color="rgb(203, 203, 77)"
+          :background-color="this.$store.state.color"
           size="40"
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
         ></v-rating>
       </v-col>
     </v-row>
@@ -67,7 +67,7 @@
       <v-col cols="8">
         <v-textarea
           label="리뷰 내용"
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
           outlined
           v-model="context"
         />
@@ -77,7 +77,7 @@
       <v-col cols="8">
         <v-file-input
           multiple
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
           label="사진 업로드"
         >
         </v-file-input>
@@ -87,7 +87,7 @@
       <v-spacer/>
       <v-col cols="5">
         <v-btn
-          color="rgb(203, 203, 77)"
+          :color="this.$store.state.color"
           @click="writeReview">
           submit</v-btn>
       </v-col>

@@ -27,7 +27,7 @@
           <v-row class="mx-2">
             <v-btn
               outlined
-              color="rgb(203, 203, 77)"
+              :color="this.$store.state.color"
               @click="login"
             >Login</v-btn>
           </v-row>

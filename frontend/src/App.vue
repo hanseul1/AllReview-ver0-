@@ -3,7 +3,7 @@
     <v-app-bar
       app
       clipped-left
-      color="rgb(203, 203, 77)"
+      :color="this.$store.state.color"
     >
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <span class="title ml-3 mr-5" @click="reloading">AllReview.com</span>

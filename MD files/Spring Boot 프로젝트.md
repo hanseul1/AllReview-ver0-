@@ -92,13 +92,41 @@
 
 3. HTTP 요청 CORS 에러
 
-   - 해결방법 : Spring boot 프로젝트의 controller에 CrossOrigin annotation 추가
+   - 원인
 
-     ```
-     @CrossOrigin(origins = {"*"}, maxAge = 6000)
-     ```
+     - CORS : Cross Origin Resource Sharing
+   
+     - domain 또는 port가 다른 서버의 자원을 요청하는 방식을 뜻한다.
 
+     - 브라우저에서는 동일 출처 정책(same-origin policy)으로 인해 외부 서버에 요청한 데이터를 보안 목적으로 차단한다.
+   
+       - 동일 출처 정책
+   
+         : 다른 출처에서 가져온 리소스와 현재 가지고 있는 리소스가 상호작용 하는 것을 제한하는 보안 방식
+   
+         => 잠재적 악성 문서를 격리하여 공격 경로를 줄인다.
+   
+     - 즉, localhost:8081(Vue 서버)에서 localhost:8080(spring boot 서버)로 자원을 요청하였기 때문에 발생한 에러이다.
+   
+   - 해결방법
+   
+     - Spring boot 프로젝트의 controller에 CrossOrigin annotation 추가
      
+       ```java
+     @CrossOrigin(origins = {"*"}, maxAge = 6000)
+       ```
+     
+     - node.js의 미들웨어 CORS 추가(Express 사용할 경우)
+     
+       ```
+       npm install --save cors
+       ```
+     
+       => 이 경우 모든 외부 서버에 대한 요청에 대해 허가를 하게 되어 보안이 취약해진다.
+   
+   - 참고 : https://velog.io/@wlsdud2194/cors
+   
+   
 
 #### Vue.js 연동
 
@@ -311,3 +339,52 @@ npm install --save axios vue-session
   - Actions에서 동기 로직(data를 변경하는 역할)인 Mutations를 호출한다.
 
 - Vuex 개념 정리 참고 : https://ict-nroo.tistory.com/106
+
+- 설치
+
+  ```
+  npm install --save vuex
+  ```
+
+- 모듈화 
+
+  - src/store.js 파일 생성
+
+  ```js
+  import Vue from 'vue'
+  import Vuex from 'vuex'
+  
+  Vue.use(Vuex)
+  
+  export const store = new Vuex.Store({
+    state: {
+      color: 'rgb(203, 203, 77)'
+    },
+    getter: {
+      // state를 화면에 바인딩하는 함수  
+    },
+    mutations: {
+      // state 값을 업데이트하는 함수(동기 로직)
+    },
+    actions: {
+      // 비동기 로직을 처리하는 함수
+    }
+  })
+  ```
+
+  - main.js에 모듈 추가
+
+  ```js
+  import {store} from './store'
+  
+  new Vue({
+      el: '#app',
+      router,
+      store,
+      ...
+  })
+  ```
+
+  => 다른 컴포넌트에서 this.$store.state.color로 데이터를 사용할 수 있다.
+
+  - 참고 : [https://kamang-it.tistory.com/entry/Vue14vuex-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0](https://kamang-it.tistory.com/entry/Vue14vuex-사용하기)
