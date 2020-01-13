@@ -1,10 +1,12 @@
 package com.hs.review.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document("review")
 public class Review {
@@ -17,11 +19,12 @@ public class Review {
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점
 	protected String context;  						// 내용
+	protected List<MultipartFile> files;
 	
 	public Review() {}
 
 	public Review(ObjectId _id, String title, String writer, String model, Date regDate, Date useDate, double rating,
-			String context) {
+			String context, List<MultipartFile> files) {
 		super();
 		this._id = _id;
 		this.title = title;
@@ -31,6 +34,7 @@ public class Review {
 		this.useDate = useDate;
 		this.rating = rating;
 		this.context = context;
+		this.files = files;
 	}
 
 	public ObjectId get_id() {
@@ -95,5 +99,12 @@ public class Review {
 
 	public void setContext(String context) {
 		this.context = context;
+	}
+
+	@Override
+	public String toString() {
+		return "Review [_id=" + _id + ", title=" + title + ", writer=" + writer + ", model=" + model + ", regDate="
+				+ regDate + ", useDate=" + useDate + ", rating=" + rating + ", context=" + context + ", files=" + files
+				+ "]";
 	}
 }

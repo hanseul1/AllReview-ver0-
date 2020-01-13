@@ -78,6 +78,7 @@
         <v-file-input
           multiple
           :color="this.$store.state.color"
+          v-model="files"
           label="사진 업로드"
         >
         </v-file-input>
@@ -107,10 +108,7 @@ export default {
       menu: false,
       useDate: new Date().toISOString().substr(0, 10),
       context: '',
-      additions: [
-        {'test': 'testvalue'},
-        {'test2': 'testvalue2'}
-      ]
+      files: []
     }
   },
   methods: {
@@ -122,7 +120,8 @@ export default {
         'regDate': new Date(),
         'useDate': this.useDate,
         'rating': this.rating,
-        'context': this.context
+        'context': this.context,
+        'files': this.files
       }
 
       axios
