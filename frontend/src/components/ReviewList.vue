@@ -50,9 +50,9 @@
             <v-card-actions>
               <v-rating
                 v-model="review.rating"
-                :background-color="this.$store.state.color"
+                background-color="rgb(203, 203, 77)"
                 size="35"
-                :color="this.$store.state.color"
+                color="rgb(203, 203, 77)"
                 readonly
               ></v-rating>
             <v-spacer></v-spacer>
