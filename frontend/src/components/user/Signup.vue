@@ -141,7 +141,7 @@ export default {
     checkId () {
       // id 중복 확인
       axios
-        .get('http://localhost:8080/user/' + this.id)
+        .get('http://localhost:8080/user/idcheck/' + this.id)
         .then(response => {
           if (response.data.data === 'not ok') {
             alert('사용할 수 없는 아이디 입니다.')

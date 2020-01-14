@@ -11,11 +11,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserDao userDao;
 	
-	/** 아이디 중복 체크
-	  * true면 아이디 사용 가능, false면 아이디 사용 불가
-	  */
-	public boolean idCheck(String id) {
-		return (userDao.searchUser(id) == null);
+	/** id로 회원 정보 찾기 */
+	public User searchUser(String id){
+		return userDao.searchUser(id);
 	}
 	
 	/** 회원 가입 */

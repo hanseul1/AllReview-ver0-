@@ -111,6 +111,13 @@ export default {
       files: []
     }
   },
+  mounted () {
+    // 로그인 하지 않았으면 이용 불가
+    if (this.$session.get('id') == null) {
+      alert('로그인이 필요한 서비스입니다.')
+      this.$router.push('/user/login')
+    }
+  },
   methods: {
     writeReview () {
       var reviewData = {

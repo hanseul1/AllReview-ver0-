@@ -31,8 +31,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}")
+	public ResponseEntity<Map<String,Object>> searchUser(@PathVariable String id){
+		return handleSuccess(userService.searchUser(id));
+	}
+
+	@GetMapping("/user/idcheck/{id}")
 	public ResponseEntity<Map<String, Object>> idCheck(@PathVariable String id){
-		if(userService.idCheck(id) == true)
+		if(userService.searchUser(id) == null)
 			return handleSuccess("ok");
 		else return handleSuccess("not ok");
 	}

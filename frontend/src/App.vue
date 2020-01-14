@@ -86,11 +86,12 @@ export default {
   data: () => ({
     drawer: null,
     items: [
-      {icon: 'add_box', text: 'Write Review', link: '/writeReview'},
-      {icon: 'assignment', text: 'all', link: '/reviewList'},
+      {icon: 'add_box', text: 'Write Review', link: '/review/write'},
+      {icon: 'assignment', text: 'all', link: '/review/list'},
       { icon: 'restaurant', text: 'Food' },
       { icon: 'filter_vintage', text: 'Beauty' },
       { icon: 'desktop_mac', text: 'Electronic' },
+      { icon: 'account_circle', text: 'User Info', link: '/user/info' },
       { heading: 'Labels' },
       { icon: 'add', text: 'Create new label' },
       { divider: true },
@@ -109,14 +110,14 @@ export default {
   },
   methods: {
     login () {
-      router.push('/login')
+      router.push('/user/login')
     },
     logout () {
       this.$session.destroy()
       window.location.reload()
     },
     signup () {
-      router.push('/signup')
+      router.push('/user/signup')
     },
     reloading () {
       router.push('/')

@@ -4,10 +4,8 @@ import com.hs.review.dto.User;
 
 public interface UserService {
 
-	/** 아이디 중복 체크
-	  * true면 아이디 사용 가능, false면 아이디 사용 불가
-	  */
-	boolean idCheck(String id);
+	/** id로 회원 정보 찾기 */
+	User searchUser(String id);
 
 	/** 회원 가입 */
 	void signup(User user);
