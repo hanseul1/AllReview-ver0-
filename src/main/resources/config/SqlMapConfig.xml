@@ -5,8 +5,12 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.hs.review.dto.User"   		alias="user"/>
+		<typeAlias type="com.hs.review.dto.Product"   		alias="product"/>
+		<typeAlias type="com.hs.review.dto.Category"   		alias="category"/>
 	</typeAliases>
 	<mappers>
 	 <mapper resource="query/user_sql.xml" />
+	 <mapper resource="query/product_sql.xml" />
+	 <mapper resource="query/category_sql.xml" />
 	</mappers>
 </configuration>

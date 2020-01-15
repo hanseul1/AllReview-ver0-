@@ -3,47 +3,32 @@ package com.hs.review.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.hs.review.dto.Review;
-import com.hs.review.service.ReviewService;
+import com.hs.review.dto.Category;
+import com.hs.review.service.CategoryService;
 
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
+@CrossOrigin(origins= {"*"}, maxAge = 6000)
 @RestController
-public class ReviewController {
+public class CategoryController {
 	@Autowired
-	private ReviewService reviewService;
+	private CategoryService service;
 	
-	@PostMapping("/review/{id}")
-	public ResponseEntity<Map<String, Object>> getReview(@PathVariable ObjectId id){
-		return handleSuccess(reviewService.getReview(id));
+	@GetMapping("/category")
+	public ResponseEntity<Map<String, Object>> searchAll(){
+		return handleSuccess(service.searchAll());
 	}
 	
-	@GetMapping("/review/model/{model}")
-	public ResponseEntity<Map<String,Object>> getReviewsByModel(@PathVariable String model){
-		return handleSuccess(reviewService.getReviewsByModel(model));
-	}
-	
-	@GetMapping("/review")
-	public ResponseEntity<Map<String,Object>> getReviews(){
-		return handleSuccess(reviewService.getReviews());
-	}
-	
-	@PostMapping("/review/save")
-	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
-		reviewService.saveReview(review);
+	@PostMapping("/category/insert")
+	public ResponseEntity<Map<String, Object>> insert(@RequestBody Category category){
+		service.insert(category);
 		return handleSuccess("success");
 	}
 	

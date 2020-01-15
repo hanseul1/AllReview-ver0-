@@ -388,3 +388,38 @@ npm install --save axios vue-session
   => 다른 컴포넌트에서 this.$store.state.color로 데이터를 사용할 수 있다.
 
   - 참고 : [https://kamang-it.tistory.com/entry/Vue14vuex-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0](https://kamang-it.tistory.com/entry/Vue14vuex-사용하기)
+
+
+
+#### Lombok 라이브러리
+
+- 자바에서 DTO를 생성할 때 멤버 필드에 대한 Getter/Setter, ToString, Constructor 코드를 annotation을 통해 자동으로 생성해주는 라이브러리
+
+- Annotation
+
+  ```
+  @ToString
+  @Getter
+  @Setter
+  @EqualsAndHashCode  : equals(..), hashcode() 메소드 생성
+  @RequiredArgsConstructor : 필수 인자만 있는 Constructor 생성
+  @NoArgsConstructor : 인자 없는 constructor 생성
+  @AllArgsConstructor : 모든 인자를 가진 constructor 생성
+  @Data : 위의 모든 annotation 처리
+  ```
+
+- 라이브러리 추가 - pom.xml 수정
+
+  ```xml
+  <dependency>
+  	<groupId>org.projectlombok</groupId>
+  	<artifactId>lombok</artifactId>
+  	<optional>true</optional>
+  </dependency>
+  ```
+
+- 설치
+  - Lombok 파일 설치 후 STS 재시작이 필요하다.
+  - 참고 : https://countryxide.tistory.com/16
+
+- 참고 : https://goddaehee.tistory.com/95
