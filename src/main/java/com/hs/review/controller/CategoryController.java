@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hs.review.dto.Category;
 import com.hs.review.service.CategoryService;
+import com.hs.review.util.RestUtil;
 
 @CrossOrigin(origins= {"*"}, maxAge = 6000)
 @RestController
@@ -23,26 +24,12 @@ public class CategoryController {
 	
 	@GetMapping("/category")
 	public ResponseEntity<Map<String, Object>> searchAll(){
-		return handleSuccess(service.searchAll());
+		return RestUtil.handleSuccess(service.searchAll());
 	}
 	
 	@PostMapping("/category/insert")
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Category category){
 		service.insert(category);
-		return handleSuccess("success");
-	}
-	
-	public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("state", "ok");
-		resultMap.put("data", data);
-		return new ResponseEntity<Map<String,Object>>(resultMap , HttpStatus.OK);
-	}
-	
-	public ResponseEntity<Map<String,Object>> handleFail(Object data, HttpStatus status){
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("state", "fail");
-		resultMap.put("data", data);
-		return new ResponseEntity<Map<String,Object>>(resultMap , status);
+		return RestUtil.handleSuccess("success");
 	}
 }

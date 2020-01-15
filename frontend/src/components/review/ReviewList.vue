@@ -24,8 +24,19 @@
         :headers="headers"
         :items="reviewList"
         :items-per-page="10"
+        @click:row="dialogOpen"
         class="elevation-1 list-table"
-      ></v-data-table>
+      >
+        <template v-slot:item.rating="{ item }">
+          <v-rating
+            v-model="item.rating"
+            background-color="rgb(203, 203, 77)"
+            size="35"
+            readonly
+            color="rgb(203, 203, 77)"
+          ></v-rating>
+        </template>
+      </v-data-table>
       <template v-else v-for="(review, index) in reviewList">
         <v-card
             :key="index"
@@ -66,6 +77,37 @@
         </v-card>
       </template>
     </v-row>
+
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          {{review.title}}
+        </v-card-title>
+
+        <v-card-text>
+          {{review.context}}
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            CLOSE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -88,7 +130,9 @@ export default {
         { text: 'Writer', value: 'writer' }
       ],
       reviewList: [],
-      display: 0
+      display: 0,
+      dialog: false,
+      review: {}
     }
   },
   mounted () {
@@ -101,6 +145,11 @@ export default {
   methods: {
     clickHeart (index) {
       console.log(this.reviewList[index].title)
+    },
+    dialogOpen (value) {
+      console.log(value)
+      this.dialog = true
+      this.review = value
     }
   }
 }
