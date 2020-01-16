@@ -35,6 +35,8 @@
 
    - 참고 : [https://caileb.tistory.com/entry/pomxml-%ED%8C%8C%EC%9D%BC%EC%9D%98-line-1%EB%B2%88-Unknown-Error](https://caileb.tistory.com/entry/pomxml-파일의-line-1번-Unknown-Error)
 
+     
+
 2. jsp 연동 오류 (index.jsp 404 error)
 
    - 원인 
@@ -89,6 +91,8 @@
      - WAR : Web application Archive. 모든 servlet/ JSP 컨테이너에 배치할 수 있는 웹 어플리케이션을 압축한 파일
 
        => 실행시 별도의 서버가 필요함
+       
+       
 
 3. HTTP 요청 CORS 에러
 
@@ -126,7 +130,8 @@
    
    - 참고 : https://velog.io/@wlsdud2194/cors
    
-   
+
+
 
 #### Vue.js 연동
 
@@ -423,3 +428,44 @@ npm install --save axios vue-session
   - 참고 : https://countryxide.tistory.com/16
 
 - 참고 : https://goddaehee.tistory.com/95
+
+
+
+#### Vue Router
+
+- SPA(Single Page Application)를 구성하기 위해 서버에서 URI에 따라 해당하는 정적 파일을 연결해주는 방식
+
+  => 요청 URI에 따라 브라우저에서 DOM을 변경하는 방식
+
+- vue-router 라이브러리
+
+  ```
+  npm install --save vue-router
+  ```
+
+- Vue router 컴포넌트에 props 전달
+
+  - 같은 '/review/list' 링크이더라도 사용자가 선택한 카테고리에 따라 다른 리뷰 데이터를 조회하고 싶다.
+
+    => 사용자가 선택한 카테고리에 대한 값을 같이 전달해야함
+
+  - 해당 컴포넌트를 router에 등록할 때 props 옵션을 추가한다.
+
+    ```js
+    new Router({
+        routes:[
+            ...
+         	{
+              path: '/review/list',
+              name: 'ReviewList',
+              component: ReviewList,
+              props: (route) => ({category: route.query.c})
+            },
+            ...
+        ]
+    })
+    ```
+
+    - '/review/list?c=all' 이라는 URL로 접속하면 ReviewList 컴포넌트에 {category: 'all'} 값의 props가 설정된다.
+
+  - 참고 : https://beomy.tistory.com/73
