@@ -2,6 +2,23 @@
   <v-container
     align-baseline="true">
     <v-row class="mx-2 mb-4">
+      <v-col cols="10">
+        <v-sheet elevation="2" class="pa-4">
+          <v-chip-group
+            column
+            multiple
+            v-model="keywords"
+            :color="this.$store.state.color"
+            active-class="primary--text"
+          >
+            <v-chip v-for="keyword in keywordList" :key="keyword.word">
+              {{ keyword.word }}
+            </v-chip>
+          </v-chip-group>
+        </v-sheet>
+      </v-col>
+    </v-row>
+    <v-row class="mx-2 mb-4">
       <v-col cols="8"><h2>리뷰 리스트 - {{category}}</h2></v-col>
       <v-col cols="4">
         <v-btn-toggle
@@ -134,7 +151,8 @@ export default {
       display: 0,
       dialog: false,
       review: {},
-      keywordList: []
+      keywordList: [],
+      keywords: []
     }
   },
   mounted () {
