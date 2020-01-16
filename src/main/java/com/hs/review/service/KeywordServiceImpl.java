@@ -19,7 +19,7 @@ public class KeywordServiceImpl implements KeywordService {
 	}
 	
 	/** 카테고리 번호로 키워드 리스트 검색 */
-	public List<Keyword> searchByCategory(int category){
+	public List<Keyword> searchByCategory(String category){
 		return dao.searchByCategory(category);
 	}
 }

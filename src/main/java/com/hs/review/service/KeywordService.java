@@ -10,6 +10,6 @@ public interface KeywordService {
 	List<Keyword> searchAll();
 
 	/** 카테고리 번호로 키워드 리스트 검색 */
-	List<Keyword> searchByCategory(int category);
+	List<Keyword> searchByCategory(String category);
 
 }

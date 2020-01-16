@@ -23,7 +23,8 @@ export default new Router({
     {
       path: '/review/list',
       name: 'ReviewList',
-      component: ReviewList
+      component: ReviewList,
+      props: (route) => ({category: route.query.category})
     },
     {
       path: '/user/signup',

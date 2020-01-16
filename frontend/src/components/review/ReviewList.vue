@@ -2,7 +2,7 @@
   <v-container
     align-baseline="true">
     <v-row class="mx-2 mb-4">
-      <v-col cols="6"><h2>리뷰 리스트 - 전체</h2></v-col>
+      <v-col cols="8"><h2>리뷰 리스트 - {{category}}</h2></v-col>
       <v-col cols="4">
         <v-btn-toggle
             v-model="display"
@@ -115,6 +115,7 @@
 import axios from 'axios'
 export default {
   name: 'ReviewList',
+  props: ['category'],
   data () {
     return {
       headers: [
@@ -132,15 +133,26 @@ export default {
       reviewList: [],
       display: 0,
       dialog: false,
-      review: {}
+      review: {},
+      keywordList: []
     }
   },
   mounted () {
+    // 카테고리에 해당하는 리뷰 불러오기
     axios
       .get('http://localhost:8080/review')
       .then(response => {
         this.reviewList = response.data.data
       })
+
+    // 카테고리에 해당하는 키워드 불러오기
+    this.getKeywordList()
+  },
+  watch: {
+    category: function (v) {
+      // 다른 카테고리 선택시
+      this.getKeywordList()
+    }
   },
   methods: {
     clickHeart (index) {
@@ -150,6 +162,15 @@ export default {
       console.log(value)
       this.dialog = true
       this.review = value
+    },
+    getKeywordList () {
+      // 카테고리에 해당하는 키워드 불러오기
+      axios
+        .get('http://localhost:8080/keyword/' + this.category)
+        .then(response => {
+          this.keywordList = response.data.data
+          console.log(this.keywordList)
+        })
     }
   }
 }

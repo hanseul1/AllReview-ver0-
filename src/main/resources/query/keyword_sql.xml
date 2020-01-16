@@ -8,9 +8,9 @@
 		select * from keyword
 	</select>
 	
-	<select id="searchByCategory" parameterType="integer" resultType="keyword">
-		select * 
-		from keyword
-		where category = #{category}
+	<select id="searchByCategory" parameterType="string" resultType="keyword">
+		select keyword.no, word, category
+		from keyword, category
+		where keyword.category = category.no and category.name = #{category}
 	</select>
 </mapper>
