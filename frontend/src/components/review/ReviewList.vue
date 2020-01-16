@@ -157,6 +157,6 @@ export default {
 
 <style>
   .list-table {
-    width: 1200px;
+    width: 1000px;
   }
 </style>
