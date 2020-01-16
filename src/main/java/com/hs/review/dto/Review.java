@@ -22,6 +22,7 @@ public class Review {
 	protected String title;							// 제목
 	protected String writer; 						// 작성자 아이디
 	protected String model;  						// 모델명
+	protected String category;						// 카테고리
 	protected Date regDate;   						// 작성일
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점

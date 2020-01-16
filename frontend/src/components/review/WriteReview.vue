@@ -15,14 +15,25 @@
       </v-col>
     </v-row>
     <v-row class="mx-2" align="center">
-      <v-col cols="3">
+      <v-col cols="4">
         <v-text-field
           label="모델명"
           v-model="model"
           :color="this.$store.state.color"
         />
       </v-col>
-      <v-col cols="3">
+      <v-col cols="4">
+        <v-select
+          :items="categoryList"
+          v-model="category"
+          label="카테고리"
+          class="input-group--focused"
+          item-text="name"
+        ></v-select>
+      </v-col>
+    </v-row>
+    <v-row class="mx-2" align="center">
+      <v-col cols="4">
         <v-layout row wrap>
         <v-menu
           lazy
@@ -54,7 +65,7 @@
         </v-menu>
         </v-layout>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="4">
         <v-rating
           v-model="rating"
           :background-color="this.$store.state.color"
@@ -108,7 +119,9 @@ export default {
       menu: false,
       useDate: new Date().toISOString().substr(0, 10),
       context: '',
-      files: []
+      files: [],
+      categoryList: [],
+      category: ''
     }
   },
   mounted () {
@@ -117,6 +130,15 @@ export default {
       alert('로그인이 필요한 서비스입니다.')
       this.$router.push('/user/login')
     }
+
+    // 카테고리 리스트 검색
+    axios
+      .get('http://localhost:8080/category')
+      .then(response => {
+        this.categoryList = response.data.data
+        console.log(this.categoryList)
+        console.log(this.items)
+      })
   },
   methods: {
     writeReview () {
@@ -124,6 +146,7 @@ export default {
         'title': this.title,
         'writer': this.$session.get('id'),
         'model': this.model,
+        'category': this.category,
         'regDate': new Date(),
         'useDate': this.useDate,
         'rating': this.rating,

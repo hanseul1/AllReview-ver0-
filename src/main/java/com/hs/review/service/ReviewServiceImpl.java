@@ -32,6 +32,12 @@ public class ReviewServiceImpl implements ReviewService{
 		return mongoTemplate.findAll(Review.class, "review");
 	}
 	
+	/** 카테고리 번호로 리뷰 리스트 검색 */
+	public List<Review> getReviewsByCategory(String category){
+		Query query = new Query(new Criteria("category").is(category));
+		return mongoTemplate.find(query, Review.class);
+	}
+	
 	/** 리뷰 정보 저장*/
 	public void saveReview(Review review) {
 		review.set_id(ObjectId.get());

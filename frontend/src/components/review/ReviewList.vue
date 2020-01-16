@@ -139,18 +139,14 @@ export default {
   },
   mounted () {
     // 카테고리에 해당하는 리뷰 불러오기
-    axios
-      .get('http://localhost:8080/review')
-      .then(response => {
-        this.reviewList = response.data.data
-      })
+    this.getReviewList()
 
     // 카테고리에 해당하는 키워드 불러오기
     this.getKeywordList()
   },
   watch: {
     category: function (v) {
-      // 다른 카테고리 선택시
+      this.getReviewList()
       this.getKeywordList()
     }
   },
@@ -169,7 +165,16 @@ export default {
         .get('http://localhost:8080/keyword/' + this.category)
         .then(response => {
           this.keywordList = response.data.data
-          console.log(this.keywordList)
+        })
+    },
+    getReviewList () {
+      // 카테고리에 해당하는 리뷰 불러오기
+      var url = ''
+      if (this.category !== 'all') url = '/category/' + this.category
+      axios
+        .get('http://localhost:8080/review' + url)
+        .then(response => {
+          this.reviewList = response.data.data
         })
     }
   }

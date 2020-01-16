@@ -37,6 +37,11 @@ public class ReviewController {
 		return RestUtil.handleSuccess(reviewService.getReviews());
 	}
 	
+	@GetMapping("/review/category/{category}")
+	public ResponseEntity<Map<String,Object>> getReviewsByCategory(@PathVariable String category){
+		return RestUtil.handleSuccess(reviewService.getReviewsByCategory(category));
+	}
+	
 	@PostMapping("/review/save")
 	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
 		reviewService.saveReview(review);

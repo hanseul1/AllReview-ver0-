@@ -17,6 +17,9 @@ public interface ReviewService {
 	/** 전체 리뷰 리스트 검색 */
 	List<Review> getReviews();
 
+	/** 카테고리 번호로 리뷰 리스트 검색 */
+	List<Review> getReviewsByCategory(String category);
+	
 	/** 리뷰 정보 저장*/
 	void saveReview(Review review);
 
