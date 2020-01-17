@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.hs.review.dto.Review;
+import com.mongodb.client.model.Updates;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
@@ -53,5 +55,11 @@ public class ReviewServiceImpl implements ReviewService{
 	/** 리뷰 삭제 */
 	public void removeReview(Review review) {
 		mongoTemplate.remove(review);
+	}
+	
+	/** 리뷰 수정 */
+	public void updateReview(Review review) {
+		removeReview(review);
+		saveReview(review);
 	}
 }

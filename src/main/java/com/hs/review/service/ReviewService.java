@@ -28,4 +28,7 @@ public interface ReviewService {
 	
 	/** 리뷰 삭제 */
 	void removeReview(Review review);
+	
+	/** 리뷰 수정 */
+	void updateReview(Review review);
 }

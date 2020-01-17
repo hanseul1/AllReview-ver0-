@@ -58,4 +58,10 @@ public class ReviewController {
 		reviewService.removeReview(review);
 		return RestUtil.handleSuccess("success");
 	}
+	
+	@PostMapping("/review/update")
+	public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
+		reviewService.updateReview(review);
+		return RestUtil.handleSuccess("success");
+	}
 }

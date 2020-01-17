@@ -5,6 +5,7 @@ import WriteReview from '@/components/review/WriteReview'
 import ReviewList from '@/components/review/ReviewList'
 import Signup from '@/components/user/Signup'
 import Userinfo from '@/components/user/Userinfo'
+import UpdateReview from '@/components/review/UpdateReview'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/user/info',
       name: 'Userinfo',
       component: Userinfo
+    },
+    {
+      path: '/review/update',
+      name: 'UpdateReview',
+      component: UpdateReview
     }
   ]
 })

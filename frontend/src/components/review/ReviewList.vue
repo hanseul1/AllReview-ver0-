@@ -233,7 +233,7 @@ export default {
     },
     editReview (review) {
       this.$store.state.review = review
-      this.$router.push('/review/write')
+      this.$router.push('/review/update')
     },
     deleteReview (review) {
       axios

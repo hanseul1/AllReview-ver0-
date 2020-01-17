@@ -21,6 +21,7 @@
                 prepend-icon="lock"
                 v-model="pw"
                 placeholder="Password"
+                v-on:keyup.enter="login"
               />
             </v-col>
           </v-row>

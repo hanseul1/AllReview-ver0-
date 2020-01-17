@@ -3,7 +3,7 @@
     align-baseline="true"
     class="container">
     <v-row class="mx-2">
-      <h2>리뷰 작성</h2>
+      <h2>리뷰 수정</h2>
     </v-row>
     <v-row class="mx-2">
       <v-col cols="8">
@@ -101,7 +101,7 @@
         <v-btn
           :color="this.$store.state.color"
           @click="writeReview">
-          등록</v-btn>
+          수정</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -110,14 +110,15 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'WriteReview',
+  name: 'UpdateReview',
   data () {
     return {
+      id: null,
       title: '',
       model: '',
       rating: 0,
       menu: false,
-      useDate: new Date().toISOString().substr(0, 10),
+      useDate: '',
       context: '',
       files: [],
       categoryList: [],
@@ -125,12 +126,6 @@ export default {
     }
   },
   mounted () {
-    // 로그인 하지 않았으면 이용 불가
-    if (this.$session.get('id') == null) {
-      alert('로그인이 필요한 서비스입니다.')
-      this.$router.push('/user/login')
-    }
-
     // 카테고리 리스트 검색
     axios
       .get('http://localhost:8080/category')
@@ -139,10 +134,23 @@ export default {
         console.log(this.categoryList)
         console.log(this.items)
       })
+
+    // 수정할 리뷰 데이터
+    if (this.$store.state.review !== {}) {
+      var data = this.$store.state.review
+      this.id = data._id
+      this.title = data.title
+      this.model = data.model
+      this.category = data.category
+      this.rating = data.rating
+      this.useDate = data.useDate
+      this.context = data.context
+    }
   },
   methods: {
     writeReview () {
       var reviewData = {
+        '_id': this.id,
         'title': this.title,
         'writer': this.$session.get('id'),
         'model': this.model,
@@ -155,13 +163,13 @@ export default {
       }
 
       axios
-        .post('http://localhost:8080/review/save', reviewData)
+        .post('http://localhost:8080/review/update', reviewData)
         .then(response => {
           if (response.data.data === 'success') {
-            alert('리뷰가 등록되었습니다.')
-            this.$router.push('/')
+            alert('리뷰가 수정되었습니다.')
+            this.$router.push('/review/list?category=my')
           } else {
-            alert('리뷰 등록에 실패했습니다.')
+            alert('리뷰 수정에 실패했습니다.')
           }
         })
     }
