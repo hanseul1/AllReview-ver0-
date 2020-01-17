@@ -17,10 +17,15 @@ public interface ReviewService {
 	/** 전체 리뷰 리스트 검색 */
 	List<Review> getReviews();
 
-	/** 카테고리 번호로 리뷰 리스트 검색 */
+	/** 카테고리로 리뷰 리스트 검색 */
 	List<Review> getReviewsByCategory(String category);
+	
+	/** 작성자 아이디로 리뷰 리스트 검색 */
+	List<Review> getReviewsByWriter(String writer);
 	
 	/** 리뷰 정보 저장*/
 	void saveReview(Review review);
-
+	
+	/** 리뷰 삭제 */
+	void removeReview(Review review);
 }

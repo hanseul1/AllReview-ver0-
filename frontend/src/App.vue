@@ -86,11 +86,12 @@ export default {
   data: () => ({
     drawer: null,
     items: [
-      {icon: 'add_box', text: 'Write Review', link: '/review/write'},
+      {icon: 'post_add', text: 'Write Review', link: '/review/write'},
       {icon: 'assignment', text: 'all', link: '/review/list?category=all'},
       { icon: 'restaurant', text: 'Food', link: '/review/list?category=food' },
       { icon: 'filter_vintage', text: 'Beauty', link: '/review/list?category=beauty' },
       { icon: 'desktop_mac', text: 'Electronic', link: '/review/list?category=electronic' },
+      { icon: 'how_to_reg', text: 'My Review', link: '/review/list?category=my' },
       { icon: 'account_circle', text: 'User Info', link: '/user/info' },
       { heading: 'Labels' },
       { icon: 'add', text: 'Create new label' },

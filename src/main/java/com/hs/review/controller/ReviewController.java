@@ -42,9 +42,20 @@ public class ReviewController {
 		return RestUtil.handleSuccess(reviewService.getReviewsByCategory(category));
 	}
 	
+	@GetMapping("/review/writer/{writer}")
+	public ResponseEntity<Map<String,Object>> getReviewsByWriter(@PathVariable String writer){
+		return RestUtil.handleSuccess(reviewService.getReviewsByWriter(writer));
+	}
+	
 	@PostMapping("/review/save")
 	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
 		reviewService.saveReview(review);
+		return RestUtil.handleSuccess("success");
+	}
+	
+	@PostMapping("/review/remove")
+	public ResponseEntity<Map<String,Object>> removeReview(@RequestBody Review review){
+		reviewService.removeReview(review);
 		return RestUtil.handleSuccess("success");
 	}
 }

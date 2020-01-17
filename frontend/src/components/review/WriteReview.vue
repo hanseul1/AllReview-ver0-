@@ -139,6 +139,16 @@ export default {
         console.log(this.categoryList)
         console.log(this.items)
       })
+
+    // 수정할 리뷰 데이터
+    if (this.$store.state.review !== {}) {
+      var data = this.$store.state.review
+      this.title = data.title
+      this.model = data.model
+      this.rating = data.rating
+      this.useDate = data.useDate
+      this.context = data.context
+    }
   },
   methods: {
     writeReview () {

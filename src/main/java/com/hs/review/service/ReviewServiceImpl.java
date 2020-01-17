@@ -32,9 +32,15 @@ public class ReviewServiceImpl implements ReviewService{
 		return mongoTemplate.findAll(Review.class, "review");
 	}
 	
-	/** 카테고리 번호로 리뷰 리스트 검색 */
+	/** 카테고리로 리뷰 리스트 검색 */
 	public List<Review> getReviewsByCategory(String category){
 		Query query = new Query(new Criteria("category").is(category));
+		return mongoTemplate.find(query, Review.class);
+	}
+	
+	/** 작성자 아이디로 리뷰 리스트 검색 */
+	public List<Review> getReviewsByWriter(String writer){
+		Query query = new Query(new Criteria("writer").is(writer));
 		return mongoTemplate.find(query, Review.class);
 	}
 	
@@ -42,5 +48,10 @@ public class ReviewServiceImpl implements ReviewService{
 	public void saveReview(Review review) {
 		review.set_id(ObjectId.get());
 		mongoTemplate.save(review, "review");
+	}
+	
+	/** 리뷰 삭제 */
+	public void removeReview(Review review) {
+		mongoTemplate.remove(review);
 	}
 }

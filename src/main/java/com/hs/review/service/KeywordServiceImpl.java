@@ -20,6 +20,8 @@ public class KeywordServiceImpl implements KeywordService {
 	
 	/** 카테고리 번호로 키워드 리스트 검색 */
 	public List<Keyword> searchByCategory(String category){
+		if(category.equals("all"))
+			return dao.searchAll();
 		return dao.searchByCategory(category);
 	}
 }
