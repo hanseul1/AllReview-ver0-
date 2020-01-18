@@ -45,12 +45,22 @@
         :items-per-page="10"
         sort-by="regDate"
         sort-desc
+        show-expand
+        single-expand=true
+        :expanded.sync="expanded"
         class="elevation-1 list-table"
       >
         <template v-slot:item.title="{ item }">
           <span
             @click="dialogOpen(item)"
+            class="context"
           >{{item.title}}</span>
+        </template>
+
+        <template v-slot:item.model="{ item }">
+          <span
+            class="context model"
+          >{{item.model}}</span>
         </template>
 
         <template v-slot:item.rating="{ item }">
@@ -80,11 +90,16 @@
             delete
           </v-icon>
         </template>
+
+        <template v-slot:expanded-item="{ item }">
+          <td colspan="10">{{item.context}}</td>
+        </template>
       </v-data-table>
       <template v-else v-for="(review, index) in reviewList">
         <v-card
             :key="index"
-            max-width="344"
+            max-width="300"
+            max-height="500"
             class="mx-4 mb-4"
         >
             <v-list-item>
@@ -100,7 +115,7 @@
             height="194"
             ></v-img>
 
-            <v-card-text>{{review.context}}</v-card-text>
+            <v-card-text class="context">{{review.context}}</v-card-text>
 
             <v-card-actions>
               <v-rating
@@ -121,37 +136,6 @@
         </v-card>
       </template>
     </v-row>
-
-    <v-dialog
-      v-model="dialog"
-      width="500"
-    >
-      <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
-          primary-title
-        >
-          {{review.title}}
-        </v-card-title>
-
-        <v-card-text>
-          {{review.context}}
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="dialog = false"
-          >
-            CLOSE
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -171,16 +155,17 @@ export default {
         },
         { text: 'Model', value: 'model' },
         { text: 'Rating', value: 'rating' },
-        { text: 'Used date', value: 'useDate' },
         { text: 'Writer', value: 'writer' },
-        { text: 'update/delete', value: 'action', sortable: false }
+        { text: 'update/delete', value: 'action', sortable: false },
+        { text: '', value: 'data-table-expand' }
       ],
       reviewList: [],
       display: 0,
       dialog: false,
       review: {},
       keywordList: [],
-      keywords: []
+      keywords: [],
+      expanded: []
     }
   },
   mounted () {
@@ -253,5 +238,20 @@ export default {
 <style>
   .list-table {
     width: 1000px;
+  }
+  .context {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .text-left {
+    max-width: 300px;
+  }
+  .model {
+    max-width: 100px;
+  }
+  .v-data-table td {
+    padding : 20px;
   }
 </style>
