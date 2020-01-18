@@ -344,7 +344,114 @@ db.users.remove({"name":"Sue"});
 - 데이터 삽입 쿼리 : insert / save
 
   ```
-  
+  db.[collectionName].save({a:100})
+  db.[collectionName].save({name:'hs', languages:['java','python']})
+```
+
+- 데이터 조회 쿼리 : find
+
+  ```
+  db.[collectionName].find()   => 전체 데이터 조회
+  db.[collectionName].find({a: {'$gte':50, '$lte':200}})    
+  	=> a필드 값이 50이상 200이하인 데이터 조회
   ```
 
-  
+- 데이터 수정 쿼리 : update
+
+  ```
+  db.[collectionName].update({name:'hs'}, {'$push': {'languages': 'c++'}})
+  db.[collectionName].update({a:100}, {a:200, b:100})
+  ```
+
+- 데이터 삭제 쿼리 : remove
+
+  ```
+  db.[collectionName].remove({})	=> 전체 데이터 삭제
+  db.[collectionName].remove({a:100})
+  ```
+
+
+
+#### Index
+
+- DB의 데이터 검색 속도 개선을 위해 데이터의 순서를 미리 정해두는 과정
+
+  - index 없이 데이터가 정렬되어 있지 않다면 query 조건을 만족하는 데이터를 모두 찾기 위해 모든 document를 스캔해야 한다.
+
+    => 데이터 양에 따라 시간이 많이 걸릴 수 있다.
+
+- MongoDB에서는 data field를 index로 지정하여 검색결과를 빠르게 하는 것이 가능하다.
+
+  - MongoDB에서는 B-tree 구조로 index를 구현함
+
+  - _id는 기본적으로 생성되는 index : document를 가리키는 유일한 키값
+
+  - 한 query당 하나의 index만 유효함 
+
+    => 두 개의 index가 필요하면 복합 index 사용 
+
+    ​	(복합 index에서 키의 순서가 매우 중요함)
+
+- index를 사용하면 데이터 read 속도는 빨라지지만 write 속도는 느려지게 된다.
+  - 어떤 데이터가 추가되거나 수정될 때마다 해당 collection에 대해 생성된 index도 그 document를 포함시키도록 수정되어야 하기 때문이다.
+  - 즉, 데이터 write가 있을때 마다 데이터를 다시 정렬해야하기 때문에 성능이 감소된다.
+  - 따라서 index는 데이터 쓰기보다 조회가 자주 일어나는 서비스에서 유용하다.
+
+- B-Tree 구조의 index
+
+  - Tree의 각 노드는 여러개의 key를 가질 수 있음
+
+  - B-Tree가 데이터베이스 index에 적합한 두가지 특징
+
+    ```
+    1. 정확한 일치, 범위 조건, 정렬, prefix 일치 등 다양한 쿼리를 용이하게 처리하도록 도와줌
+    2. key가 추가되거나 삭제되더라도 트리의 밸런스를 유지함
+    ```
+
+- index 사용
+
+  - index 조회
+
+    ```
+    db.[collectionName].getIndexes()
+    ```
+
+  - index 생성
+
+    ```
+    db.[collectionName].ensureIndex({"name":1})
+    	=> name field를 key로 하는 index 생성
+    	(1 : 오름차순, -1 : 내림차순)
+    ```
+
+  - index 삭제
+
+    ```
+    db.[collectionName].dropIndexes()  => _id 필드 인덱스 제외한 모든 index 삭제
+    db.[collectionName].dropIndex({"name": 1})
+    ```
+
+- index에서 쿼리 실행하여 데이터 검색하기
+
+  ![index diagram](https://docs.mongodb.com/manual/_images/index-for-sort.bakedsvg.svg)
+
+- index 종류
+
+  - single field index
+    - 단일 필드에 대해 사용자 정의 오름차순 / 내림차순 인덱스를 생성한다.
+
+  - compound index
+
+    - 여러 필드에 대해 사용자 정의 인덱스를 생성한다. 
+
+    - 인덱스를 구성하는 키의 순서가 매우 중요하다.
+
+      ```
+      {userId : 1, score : -1}
+      ```
+
+      index가 위와 같이 구성되어 있다면, userId를 기준으로 먼저 오름차순 정렬하고, 각 userId 내에서 score 기준으로 내림차순 정렬을 한다.
+
+  - text index
+    - collection의 문자열 내용 검색을 지원하는 텍스트 인덱스를 생성한다.
+

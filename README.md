@@ -489,3 +489,59 @@ npm install --save axios vue-session
 
   - 참고 : https://beomy.tistory.com/73
 
+
+
+#### MongoDB index 
+
+- 리뷰의 카테고리 별 검색과 키워드 검색이 자주 일어나기 때문에 검색 속도 향상을 위해 index를 생성하였다.
+
+- text index
+
+  - MongoDB는 문자열 필드에 대한 텍스트 검색 쿼리를 지원하기 위해 text index를 제공한다.
+
+  - 텍스트 검색 쿼리를 사용하기 위해서는 해당 collection에 text index가 있어야 한다.
+
+  - 하나의 collection은 하나의 text index만 가질 수 있다.
+
+    (하나의 text index에 여러 개의 field를 포함할 수 있다.)
+
+  - 문자열 필드의 일반 index와의 차이점
+
+    ```
+    db.review.createIndex({context: 1})
+    ```
+
+    - 해당 필드의 전체 문자열을 인덱싱한다.
+    - 즉, 정확히 일치하는 문자열 검색이나 단일 단어 필드에 유용하다.
+
+    ```
+    db.review.createIndex({context:"text"})
+    ```
+
+    - 해당 필드의 문자열 값을 word 단위로 tokenizing 하여 인덱싱한다.
+
+    - 각 단어에서 파생되어 변형된 문자열 검색에 유용하다.
+
+      ```
+      ex) '사용' 이라는 단어로 검색했을 때
+      '사용하다', '많이 사용', '사용감', '사용하는데' 등의 문자열과 match될 수 있다.
+      ```
+
+  - text search
+
+    - $text 쿼리 연산자를 사용하여 text index가 있는 collection에서 텍스트 검색을 할 수 있다.
+
+    - 검색 조건 문자열을 공백을 기준으로 tokenizing하여 모든 토큰에 대해 OR 논리 조건으로 검색을 수행한다.
+
+      ```
+      db.review.find({$text: {$search: "화면 크기 가격"}});
+      ```
+
+      => 화면, 크기, 가격으로 각각 tokenizing되고, 각 토큰 중 하나라도 포함하는 document를 결과값에 포함시킨다.
+
+    - query 조건과 document가 얼마나 잘 일치하는지 score를 계산한다.
+
+      => score를 기준으로 sort가 가능하다.
+
+  - 참고 : https://stackoverflow.com/questions/24316117/mongodb-difference-between-index-on-text-field-and-text-index
+
