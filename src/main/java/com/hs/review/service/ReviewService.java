@@ -1,6 +1,7 @@
 package com.hs.review.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 
@@ -31,4 +32,7 @@ public interface ReviewService {
 	
 	/** 리뷰 수정 */
 	void updateReview(Review review);
+	
+	/** input keyword를 포함하고 있는 리뷰 리스트 검색 */
+	List<Review> getReviewsByKeywords(Map<String, Object> data);
 }

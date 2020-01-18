@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,6 @@ public class Review {
 	protected Date regDate;   						// 작성일
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점
-	protected String context;  						// 내용
+	@TextIndexed protected String context;  		// 내용
 	protected List<MultipartFile> files;
 }

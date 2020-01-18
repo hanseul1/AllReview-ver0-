@@ -545,3 +545,44 @@ npm install --save axios vue-session
 
   - 참고 : https://stackoverflow.com/questions/24316117/mongodb-difference-between-index-on-text-field-and-text-index
 
+- keyword filtering 함수 구현
+
+  - vue component에서 사용자가 선택한 keyword list를 POST로 받아오면, 
+
+    해당 키워드 조건으로 text search를 수행하여 키워드가 포함되어있는 review 데이터 검색
+
+  - DTO class에 text index를 생성할 field 표시
+
+    ```java
+    @Document("review")
+    public class Review{
+        private ObjectId _id;
+        ...
+        // 리뷰 내용에서 키워드 검색을 하기 위해 
+        // context field에 text index 생성 annotation 작성
+        @TextIndexed protected String context;
+    }
+    ```
+
+  - Criteria를 활용하여 text search 쿼리 작성
+
+    ```java
+    public List<Review> getReviewsByKeywords(Map<String, Object> data){
+    	List<String> keywords = (List<String>) data.get("keywords");
+    	
+        // matchingAny(...)의 paramter로 String[] 타입만 입력이 가능하므로
+        // List<String> 타입의 keyword list를 String[] 타입으로 변환
+        String[] keywordList = new String[keywords.size()];
+    	for(int i=0; i<keywordList.length; i++) {
+    		keywordList[i] = keywords.get(i);
+    	}
+    	
+    	TextCriteria criteria = TextCriteria.forDefaultLanguage()
+    								.matchingAny(keywordList);
+    		
+    	Query query = TextQuery.queryText(criteria);
+    	return mongoTemplate.find(query, Review.class);
+    }
+    ```
+
+  - 참고 : https://spring.io/blog/2014/07/17/text-search-your-documents-with-spring-data-mongodb

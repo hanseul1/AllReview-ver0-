@@ -46,7 +46,6 @@
         sort-by="regDate"
         sort-desc
         show-expand
-        single-expand=true
         :expanded.sync="expanded"
         class="elevation-1 list-table"
       >
@@ -185,6 +184,29 @@ export default {
       this.getReviewList()
       this.getKeywordList()
       this.keywords = []
+    },
+    keywords: function (v) {
+      // 선택한 키워드가 존재하면 키워드 검색 API 호출
+      if (v.length !== 0) {
+        var keywordData = []
+        for (var i = 0; i < v.length; i++) {
+          keywordData.push(this.keywordList[v[i]].word)
+        }
+
+        var data = {
+          'keywords': keywordData,
+          'category': this.category
+        }
+
+        axios
+          .post('http://localhost:8080/review/keyword', data)
+          .then(response => {
+            this.reviewList = response.data.data
+          })
+      } else {
+        // 선택한 키워드가 존재하지 않으면 전체 리뷰 리스트 조회
+        this.getReviewList()
+      }
     }
   },
   methods: {

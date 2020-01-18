@@ -1,5 +1,6 @@
 package com.hs.review.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
@@ -63,5 +64,11 @@ public class ReviewController {
 	public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
 		reviewService.updateReview(review);
 		return RestUtil.handleSuccess("success");
+	}
+	
+	@PostMapping("/review/keyword")
+	public ResponseEntity<Map<String,Object>> getReviewsByKeywords
+									(@RequestBody Map<String, Object> requestData){
+		return RestUtil.handleSuccess(reviewService.getReviewsByKeywords(requestData));
 	}
 }
