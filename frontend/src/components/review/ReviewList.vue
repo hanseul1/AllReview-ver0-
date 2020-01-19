@@ -43,6 +43,7 @@
         :headers="headers"
         :items="reviewList"
         :items-per-page="10"
+        item-key="title"
         sort-by="regDate"
         sort-desc
         show-expand
@@ -90,8 +91,8 @@
           </v-icon>
         </template>
 
-        <template v-slot:expanded-item="{ item }">
-          <td colspan="10">{{item.context}}</td>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">{{item.context}}</td>
         </template>
       </v-data-table>
       <template v-else v-for="(review, index) in reviewList">
@@ -184,8 +185,10 @@ export default {
       this.getReviewList()
       this.getKeywordList()
       this.keywords = []
+      this.expanded = []
     },
     keywords: function (v) {
+      this.expanded = []
       // 선택한 키워드가 존재하면 키워드 검색 API 호출
       if (v.length !== 0) {
         var keywordData = []

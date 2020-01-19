@@ -69,6 +69,8 @@ public class ReviewServiceImpl implements ReviewService{
 	/** input keyword를 포함하고 있는 리뷰 리스트 검색 */
 	public List<Review> getReviewsByKeywords(Map<String, Object> data){
 		List<String> keywords = (List<String>) data.get("keywords");
+		String category = (String) data.get("category");
+		
 		String[] keywordList = new String[keywords.size()];
 		for(int i=0; i<keywordList.length; i++) {
 			keywordList[i] = keywords.get(i);
@@ -78,6 +80,11 @@ public class ReviewServiceImpl implements ReviewService{
 								.matchingAny(keywordList);
 		
 		Query query = TextQuery.queryText(criteria);
+		
+		// 카테고리가 지정되어 있다면 해당 카테고리 조건으로 조회
+		if(!category.equals("all"))
+			query.addCriteria(new Criteria().andOperator(new Criteria("category").is(category)));
+		
 		return mongoTemplate.find(query, Review.class);
 	}
 }

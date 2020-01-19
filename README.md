@@ -147,6 +147,33 @@
        => 이 경우 모든 외부 서버에 대한 요청에 대해 허가를 하게 되어 보안이 취약해진다.
 
    - 참고 : https://velog.io/@wlsdud2194/cors
+   
+     
+   
+4. Vue data-table expand 오류
+
+   - 상황 및 원인
+
+     - v-data-table에서 expand 옵션을 추가했을 때, expand 버튼 클릭시 해당 리뷰 내용만 보여지는 것이 아니라 모든 리뷰 내용이 expand 되었다.
+
+       (즉, 모든 expand 버튼이 동기화됨)
+
+     - 이는 v-data-table에서 item을 반복시켜 렌더링할 때 반복되는 item들을 구분해줄 고유 key값을 부여하지 않아서 생기는 문제이다.
+
+   - 해결방법
+
+     - v-data-table 태그에 key 옵션을 추가하여 지정해준다.
+
+       ```html
+       <v-data-table
+          ...
+          item-key="title"
+          ...
+       >
+       ```
+
+       - 각 review data의 고유 키값인 _id 값을 설정하려고 했으나, 모두 같은 Object로 인식되어 duplicate key 에러가 발생하였다.
+       - 임의로 title 값을 고유 키 값으로 설정해 주었다.
 
 
 
@@ -569,20 +596,30 @@ npm install --save axios vue-session
     ```java
     public List<Review> getReviewsByKeywords(Map<String, Object> data){
     	List<String> keywords = (List<String>) data.get("keywords");
-    	
-        // matchingAny(...)의 paramter로 String[] 타입만 입력이 가능하므로
-        // List<String> 타입의 keyword list를 String[] 타입으로 변환
-        String[] keywordList = new String[keywords.size()];
+    	String category = (String) data.get("category");
+    		
+    	String[] keywordList = new String[keywords.size()];
     	for(int i=0; i<keywordList.length; i++) {
     		keywordList[i] = keywords.get(i);
     	}
-    	
+    		
     	TextCriteria criteria = TextCriteria.forDefaultLanguage()
-    								.matchingAny(keywordList);
+    							.matchingAny(keywordList);
     		
     	Query query = TextQuery.queryText(criteria);
+    		
+    	// 카테고리가 지정되어 있다면 해당 카테고리 조건으로 조회
+    	if(!category.equals("all"))
+    		query.addCriteria(new Criteria().andOperator(new 													Criteria("category").is(category)));
+  		
     	return mongoTemplate.find(query, Review.class);
     }
     ```
-
+  
+  - text search 조건과 category match 조건을 한 쿼리에 적용하기 위해 
+  
+    2개의 Criteria 객체를 생성하고, addCriteria(...) 함수를 사용하였다.
+  
+    (and 조건으로 지정하기 위해 andOperator(...) 사용)
+  
   - 참고 : https://spring.io/blog/2014/07/17/text-search-your-documents-with-spring-data-mongodb

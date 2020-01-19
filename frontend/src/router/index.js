@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Main from '@/components/common/Main'
 import Login from '@/components/user/Login'
 import WriteReview from '@/components/review/WriteReview'
 import ReviewList from '@/components/review/ReviewList'
@@ -11,6 +12,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      name: 'Main',
+      component: Main
+    },
     {
       path: '/user/login',
       name: 'Login',
