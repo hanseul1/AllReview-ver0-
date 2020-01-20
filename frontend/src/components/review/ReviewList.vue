@@ -11,7 +11,7 @@
           >
             <v-chip
               v-for="keyword in keywordList"
-              :key="keyword.word"
+              :key="keyword.no"
               outlined
               color="rgb(203, 203, 77)">
               {{ keyword.word }}

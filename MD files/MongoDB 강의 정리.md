@@ -346,31 +346,30 @@ db.users.remove({"name":"Sue"});
   ```
   db.[collectionName].save({a:100})
   db.[collectionName].save({name:'hs', languages:['java','python']})
-```
-
+  ```
 - 데이터 조회 쿼리 : find
 
   ```
-  db.[collectionName].find()   => 전체 데이터 조회
-  db.[collectionName].find({a: {'$gte':50, '$lte':200}})    
-  	=> a필드 값이 50이상 200이하인 데이터 조회
+    db.[collectionName].find()   => 전체 데이터 조회
+    db.[collectionName].find({a: {'$gte':50, '$lte':200}})    
+    	=> a필드 값이 50이상 200이하인 데이터 조회
   ```
 
-- 데이터 수정 쿼리 : update
+-  데이터 수정 쿼리 : update
 
   ```
-  db.[collectionName].update({name:'hs'}, {'$push': {'languages': 'c++'}})
-  db.[collectionName].update({a:100}, {a:200, b:100})
+   db.[collectionName].update({name:'hs'}, {'$push': {'languages': 'c++'}})
+   db.[collectionName].update({a:100}, {a:200, b:100})
   ```
 
 - 데이터 삭제 쿼리 : remove
 
-  ```
-  db.[collectionName].remove({})	=> 전체 데이터 삭제
-  db.[collectionName].remove({a:100})
-  ```
+   ```
+   db.[collectionName].remove({})	=> 전체 데이터 삭제
+   db.[collectionName].remove({a:100})
+   ```
 
-
+  
 
 #### Index
 
@@ -390,7 +389,7 @@ db.users.remove({"name":"Sue"});
 
     => 두 개의 index가 필요하면 복합 index 사용 
 
-    ​	(복합 index에서 키의 순서가 매우 중요함)
+    	(복합 index에서 키의 순서가 매우 중요함)
 
 - index를 사용하면 데이터 read 속도는 빨라지지만 write 속도는 느려지게 된다.
   - 어떤 데이터가 추가되거나 수정될 때마다 해당 collection에 대해 생성된 index도 그 document를 포함시키도록 수정되어야 하기 때문이다.
@@ -402,12 +401,12 @@ db.users.remove({"name":"Sue"});
   - Tree의 각 노드는 여러개의 key를 가질 수 있음
 
   - B-Tree가 데이터베이스 index에 적합한 두가지 특징
-
+  
     ```
     1. 정확한 일치, 범위 조건, 정렬, prefix 일치 등 다양한 쿼리를 용이하게 처리하도록 도와줌
     2. key가 추가되거나 삭제되더라도 트리의 밸런스를 유지함
     ```
-
+  
 - index 사용
 
   - index 조회
@@ -438,8 +437,9 @@ db.users.remove({"name":"Sue"});
 - index 종류
 
   - single field index
-    - 단일 필드에 대해 사용자 정의 오름차순 / 내림차순 인덱스를 생성한다.
-
+    
+  - 단일 필드에 대해 사용자 정의 오름차순 / 내림차순 인덱스를 생성한다.
+    
   - compound index
 
     - 여러 필드에 대해 사용자 정의 인덱스를 생성한다. 
@@ -453,5 +453,6 @@ db.users.remove({"name":"Sue"});
       index가 위와 같이 구성되어 있다면, userId를 기준으로 먼저 오름차순 정렬하고, 각 userId 내에서 score 기준으로 내림차순 정렬을 한다.
 
   - text index
+    
     - collection의 문자열 내용 검색을 지원하는 텍스트 인덱스를 생성한다.
 
