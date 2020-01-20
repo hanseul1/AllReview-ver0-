@@ -95,7 +95,7 @@ export default {
         'phone': this.phone
       }
       axios
-        .post('http://localhost:8080/user/update', requestData)
+        .put('http://localhost:8080/user', requestData)
         .then(response => {
           if (response.data.data === 'success') {
             alert('수정 완료되었습니다.')

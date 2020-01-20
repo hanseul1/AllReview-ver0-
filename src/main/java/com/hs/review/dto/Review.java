@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Document("review")
 public class Review {
 	@Id
-	private   ObjectId _id;  						// 리뷰 번호
+	private   String _id;  							// 리뷰 번호
 	protected String title;							// 제목
 	protected String writer; 						// 작성자 아이디
 	protected String model;  						// 모델명

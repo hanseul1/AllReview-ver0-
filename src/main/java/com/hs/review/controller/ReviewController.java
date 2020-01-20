@@ -7,9 +7,11 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,19 +50,19 @@ public class ReviewController {
 		return RestUtil.handleSuccess(reviewService.getReviewsByWriter(writer));
 	}
 	
-	@PostMapping("/review/save")
+	@PostMapping("/review")
 	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
 		reviewService.saveReview(review);
 		return RestUtil.handleSuccess("success");
 	}
 	
-	@PostMapping("/review/remove")
-	public ResponseEntity<Map<String,Object>> removeReview(@RequestBody Review review){
-		reviewService.removeReview(review);
+	@DeleteMapping("/review/{id}")
+	public ResponseEntity<Map<String,Object>> removeReview(@PathVariable String id){
+		reviewService.removeReview(id);
 		return RestUtil.handleSuccess("success");
 	}
 	
-	@PostMapping("/review/update")
+	@PutMapping("/review")
 	public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
 		reviewService.updateReview(review);
 		return RestUtil.handleSuccess("success");

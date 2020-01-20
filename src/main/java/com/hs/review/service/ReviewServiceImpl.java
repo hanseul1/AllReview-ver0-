@@ -51,19 +51,30 @@ public class ReviewServiceImpl implements ReviewService{
 	
 	/** 리뷰 정보 저장*/
 	public void saveReview(Review review) {
-		review.set_id(ObjectId.get());
 		mongoTemplate.save(review, "review");
 	}
 	
 	/** 리뷰 삭제 */
-	public void removeReview(Review review) {
-		mongoTemplate.remove(review);
+	public void removeReview(String id) {
+		Query query = new Query(new Criteria("_id").is(id));
+		mongoTemplate.remove(query, "review");
 	}
 	
 	/** 리뷰 수정 */
 	public void updateReview(Review review) {
-		removeReview(review);
-		saveReview(review);
+		Update update = new Update();
+		update.set("title", review.getTitle());
+		update.set("model", review.getModel());
+		update.set("category", review.getCategory());
+		update.set("regDate", review.getRegDate());
+		update.set("useDate", review.getUseDate());
+		update.set("rating", review.getRating());
+		update.set("context", review.getContext());
+		update.set("files", review.getFiles());
+		
+		Query query = new Query(new Criteria("_id").is(review.get_id()));
+		
+		mongoTemplate.updateFirst(query, update, Review.class);
 	}
 	
 	/** input keyword를 포함하고 있는 리뷰 리스트 검색 */

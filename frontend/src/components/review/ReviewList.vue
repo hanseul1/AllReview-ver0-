@@ -43,7 +43,7 @@
         :headers="headers"
         :items="reviewList"
         :items-per-page="10"
-        item-key="title"
+        item-key="_id"
         sort-by="regDate"
         sort-desc
         show-expand
@@ -247,7 +247,7 @@ export default {
     },
     deleteReview (review) {
       axios
-        .post('http://localhost:8080/review/remove', review)
+        .delete('http://localhost:8080/review/' + review._id)
         .then(response => {
           if (response.data.data === 'success') {
             alert('삭제되었습니다.')

@@ -28,7 +28,7 @@ public interface ReviewService {
 	void saveReview(Review review);
 	
 	/** 리뷰 삭제 */
-	void removeReview(Review review);
+	void removeReview(String id);
 	
 	/** 리뷰 수정 */
 	void updateReview(Review review);

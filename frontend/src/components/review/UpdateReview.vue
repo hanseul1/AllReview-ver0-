@@ -163,7 +163,7 @@ export default {
       }
 
       axios
-        .post('http://localhost:8080/review/update', reviewData)
+        .put('http://localhost:8080/review', reviewData)
         .then(response => {
           if (response.data.data === 'success') {
             alert('리뷰가 수정되었습니다.')

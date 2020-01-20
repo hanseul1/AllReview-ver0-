@@ -29,7 +29,7 @@
 ```
 
 
-#### Error logging
+#### Problem & Solving
 
 1. spring starter project 생성 직후 pom.xml Line1 unknown error
 
@@ -175,7 +175,92 @@
        - 각 review data의 고유 키값인 _id 값을 설정하려고 했으나, 모두 같은 Object로 인식되어 duplicate key 에러가 발생하였다.
        - 임의로 title 값을 고유 키 값으로 설정해 주었다.
 
+5. RESTful API의 구현
 
+   - 이전
+
+     - Front-end와 HTTP통신을 하는 API를 구성할 때 controller에서  GET / POST 방식의 메소드만 정의하여 사용하였다.
+
+       ```java
+       @GetMapping("/review")
+       ...
+       @PostMapping("/review/save")
+       ...
+       @PostMapping("/review/update")
+       ...
+       @DeleteMapping("/review/delete")
+       ...
+       ```
+
+       - 이는 REST API 설계 규칙에 맞지 않는다.
+
+         (REST API의 URI 구성 시 자원에 대한 행위(동사 형태) 보다는 자원(명사 형태)을 표현하는 데 중점을 두어야 한다.)
+
+   - 이후
+
+     - update 작업을 하는 메소드는 PUT 방식으로, delete 작업을 하는 메소드는 DELETE 방식으로 정의하였다.
+
+     - 에러 발생
+
+       - DeleteMapping시 @RequestBody를 선언하여 요청 데이터를 받는 경우,
+
+         클라이언트에서 해당 API를 호출하면 400(Bad Request) 에러가 발생하였다.
+
+       - 이는 Spring boot의 내장 톰캣이 POST 요청에 대해서만 Request body의 parsing 작업을 수행하기 때문이다.
+
+         => 톰캣 서버의 parseBodyMethods 설정을 POST 뿐만 아니라 PUT, DELETE도 추가해주는 방법도 있으나, Spring boot에서 내장 톰캣 서버 설정을 바꾸는 방법을 찾지 못함
+
+         - Delete 작업 요청시 review 데이터 전체를 요청 데이터에 넣어 전달하지 않고, review의 고유 키 값인 _id만 @PathVariable 로 전달하는 방법으로 개선하였다.
+
+         - 기존 ObjectId 타입의 _id값이 타입 문제로 spring boot와 vue에서 collection의 고유 키 값 역할을 하지 못하는 문제가 있어 String 타입으로 수정
+
+           ```java
+           @Document("review")
+           public class Review {
+           	@Id
+           	private   String _id; 
+               ...
+           }
+           ```
+
+         - controller 클래스의 method 수정
+
+           ```java
+           @DeleteMapping("/review/{id}")
+           public ResponseEntity<Map<String,Object>> removeReview(@PathVariable String id){
+               ...
+           }
+           	
+           @PutMapping("/review")
+           public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
+               ...
+           }
+           ```
+
+         - service 클래스의 MongoTemplate 메소드 호출 수정
+
+           ```java
+           /** 리뷰 삭제 */
+           public void removeReview(String id) {
+               // _id 값으로 Document 찾은 후 삭제
+           	Query query = new Query(new Criteria("_id").is(id));
+           	mongoTemplate.remove(query, "review");
+           }
+           	
+           /** 리뷰 수정 */
+           public void updateReview(Review review) {
+           	Update update = new Update();
+           	update.set("title", review.getTitle());
+           	...
+           	
+               // _id 값으로 Document 찾은 후 업데이트 정보 반영
+           	Query query = new Query(new Criteria("_id").is(review.get_id()));
+           		
+           	mongoTemplate.updateFirst(query, update, Review.class);
+           }
+           ```
+
+           
 
 #### Vue.js 연동
 

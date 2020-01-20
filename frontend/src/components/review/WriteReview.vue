@@ -155,7 +155,7 @@ export default {
       }
 
       axios
-        .post('http://localhost:8080/review/save', reviewData)
+        .post('http://localhost:8080/review', reviewData)
         .then(response => {
           if (response.data.data === 'success') {
             alert('리뷰가 등록되었습니다.')
