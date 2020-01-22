@@ -9,4 +9,5 @@
 	<context:annotation-config/>
 	
 	<bean id="application" class="com.hs.review.config.ApplicationConfig"/>
+
 </beans>

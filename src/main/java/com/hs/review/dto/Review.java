@@ -28,5 +28,4 @@ public class Review {
 	protected Date useDate;   						// 제품 및 서비스 이용 날짜
 	protected double rating; 						// 평점
 	@TextIndexed protected String context;  		// 내용
-	protected List<MultipartFile> files;
 }

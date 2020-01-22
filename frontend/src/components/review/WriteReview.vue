@@ -150,8 +150,28 @@ export default {
         'regDate': new Date(),
         'useDate': this.useDate,
         'rating': this.rating,
-        'context': this.context,
-        'files': this.files
+        'context': this.context
+      }
+
+      if (this.files.length > 0) {
+        var fileData = new FormData()
+        for (var i = 0; i < this.files.length; i++) {
+          fileData.append('files', this.files[i])
+        }
+
+        axios
+          .post('http://localhost:8080/review/files', fileData, {
+            headers: {
+              'enctype': 'multipart/form-data'
+            }
+          })
+          .then(response => {
+            if (response.data.data === 'success') {
+              console.log('file upload')
+            } else {
+              alert('파일 업로드에 실패했습니다.')
+            }
+          })
       }
 
       axios

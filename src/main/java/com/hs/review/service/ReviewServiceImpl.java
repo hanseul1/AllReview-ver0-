@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.Review;
 import com.mongodb.client.model.Updates;
@@ -54,6 +55,11 @@ public class ReviewServiceImpl implements ReviewService{
 		mongoTemplate.save(review, "review");
 	}
 	
+	/** 리뷰 이미지 파일 저장 */
+	public void insertFiles(MultipartFile[] files) {
+		
+	}
+	
 	/** 리뷰 삭제 */
 	public void removeReview(String id) {
 		Query query = new Query(new Criteria("_id").is(id));
@@ -70,7 +76,6 @@ public class ReviewServiceImpl implements ReviewService{
 		update.set("useDate", review.getUseDate());
 		update.set("rating", review.getRating());
 		update.set("context", review.getContext());
-		update.set("files", review.getFiles());
 		
 		Query query = new Query(new Criteria("_id").is(review.get_id()));
 		

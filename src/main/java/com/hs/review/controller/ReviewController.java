@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.Review;
 import com.hs.review.service.ReviewService;
@@ -48,6 +50,14 @@ public class ReviewController {
 	@GetMapping("/review/writer/{writer}")
 	public ResponseEntity<Map<String,Object>> getReviewsByWriter(@PathVariable String writer){
 		return RestUtil.handleSuccess(reviewService.getReviewsByWriter(writer));
+	}
+	
+	@PostMapping("/review/files")
+	public ResponseEntity<Map<String,Object>> saveReviewFiles
+								(@RequestParam("files") MultipartFile[] files){
+		System.out.println("==============================");
+		System.out.println(files.length);
+		return RestUtil.handleSuccess("success");
 	}
 	
 	@PostMapping("/review")
