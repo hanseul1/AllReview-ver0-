@@ -260,7 +260,151 @@
            }
            ```
 
+   
+   
+6. MultipartFile 업로드
+
+   - Spring boot에서의 REST API 구현
+
+     - pom.xml에 dependency 추가
+
+       ```xml
+       <dependency>
+       	<groupId>commons-io</groupId>
+       	<artifactId>commons-io</artifactId>
+       	<version>2.5</version>
+       </dependency>
+       <dependency>
+       	<groupId>commons-fileupload</groupId>
+       	<artifactId>commons-fileupload</artifactId>
+       	<version>1.3.1</version>
+       </dependency>
+       ```
+
+     - Controller 클래스에 MultipartFile 타입 요청 데이터를 받는 API 정의
+
+       ```java
+       @PostMapping("/review/files")
+       public ResponseEntity<Map<String,Object>> saveReviewFiles
+       							(@RequestParam("files") MultipartFile[] files) 										throws IllegalStateException, IOException{
+       	reviewService.insertFiles(files);
+       	return RestUtil.handleSuccess("success");
+       }
+       ```
+
+     - 일반 Spring 프로젝트에서는 파일 처리를 위해 MultipartResolver 빈을 등록해주어야 한다.
+
+       ```xml
+       <!-- mvc-config.xml 설정파일에 선언 -->
+       <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+       ```
+
+       - Spring Boot에서는 기본 MultipartResolver를 StandardServletMultipartResolver로 사용하고 있다.
+
+         => 따라서 직접 MultipartResolver bean을 주입해주지 않아도 된다.
+
+         - 그러나 CommonsMultipartResolver를 MultipartResolver로 사용하고 싶다면 자동 설정을 제외하고 해당 리졸버를 등록해주어야 한다.
+
+           ```java
+           @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+           @Configuration
+           public class MultipartConfig {
            
+               @Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
+               public MultipartResolver multipartResolver() {
+                   CommonsMultipartResolver multipartResolver = new 															CommonsMultipartResolver();
+                   return multipartResolver;
+               }
+           
+               @Bean
+               @Order(0)
+               public MultipartFilter multipartFilter() {
+                   MultipartFilter multipartFilter = new MultipartFilter();
+                   																		multipartFilter.setMultipartResolverBeanName                                      (DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME);
+                   return multipartFilter;
+               }
+           }
+           ```
+
+           - configuration annotation의 우선순위 때문에 
+
+             `@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})`
+
+             해당 annotation이 없으면 MultipartAutoConfiguration이 활성화되어 StandardServletMultipartResolver가 자동 설정되므로 주의해야 한다.
+
+         - 참고 : https://gist.github.com/dlxotn216/18622dd08ee430f0cb9610fb0e60c5ba
+
+   - Vue component에서의 axios 구현
+
+     ```js
+     if (this.files.length > 0) {
+     	var fileData = new FormData()
+         for (var i = 0; i < this.files.length; i++) {
+         	fileData.append('files', this.files[i])
+             fileNames.push(this.files[i].name)
+         }
+     
+         axios
+           .post('http://localhost:8080/review/files', fileData, {
+           	headers: {
+               'enctype': 'multipart/form-data'
+             }
+           })
+           .then(response => {
+             if (response.data.data === 'success') {
+               console.log('file upload')
+             } else {
+               alert('파일 업로드에 실패했습니다.')
+             }
+           })
+     }
+     ```
+
+     - FormData : <form> 태그를 직접 HTML에서 사용하지 않고도 ajax 방식으로 데이터를 key-value 쌍으로 서버에서 전송할 수 있는 api
+
+       => multipart/form-data 인코딩이 가능함
+
+     - `fileData.append('files', this.files)` 로 배열 전체를 하나의 key 값 안에 넣으면 server에서 MultipartFile[] 타입으로 받을 수 없음 - 타입 오류로 null 값이 됨
+
+     - `fileData.append('review', reviewData)` 코드를 추가하여 리뷰 데이터와 파일 데이터를 한번에 전송하려고 하였으나 server에서 두개 이상의 requestParam을 받지 못함 - 500 에러 발생
+
+     - 파일 데이터와 리뷰 데이터를 각각 API 호출하여 전송하여 server의 service 단에서 함께 처리하도록 구현하였다.
+
+   - Spring boot Service 클래스에서의 파일 업로드 구현
+   
+     ```java
+     public List<String> insertFiles(MultipartFile[] files) 
+         						throws IllegalStateException, IOException {
+     	// 각 파일들의 새로 생성된 이름을 저장할 리스트(뷰 컴포넌트에 다시 전달)
+     	List<String> fileNames = new ArrayList<>();
+         
+         for(MultipartFile file: files) {
+     		String rfileName = file.getOriginalFilename();
+             // 중복된 이름의 파일이 서버에 이미 있을 경우를 대비해 
+     		// 파일 이름 앞에 현재 시간을 붙여 새로운 파일 이름을 생성한다.
+     		String sfileName = String.format("%d%s"
+   											, System.currentTimeMillis()
+     											, rfileName);
+           
+     		File realFile = 
+               new File(new ClassPathResource("application.properties") 										.getURI().getPath()
+     							+ "/../static/static/img/" + sfileName);
+   		file.transferTo(realFile);
+             fileNames.add(sfileName);
+   	}
+         return fileNames;
+     }
+     ```
+     
+     - `new ClassPathResource("application.properties").getURI().getPath()`
+     
+       : 프로젝트의 classpath(resource 경로)를 찾기위해 target 폴더 하위에 있는 application.properties의 경로를 반환받는다.
+     
+     - 파일은 '프로젝트 경로\target\classes\static\static\img' 에 저장된다.
+     
+       => 'http://{server_ip:port}/static/img/{filename} 으로 해당 파일에 접근 가능하다.
+     
+       
 
 #### Vue.js 연동
 

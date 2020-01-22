@@ -57,8 +57,7 @@ public class ReviewController {
 	@PostMapping("/review/files")
 	public ResponseEntity<Map<String,Object>> saveReviewFiles
 								(@RequestParam("files") MultipartFile[] files) throws IllegalStateException, IOException{
-		reviewService.insertFiles(files);
-		return RestUtil.handleSuccess("success");
+		return RestUtil.handleSuccess(reviewService.insertFiles(files));
 	}
 	
 	@PostMapping("/review")

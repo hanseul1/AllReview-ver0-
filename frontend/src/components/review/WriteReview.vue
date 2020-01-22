@@ -147,7 +147,6 @@ export default {
         var fileData = new FormData()
         for (var i = 0; i < this.files.length; i++) {
           fileData.append('files', this.files[i])
-          fileNames.push(this.files[i].name)
         }
 
         axios
@@ -157,8 +156,8 @@ export default {
             }
           })
           .then(response => {
-            if (response.data.data === 'success') {
-              console.log('file upload')
+            if (response.data.state === 'ok') {
+              fileNames = response.data.data
             } else {
               alert('파일 업로드에 실패했습니다.')
             }
