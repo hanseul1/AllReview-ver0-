@@ -142,21 +142,12 @@ export default {
   },
   methods: {
     writeReview () {
-      var reviewData = {
-        'title': this.title,
-        'writer': this.$session.get('id'),
-        'model': this.model,
-        'category': this.category,
-        'regDate': new Date(),
-        'useDate': this.useDate,
-        'rating': this.rating,
-        'context': this.context
-      }
-
+      var fileNames = []
       if (this.files.length > 0) {
         var fileData = new FormData()
         for (var i = 0; i < this.files.length; i++) {
           fileData.append('files', this.files[i])
+          fileNames.push(this.files[i].name)
         }
 
         axios
@@ -172,6 +163,18 @@ export default {
               alert('파일 업로드에 실패했습니다.')
             }
           })
+      }
+
+      var reviewData = {
+        'title': this.title,
+        'writer': this.$session.get('id'),
+        'model': this.model,
+        'category': this.category,
+        'regDate': new Date(),
+        'useDate': this.useDate,
+        'rating': this.rating,
+        'context': this.context,
+        'files': fileNames
       }
 
       axios

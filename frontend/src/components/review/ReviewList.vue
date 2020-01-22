@@ -111,7 +111,8 @@
             </v-list-item>
 
             <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"
+            v-if="review.files !== null"
+            :src="'http://localhost:8080/static/img/' + review.files[0]"
             height="194"
             ></v-img>
 

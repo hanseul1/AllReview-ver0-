@@ -1,7 +1,9 @@
 package com.hs.review.controller;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +56,8 @@ public class ReviewController {
 	
 	@PostMapping("/review/files")
 	public ResponseEntity<Map<String,Object>> saveReviewFiles
-								(@RequestParam("files") MultipartFile[] files){
-		System.out.println("==============================");
-		System.out.println(files.length);
+								(@RequestParam("files") MultipartFile[] files) throws IllegalStateException, IOException{
+		reviewService.insertFiles(files);
 		return RestUtil.handleSuccess("success");
 	}
 	

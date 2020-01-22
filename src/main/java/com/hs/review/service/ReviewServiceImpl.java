@@ -1,10 +1,14 @@
 package com.hs.review.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,13 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.Review;
-import com.mongodb.client.model.Updates;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+	@Autowired private ResourceLoader resourceLoader;
+
 	/** _id로 특정 리뷰 정보 검색 */
 	public Review getReview(ObjectId _id) {
 		return mongoTemplate.findById(_id, Review.class, "review");
@@ -56,8 +60,13 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 	
 	/** 리뷰 이미지 파일 저장 */
-	public void insertFiles(MultipartFile[] files) {
-		
+	public void insertFiles(MultipartFile[] files) throws IllegalStateException, IOException {
+		for(MultipartFile file: files) {
+			String originalFileName = file.getOriginalFilename();
+			File realFile = new File(new ClassPathResource("application.properties").getURI().getPath()
+										+"/../static/static/img/"+ originalFileName);
+			file.transferTo(realFile);
+		}
 	}
 	
 	/** 리뷰 삭제 */
