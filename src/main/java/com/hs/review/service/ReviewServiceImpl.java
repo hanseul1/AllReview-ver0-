@@ -61,9 +61,10 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 	
 	/** 리뷰 이미지 파일 저장 */
-	public List<String> insertFiles(MultipartFile[] files) throws IllegalStateException, IOException {
+	public String[] insertFiles(MultipartFile[] files) throws IllegalStateException, IOException {
 		// 각 파일들의 새로 생성된 이름을 저장할 리스트
-		List<String> fileNames = new ArrayList<>();
+		String[] fileNames = new String[files.length];
+		int i = 0;
 		for(MultipartFile file: files) {
 			String rfileName = file.getOriginalFilename();
 			
@@ -75,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService{
 			File realFile = new File(new ClassPathResource("application.properties").getURI().getPath()
 										+"/../static/static/img/"+ sfileName);
 			file.transferTo(realFile);
-			fileNames.add(sfileName);
+			fileNames[i++] = sfileName;
 		}
 		return fileNames;
 	}

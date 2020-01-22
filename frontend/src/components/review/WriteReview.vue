@@ -142,7 +142,6 @@ export default {
   },
   methods: {
     writeReview () {
-      var fileNames = []
       if (this.files.length > 0) {
         var fileData = new FormData()
         for (var i = 0; i < this.files.length; i++) {
@@ -157,13 +156,14 @@ export default {
           })
           .then(response => {
             if (response.data.state === 'ok') {
-              fileNames = response.data.data
+              this.saveReview(response.data.data)
             } else {
               alert('파일 업로드에 실패했습니다.')
             }
           })
       }
-
+    },
+    saveReview (fileNames) {
       var reviewData = {
         'title': this.title,
         'writer': this.$session.get('id'),
