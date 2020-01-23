@@ -3,8 +3,6 @@ package com.hs.review.controller;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.Review;
+import com.hs.review.service.FileService;
 import com.hs.review.service.ReviewService;
 import com.hs.review.util.RestUtil;
 
@@ -28,6 +27,8 @@ import com.hs.review.util.RestUtil;
 public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private FileService fileService;
 	
 	@PostMapping("/review/{id}")
 	public ResponseEntity<Map<String, Object>> getReview(@PathVariable ObjectId id){
@@ -56,24 +57,25 @@ public class ReviewController {
 	
 	@PostMapping("/review/files")
 	public ResponseEntity<Map<String,Object>> saveReviewFiles
-								(@RequestParam("files") MultipartFile[] files) throws IllegalStateException, IOException{
-		return RestUtil.handleSuccess(reviewService.insertFiles(files));
+						(@RequestParam("files") MultipartFile[] files) 
+								throws IllegalStateException, IOException{
+		return RestUtil.handleSuccess(fileService.insertFiles(files));
 	}
 	
 	@PostMapping("/review")
-	public ResponseEntity<Map<String,Object>> saveReview(@RequestBody Review review){
+	public ResponseEntity<Map<String,Object>> save(@RequestBody Review review){
 		reviewService.saveReview(review);
 		return RestUtil.handleSuccess("success");
 	}
 	
 	@DeleteMapping("/review/{id}")
-	public ResponseEntity<Map<String,Object>> removeReview(@PathVariable String id){
+	public ResponseEntity<Map<String,Object>> remove(@PathVariable String id){
 		reviewService.removeReview(id);
 		return RestUtil.handleSuccess("success");
 	}
 	
 	@PutMapping("/review")
-	public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
+	public ResponseEntity<Map<String,Object>> update(@RequestBody Review review){
 		reviewService.updateReview(review);
 		return RestUtil.handleSuccess("success");
 	}

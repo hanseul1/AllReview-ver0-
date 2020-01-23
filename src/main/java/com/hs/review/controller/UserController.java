@@ -1,5 +1,6 @@
 package com.hs.review.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.User;
+import com.hs.review.service.FileService;
 import com.hs.review.service.UserService;
 import com.hs.review.util.RestUtil;
 
@@ -23,6 +27,8 @@ import com.hs.review.util.RestUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private FileService fileService;
 	
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user){
@@ -51,12 +57,6 @@ public class UserController {
 		else return RestUtil.handleSuccess("not success");
 	}
 	
-	@GetMapping("/user/logout")
-	public ResponseEntity<Map<String, Object>> logout(HttpSession session){
-		session.invalidate();
-		return RestUtil.handleSuccess("success");
-	}
-	
 	@PutMapping("/user")
 	public ResponseEntity<Map<String, Object>> update(@RequestBody User user){
 		userService.updateUser(user);
@@ -67,5 +67,12 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> delete(@RequestBody User user){
 		userService.deleteUser(user);
 		return RestUtil.handleSuccess("success");
+	}
+	
+	@PostMapping("/user/image")
+	public ResponseEntity<Map<String,Object>> setImageFile
+						(@RequestParam("image") MultipartFile[] image) 
+								throws IllegalStateException, IOException{
+		return RestUtil.handleSuccess(fileService.insertFiles(image));
 	}
 }

@@ -26,9 +26,6 @@ public interface ReviewService {
 	/** 작성자 아이디로 리뷰 리스트 검색 */
 	List<Review> getReviewsByWriter(String writer);
 	
-	/** 리뷰 이미지 파일 저장 */
-	List<String> insertFiles(MultipartFile[] files) throws IllegalStateException, IOException;
-	
 	/** 리뷰 정보 저장*/
 	void saveReview(Review review);
 	
