@@ -98,12 +98,14 @@
       <template v-else v-for="(review, index) in reviewList">
         <v-card
             :key="index"
-            max-width="300"
+            width="300"
             max-height="500"
             class="mx-4 mb-4"
         >
             <v-list-item>
-            <v-list-item-avatar color="grey"></v-list-item-avatar>
+            <v-list-item-avatar>
+              <v-img :src="profileImage"></v-img>
+            </v-list-item-avatar>
             <v-list-item-content>
                 <v-list-item-title class="headline">{{review.title}}</v-list-item-title>
                 <v-list-item-subtitle>by {{review.writer}}</v-list-item-subtitle>
@@ -113,6 +115,11 @@
             <v-img
             v-if="review.files !== null"
             :src="'http://localhost:8080/static/img/' + review.files[0]"
+            height="194"
+            ></v-img>
+            <v-img
+            v-else
+            :src="noImage"
             height="194"
             ></v-img>
 
@@ -166,7 +173,9 @@ export default {
       review: {},
       keywordList: [],
       keywords: [],
-      expanded: []
+      expanded: [],
+      profileImage: require('../../assets/Olive.png'),
+      noImage: require('../../assets/no-image.png')
     }
   },
   mounted () {
