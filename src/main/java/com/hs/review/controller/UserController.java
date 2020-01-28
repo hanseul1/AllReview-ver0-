@@ -27,9 +27,7 @@ import com.hs.review.util.RestUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private FileService fileService;
-	
+
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user){
 		userService.signup(user);
@@ -67,12 +65,5 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> delete(@RequestBody User user){
 		userService.deleteUser(user);
 		return RestUtil.handleSuccess("success");
-	}
-	
-	@PostMapping("/user/image")
-	public ResponseEntity<Map<String,Object>> setImageFile
-						(@RequestParam("image") MultipartFile[] image) 
-								throws IllegalStateException, IOException{
-		return RestUtil.handleSuccess(fileService.insertFiles(image));
 	}
 }
