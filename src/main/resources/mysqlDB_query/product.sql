@@ -11,6 +11,12 @@ word varchar(30) not null,
 category int references category(no)
 );
 
+-- company table create문
+create table company(
+no int primary key auto_increment not null,
+name varchar(50) not null
+);
+
 -- product table create문
 create table product(
 no int primary key not null,

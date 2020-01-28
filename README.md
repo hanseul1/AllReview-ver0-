@@ -29,6 +29,72 @@
 ```
 
 
+
+#### Database tables
+
+##### MySQL
+
+- User 테이블
+
+  | Column | Type         | Definition             | Remark      |
+  | ------ | ------------ | ---------------------- | ----------- |
+  | id     | varchar(100) | 사용자 로그인 아이디   | primary key |
+  | pw     | varchar(100) | 사용자 로그인 비밀번호 |             |
+  | phone  | varchar(20)  | 사용자 전화번호        |             |
+  | name   | varchar(10)  | 사용자 닉네임          |             |
+
+- Category 테이블
+
+  | Column | Type        | Definition           | Remark      |
+  | ------ | ----------- | -------------------- | ----------- |
+  | no     | int         | 카테고리 구분 아이디 | primary key |
+  | name   | varchar(50) | 카테고리 이름        |             |
+
+- Keyword 테이블
+
+  | Column   | Type        | Definition           | Remark                      |
+  | -------- | ----------- | -------------------- | --------------------------- |
+  | no       | int         | 키워드 구분 아이디   | primary key, auto_increment |
+  | word     | varchar(30) | 키워드               |                             |
+  | category | int         | 카테고리 구분 아이디 | foreign key(category.no)    |
+
+- Company 테이블
+
+  | Column | Type        | Definition         | Remark                      |
+  | ------ | ----------- | ------------------ | --------------------------- |
+  | no     | int         | 제조사 구분 아이디 | primary key, auto_increment |
+  | name   | varchar(50) | 제조사 이름        |                             |
+
+- Product 테이블
+
+  | Column   | Type        | Definition           | Remark                   |
+  | -------- | ----------- | -------------------- | ------------------------ |
+  | no       | int         | 제품 구분 아이디     | primary key              |
+  | name     | varchar(50) | 제품 이름            |                          |
+  | category | int         | 카테고리 구분 아이디 | foreign key(category.no) |
+  | com      | int         | 제조사 구분 아이디   | foreign key(company.no)  |
+
+
+
+##### MongoDB
+
+- Reveiw Document
+
+  | Column   | Type             | Definition                   | Remark        |
+  | -------- | ---------------- | ---------------------------- | ------------- |
+  | _id      | String(ObjectId) | document 고유 키 값          |               |
+  | title    | String           | 리뷰 제목                    |               |
+  | writer   | String           | 리뷰 작성자 아이디           | user.id       |
+  | model    | String           | 리뷰 제품 이름               | product.name  |
+  | category | String           | 리뷰 작성 제품 카테고리 이름 | category.name |
+  | regDate  | Date             | 리뷰 작성 날짜               |               |
+  | useDate  | Date             | 리뷰 제품 사용 날짜          |               |
+  | rating   | double           | 리뷰 별점                    | 0.5 단위      |
+  | context  | String           | 리뷰 내용                    | text index    |
+  | files    | String[]         | 리뷰 사진 파일 이름          | sFileName     |
+
+  
+
 #### Problem & Solving
 
 1. spring starter project 생성 직후 pom.xml Line1 unknown error
