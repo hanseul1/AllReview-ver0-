@@ -918,3 +918,164 @@ npm install --save axios vue-session
     (and 조건으로 지정하기 위해 andOperator(...) 사용)
   
   - 참고 : https://spring.io/blog/2014/07/17/text-search-your-documents-with-spring-data-mongodb
+
+
+
+#### JWT(JSON Web Token)
+
+- JSON 객체를 사용하여 self-contained 방식으로 두 개체간 정보를 전달해주는 웹 표준
+- self-contained : 필요한 모든 정보를 자체적으로 지니고 있음
+  - header
+  - payload
+  - signature
+
+- jwt는 자체적으로 인증된 서명을 가지고 있기 때문에 안정되게 정보를 교류할 수 있다.
+
+  => 회원 인증 토큰으로 자주 활용된다.
+
+- 구조
+
+  ![jwt](https://velopert.com/wp-content/uploads/2016/12/jwt.png)
+
+  - header
+
+    - typ: 토큰의 타입
+    - alg : 해싱 알고리즘 (주로 HMAC SHA256 또는 RSA)
+
+    ```
+    {
+      "typ": "JWT",
+      "alg": "HS256"
+    }
+    ```
+
+  - payload : 토큰에 담을 정보
+
+    - claim 단위로 이루어져 있음
+    - 각 claim은 (name, value) 쌍으로 이루어져 있음
+    - 토큰 제목, 발급 대상자, 만료시간 등의 정보를 넣을 수 있다.
+
+    ```
+    {
+        "iss": "Allreview.com",
+        "exp": "1485270000000",
+        "https:allreview.com/jwt_claims/is_admin": true,
+        "userId": "11028373727102",
+        "username": "velopert"
+    }
+    ```
+
+  - signature : header의 인코딩 값, payload의 인코딩 값을 합쳐 비밀키로 해시하여 생성
+
+    ```
+    HMACSHA256(
+      base64UrlEncode(header) + "." +
+      base64UrlEncode(payload),
+      secret)
+    ```
+
+- 참고 : https://velopert.com/2389
+
+- maven 라이브러리 추가 - pom.xml
+
+  ```xml
+  <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>0.7.0</version>
+  </dependency>
+  <!-- token 생성과 검증을 위한 라이브러리 -->
+  <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.8.1</version>
+  </dependency>
+  ```
+
+- JwtUtil 클래스 생성
+
+  ```java
+  @Component
+  public class JwtUtilImpl implements JwtUtil {
+  	private final String SIGN_KEY = "SIGN_KEY";
+  	private Date expiredTime = new Date(System.currentTimeMillis() + 1000 * 10);
+  	private String issuer = "issuer";
+  	
+  	/** 사용자 토큰 발급 */
+  	public String CreateToken() {
+  		return JWT.create()
+  				  .withIssuer(issuer)
+  				  .withExpiresAt(expiredTime)
+  				  .sign(Algorithm.HMAC256(SIGN_KEY));
+  	}
+  	
+  	/** 사용자 요청 토큰 검증 */
+  	public void verifyToken(String requestToken) {
+          // hash function은 SHA-256 사용
+  		JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SIGN_KEY))
+  				                  .withIssuer(issuer)
+  				                  .build();
+  		// 검증 실패하면 Exception 발생
+  		verifier.verify(requestToken);
+  	}
+  }
+  ```
+
+- JwtAuthInterceptor 생성
+
+  - 사용자가 server에 요청할 때 만약 로그인이 필요한 요청이라면 토큰 검증이 필요하다.
+
+    => 검증이 필요한 모든 controller의 handler에서 각각 검증을 수행하려면 비효율적임
+
+    => interceptor 객체를 생성해 handler로 요청되기 직전에 interceptor에서 검증하도록 한다.
+
+  ```java
+  public class JwtAuthInterceptor implements HandlerInterceptor {
+  	@Autowired
+  	private JwtUtil jwtUtil;
+  	@Autowired
+  	private UserDao userDao;
+  	
+  	private String HEADER_TOKEN_KEY = "token";
+  	
+  	@Override
+  	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+  			throws Exception {
+  		String requestToken = request.getHeader(HEADER_TOKEN_KEY);
+  		
+  		// 토큰 검증 실패하면 Exception 발생 시킴
+  		jwtUtil.verifyToken(requestToken);
+  		return true;
+  	}
+  }
+  ```
+
+- WebConfig 클래스 생성
+
+  - JwtAuthInterceptor를 interceptor로 등록하기 위해 WebMVC 설정을 위한 클래스를 생성한다.
+
+    => @Configuration annotation 추가
+
+  - WebMvcConfigurer 인터페이스를 구현하여 addInterceptors 메소드를 오버라이드한다.
+
+  ```java
+  @Configuration
+  public class WebConfig implements WebMvcConfigurer {
+  	// interceptor를 거치지 않을 요청 uri 리스트
+      private String[] whiteList = {
+  			"/user/login/**",
+  			"/user/join/**"
+  	};
+  	
+  	@Override
+  	public void addInterceptors(InterceptorRegistry registry) {
+  		registry.addInterceptor(new JwtAuthInterceptor())
+  				.addPathPatterns("/*")
+  				.excludePathPatterns(whiteList);
+  	}
+  }
+  ```
+
+- 참고 : https://alwayspr.tistory.com/8
+
+  ​           https://galid1.tistory.com/638
