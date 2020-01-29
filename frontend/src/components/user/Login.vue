@@ -55,9 +55,10 @@ export default {
       axios
         .post('http://127.0.0.1:8080/user/login', loginData)
         .then(response => {
-          if (response.data.data === 'success') {
-            this.$session.set('id', this.id)
-            window.location.reload()
+          if (response.data.state === 'ok') {
+            this.$store.state.userToken = response.data.data
+            this.$store.state.userId = this.id
+            this.$router.push('/')
           } else {
             alert('login fail')
           }

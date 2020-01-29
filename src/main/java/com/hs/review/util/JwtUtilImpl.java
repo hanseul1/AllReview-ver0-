@@ -10,9 +10,9 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 
 @Component
 public class JwtUtilImpl implements JwtUtil {
-	private final String SIGN_KEY = "GREAT_SIGN_KEY";
-	private Date expiredTime = new Date(System.currentTimeMillis() + 1000 * 10);
-	private String issuer = "Great";
+	private final String SIGN_KEY = "Allreview_sign_key";
+	private Date expiredTime = new Date(System.currentTimeMillis() + 1000000000 * 10);
+	private String issuer = "Allreview";
 	
 	/** 사용자 토큰 발급 */
 	public String CreateToken() {

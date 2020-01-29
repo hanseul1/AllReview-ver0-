@@ -15,9 +15,9 @@
         prepend-inner-icon="search"
       />
       <v-spacer />
-      <v-btn v-if="user_id == null" text color="black" @click="login">Login</v-btn>
+      <v-btn v-if="userToken == ''" text color="black" @click="login">Login</v-btn>
       <v-btn v-else text color="black" @click='logout'>Logout</v-btn>
-      <v-btn v-if="user_id == null" text color="black" @click='signup'>Sign up</v-btn>
+      <v-btn v-if="userToken == ''" text color="black" @click='signup'>Sign up</v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -103,10 +103,10 @@ export default {
       { icon: 'chat_bubble', text: 'Trash' },
       { icon: 'help', text: 'Help' }
     ],
-    user_id: ''
+    userToken: ''
   }),
   mounted () {
-    this.user_id = this.$session.get('id')
+    this.userToken = this.$store.state.userToken
     router.push('/')
   },
   methods: {
@@ -114,7 +114,8 @@ export default {
       router.push('/user/login')
     },
     logout () {
-      this.$session.destroy()
+      this.$store.state.userId = ''
+      this.$store.state.userToken = ''
       window.location.reload()
     },
     signup () {

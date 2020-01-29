@@ -129,8 +129,10 @@ export default {
         axios
           .post('http://localhost:8080/user/signup', formData)
           .then(response => {
-            if (response.data.data === 'success') {
+            if (response.data.state === 'ok') {
               alert('회원 가입 완료')
+              this.$store.state.userToken = response.data.data
+              this.$store.state.userId = this.id
               this.$router.push('/login')
             } else {
               alert('회원 가입 실패ㅜ.ㅜ 다시 시도해 주세요')

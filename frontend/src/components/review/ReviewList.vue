@@ -243,7 +243,7 @@ export default {
       // 카테고리에 해당하는 리뷰 불러오기
       var url = ''
       if (this.category !== 'all') url = '/category/' + this.category
-      if (this.category === 'my') url = '/writer/' + this.$session.get('id')
+      if (this.category === 'my') url = '/writer/' + this.$store.state.userId
 
       axios
         .get('http://localhost:8080/review' + url)

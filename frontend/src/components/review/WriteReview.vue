@@ -125,19 +125,33 @@ export default {
     }
   },
   mounted () {
-    // 로그인 하지 않았으면 이용 불가
-    if (this.$session.get('id') == null) {
-      alert('로그인이 필요한 서비스입니다.')
-      this.$router.push('/user/login')
-    }
-
-    // 카테고리 리스트 검색
+    // Authorization token validating
+    var token = this.$store.state.userToken
     axios
-      .get('http://localhost:8080/category')
+      .get('http://localhost:8080/user/' + this.$store.state.userId, {
+        headers: {
+          'Authorization': token
+        }
+      })
       .then(response => {
-        this.categoryList = response.data.data
-        console.log(this.categoryList)
-        console.log(this.items)
+        // 카테고리 리스트 검색
+        axios
+          .get('http://localhost:8080/category', {
+            headers: {
+              'Authorization': token
+            }
+          })
+          .then(response => {
+            this.categoryList = response.data.data
+            console.log(this.categoryList)
+            console.log(this.items)
+          })
+      })
+      .catch(() => {
+        alert('로그인이 필요한 서비스입니다.')
+        this.$store.state.userToken = ''
+        this.$store.state.userId = ''
+        this.$router.push('/user/login')
       })
   },
   methods: {
@@ -166,7 +180,7 @@ export default {
     saveReview (fileNames) {
       var reviewData = {
         'title': this.title,
-        'writer': this.$session.get('id'),
+        'writer': this.$store.state.userId,
         'model': this.model,
         'category': this.category,
         'regDate': new Date(),

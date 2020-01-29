@@ -68,22 +68,28 @@ export default {
       user_id: '',
       name: '',
       password: '',
-      phone: ''
+      phone: '',
+      token: ''
     }
   },
   mounted () {
-    this.user_id = this.$session.get('id')
-    if (this.user_id == null) {
-      alert('로그인이 필요한 서비스입니다.')
-      this.$router.push('/user/login')
-    }
-
+    // Authorization token validating
+    this.token = this.$store.state.userToken
     axios
-      .get('http://localhost:8080/user/' + this.user_id)
+      .get('http://localhost:8080/user/' + this.$store.state.userId, {
+        headers: {
+          'Authorization': this.token
+        }
+      })
       .then(response => {
         this.name = response.data.data.name
         this.phone = response.data.data.phone
-        console.log(this.name)
+      })
+      .catch(() => {
+        alert('로그인이 필요한 서비스입니다.')
+        this.$store.state.userToken = ''
+        this.$store.state.userId = ''
+        this.$router.push('/user/login')
       })
   },
   methods: {
@@ -94,6 +100,7 @@ export default {
         'name': this.name,
         'phone': this.phone
       }
+      console.log(this.token)
       axios
         .put('http://localhost:8080/user', requestData)
         .then(response => {

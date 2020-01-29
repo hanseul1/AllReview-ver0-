@@ -131,8 +131,6 @@ export default {
       .get('http://localhost:8080/category')
       .then(response => {
         this.categoryList = response.data.data
-        console.log(this.categoryList)
-        console.log(this.items)
       })
 
     // 수정할 리뷰 데이터

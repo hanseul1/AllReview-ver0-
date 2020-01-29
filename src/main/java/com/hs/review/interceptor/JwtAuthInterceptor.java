@@ -1,5 +1,7 @@
 package com.hs.review.interceptor;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +24,10 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 			throws Exception {
 		String requestToken = request.getHeader(HEADER_TOKEN_KEY);
 		
+		Enumeration<String> str = request.getHeaderNames();
+		while(str.hasMoreElements()) {
+			System.out.println(str.nextElement());
+		}
 		// 토큰 검증 실패하면 Exception 발생 시킴
 		jwtUtil.verifyToken(requestToken);
 		return true;

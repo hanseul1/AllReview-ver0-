@@ -1,6 +1,7 @@
 package com.hs.review.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hs.review.dto.User;
 import com.hs.review.service.FileService;
 import com.hs.review.service.UserService;
+import com.hs.review.util.JwtUtil;
 import com.hs.review.util.RestUtil;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -27,11 +29,16 @@ import com.hs.review.util.RestUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user){
 		userService.signup(user);
-		return RestUtil.handleSuccess("success");
+		
+		// 가입완료 하면 jwt 토큰 생성 후 브라우저에 전달
+		String token = jwtUtil.CreateToken();
+		return RestUtil.handleSuccess(token);
 	}
 	
 	@GetMapping("/user/{id}")
@@ -47,10 +54,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody User user, HttpSession session){
+	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
 		if(userService.login(user) == true) {
-			session.setAttribute("id", user.getId());
-			return RestUtil.handleSuccess("success");
+			String token = jwtUtil.CreateToken();
+			return RestUtil.handleSuccess(token);
 		}
 		else return RestUtil.handleSuccess("not success");
 	}
