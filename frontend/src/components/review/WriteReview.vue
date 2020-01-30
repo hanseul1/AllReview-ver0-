@@ -143,8 +143,6 @@ export default {
           })
           .then(response => {
             this.categoryList = response.data.data
-            console.log(this.categoryList)
-            console.log(this.items)
           })
       })
       .catch(() => {
@@ -157,6 +155,7 @@ export default {
   methods: {
     writeReview () {
       if (this.files.length > 0) {
+        // image file 있으면 file api 호출해서 먼저 저장
         var fileData = new FormData()
         for (var i = 0; i < this.files.length; i++) {
           fileData.append('files', this.files[i])
@@ -165,7 +164,8 @@ export default {
         axios
           .post('http://localhost:8080/review/files', fileData, {
             headers: {
-              'enctype': 'multipart/form-data'
+              'enctype': 'multipart/form-data',
+              'Authorization': this.$store.state.userToken
             }
           })
           .then(response => {
@@ -175,6 +175,9 @@ export default {
               alert('파일 업로드에 실패했습니다.')
             }
           })
+      } else {
+        // image file 없으면 리뷰 내용만 저장
+        this.saveReview([])
       }
     },
     saveReview (fileNames) {
@@ -191,7 +194,11 @@ export default {
       }
 
       axios
-        .post('http://localhost:8080/review', reviewData)
+        .post('http://localhost:8080/review', reviewData, {
+          headers: {
+            'Authorization': this.$store.state.userToken
+          }
+        })
         .then(response => {
           if (response.data.data === 'success') {
             alert('리뷰가 등록되었습니다.')

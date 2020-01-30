@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.hs.review.dao.UserDao;
 import com.hs.review.util.JwtUtil;
-import com.hs.review.util.JwtUtilImpl;
+import com.hs.review.util.JwtUtil;
 
 public class JwtAuthInterceptor implements HandlerInterceptor {
 //	@Autowired
@@ -22,18 +22,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		if(request.getMethod().equals("OPTIONS")) return true;
 		
 		String requestToken = request.getHeader(HEADER_TOKEN_KEY);
-		if(request.getMethod().equals("OPTIONS")) {
-			return true;
-		}
-		else {
-			System.out.println("====================");
-			System.out.println(requestToken);
-		}
-		
 		// 토큰 검증 실패하면 Exception 발생 시킴
-		JwtUtilImpl.verifyToken(requestToken);
+		JwtUtil.verifyToken(requestToken);
 		
 		return true;
 	}

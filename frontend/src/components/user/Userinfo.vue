@@ -101,7 +101,6 @@ export default {
         'name': this.name,
         'phone': this.phone
       }
-      console.log(this.token)
       axios
         .put('http://localhost:8080/user', requestData)
         .then(response => {
