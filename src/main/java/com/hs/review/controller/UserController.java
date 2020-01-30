@@ -22,6 +22,7 @@ import com.hs.review.dto.User;
 import com.hs.review.service.FileService;
 import com.hs.review.service.UserService;
 import com.hs.review.util.JwtUtil;
+import com.hs.review.util.JwtUtilImpl;
 import com.hs.review.util.RestUtil;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -29,15 +30,15 @@ import com.hs.review.util.RestUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private JwtUtil jwtUtil;
+//	@Autowired
+//	private JwtUtil jwtUtil;
 	
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user){
 		userService.signup(user);
 		
 		// 가입완료 하면 jwt 토큰 생성 후 브라우저에 전달
-		String token = jwtUtil.CreateToken();
+		String token = JwtUtilImpl.CreateToken();
 		return RestUtil.handleSuccess(token);
 	}
 	
@@ -56,7 +57,7 @@ public class UserController {
 	@PostMapping("/user/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
 		if(userService.login(user) == true) {
-			String token = jwtUtil.CreateToken();
+			String token = JwtUtilImpl.CreateToken();
 			return RestUtil.handleSuccess(token);
 		}
 		else return RestUtil.handleSuccess("not success");

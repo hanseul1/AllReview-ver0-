@@ -1,12 +1,14 @@
 package com.hs.review.config;
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.hs.review.interceptor.JwtAuthInterceptor;
 
-//@Configuration
+
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
 	private String[] whiteList = {
 			"/user/signup/**",
