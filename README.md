@@ -472,6 +472,113 @@
      
        
 
+7. Vue API request 데이터에 header 추가 시 CORS 에러
+
+   - 상황
+
+     - JWT를 활용한 user authorization을 위해 인증 토큰을 API 호출 시 요청 데이터의 header에 넣어 보낸다.
+
+       ```js
+       axios
+         .get('http://localhost:8080/user', {
+           headers: {
+             'Authorization': token
+           }
+         })
+       ```
+
+     - spring boot 서버단에서 @CrossOrigin annotation을 이용해 cors 설정을 해준 상태
+
+       => 기존의 header가 없는 요청이나 header에 content-type만 넣은 요청은 cors 에러가 발생하지 않음
+
+   - 원인
+
+     - preflighted 요청에 대한 cors 에러가 발생한 것
+
+     - preflighted 요청
+
+       - 일반적인 요청인 경우, server에 바로 접근하여 servlet container에 의해 해당 controller로 mapping되어 처리된다.
+
+         => 일반적인 요청
+
+         - request header에 다음 이름의 속성만 추가되는 경우
+
+           `Accept` `Accept-Language` `Content-Language` `Content-Type`
+
+         - `Content-Type`의 경우 다음 value만 허용
+
+           `application/x-www-form-urlencoded` `multipart/form-data`  `text/plain`
+
+       - 일반적인 request가 아닌경우 server에 먼저 preflighted 요청을 보낸다.
+
+         1. server에 OPTIONS method 방식으로 요청을 보냄
+
+         2. OPTIONS 요청을 받은 server에서는 서버가 허용할 option을 response header에 담아 응답함
+         3. client는 server가 보낸 response header에 포함된 server 허용 정보를 이용하여 허용되지 않은 request인 경우 에러를 발생시키고, 실제 API 요청은 server로 전송하지 않음
+         4. 허용된 request이면 server로 실제 API 요청을 보냄
+
+     - preflighted 요청의 요청 방식인 OPTIONS method에 대해 '*Access-Control-Allow-Origin*' 이 허용되지 않아 CORS 에러가 발생한 것이다.
+
+       ![cors_error_list_01](http://www.popit.kr/wp-content/uploads/2017/12/cors_error_list_01-600x52.png)
+
+   - 해결 방법
+
+     - CorsFilter 클래스를 생성하여 server로 들어오는 모든 request에 대해서 response header에 '*Access-Control-Allow-Origin*'을 허용해주었다.
+
+       ```java
+       @Component
+       public class CorsFilter implements Filter {
+       	 public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+       	        HttpServletResponse response = (HttpServletResponse) servletResponse;
+       	        HttpServletRequest request= (HttpServletRequest) servletRequest;
+       
+       	        response.setHeader("Access-Control-Allow-Origin", "*");
+       	        response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+       	        response.setHeader("Access-Control-Allow-Headers", "*");
+       	        response.setHeader("Access-Control-Allow-Credentials", "true");
+       	        response.setIntHeader("Access-Control-Max-Age", 3600);
+       	        filterChain.doFilter(servletRequest, servletResponse);
+       	    }
+       
+       
+       	    public void init(FilterConfig filterConfig) {}
+       
+       	    public void destroy() {}
+       }
+       ```
+
+     - Cross Origin을 허용해주는 filter는 JWT 인증 토큰을 검사하는 filter보다 먼저 수행되어야 한다.(순서에 주의)
+       - Spring boot에서는 Filter가 interceptor보다 먼저 수행되므로 순서를 지정해 줄 필요는 없다.
+
+   - 또 다른 에러 발생
+
+     - 위의 cors에러는 해결되었지만 HttpStatus OK response를 받지 못했다는 에러가 발생함
+
+     - server에서 preflighted의 OPTIONS 메소드 요청에 대해서 Cross Origin을 허용해 주었지만, 200 OK라는 response를 돌려주지 않아 발생한 에러이다.
+
+       (Filter 통과 후 interceptor로 요청이 넘어가는데, interceptor에서 요구하는 'Authorization' 헤더를 preflighted 요청은 가지고 있지 않아 Exception이 발생함)
+
+     - client가 OPTIONS 요청을 보내는 경우, 이 요청에 대한 결과로 서버에서 정상 상태(2xx)가 아닌 경우 error로 간주하여 catch() 상황으로 넘기기 때문이다.
+
+     - interceptor에서 OPTIONS 요청은 바로 200 OK response를 client에게 전송하도록 수정하였다.
+
+       ```java
+       
+       public boolean preHandle(HttpServletRequest request, HttpServletResponse 	response, Object handler) throws Exception {
+           // request의 method가 OPTIONS이면 바로 다음 controller로 전달
+           if(request.getMethod().equals("OPTIONS")) return true;
+       
+           String requestToken = request.getHeader(HEADER_TOKEN_KEY);
+           JwtUtil.verifyToken(requestToken);
+       
+           return true;
+       }
+       ```
+
+   - 참고 : [https://www.popit.kr/cors-preflight-%EC%9D%B8%EC%A6%9D-%EC%B2%98%EB%A6%AC-%EA%B4%80%EB%A0%A8-%EC%82%BD%EC%A7%88/](https://www.popit.kr/cors-preflight-인증-처리-관련-삽질/)
+
+     
+
 #### Vue.js 연동
 
 - **GUI Framework에서 중요하게 봐야 할 4가지 요소
@@ -961,7 +1068,7 @@ npm install --save axios vue-session
         "exp": "1485270000000",
         "https:allreview.com/jwt_claims/is_admin": true,
         "userId": "11028373727102",
-        "username": "velopert"
+        "username": "hs"
     }
     ```
 
@@ -995,14 +1102,13 @@ npm install --save axios vue-session
 - JwtUtil 클래스 생성
 
   ```java
-  @Component
-  public class JwtUtilImpl implements JwtUtil {
-  	private final String SIGN_KEY = "SIGN_KEY";
-  	private Date expiredTime = new Date(System.currentTimeMillis() + 1000 * 10);
-  	private String issuer = "issuer";
+  public class JwtUtil  {
+  	private final static String SIGN_KEY = "SIGN_KEY";
+  	private static Date expiredTime = new Date(System.currentTimeMillis() + 1000 * 10);
+  	private static String issuer = "issuer";
   	
   	/** 사용자 토큰 발급 */
-  	public String CreateToken() {
+  	public static String CreateToken() {
   		return JWT.create()
   				  .withIssuer(issuer)
   				  .withExpiresAt(expiredTime)
@@ -1010,7 +1116,7 @@ npm install --save axios vue-session
   	}
   	
   	/** 사용자 요청 토큰 검증 */
-  	public void verifyToken(String requestToken) {
+  	public static void verifyToken(String requestToken) {
           // hash function은 SHA-256 사용
   		JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SIGN_KEY))
   				                  .withIssuer(issuer)
@@ -1020,7 +1126,7 @@ npm install --save axios vue-session
   	}
   }
   ```
-
+  
 - JwtAuthInterceptor 생성
 
   - 사용자가 server에 요청할 때 만약 로그인이 필요한 요청이라면 토큰 검증이 필요하다.
@@ -1031,30 +1137,29 @@ npm install --save axios vue-session
 
   ```java
   public class JwtAuthInterceptor implements HandlerInterceptor {
-  	@Autowired
-  	private JwtUtil jwtUtil;
-  	@Autowired
-  	private UserDao userDao;
-  	
   	private String HEADER_TOKEN_KEY = "token";
   	
   	@Override
   	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
   			throws Exception {
-  		String requestToken = request.getHeader(HEADER_TOKEN_KEY);
+  		if(request.getMethod().equals("OPTIONS")) return true;
   		
+  		String requestToken = request.getHeader(HEADER_TOKEN_KEY);
   		// 토큰 검증 실패하면 Exception 발생 시킴
-  		jwtUtil.verifyToken(requestToken);
+  		JwtUtil.verifyToken(requestToken);
+  		
   		return true;
   	}
   }
   ```
-
+  
 - WebConfig 클래스 생성
 
   - JwtAuthInterceptor를 interceptor로 등록하기 위해 WebMVC 설정을 위한 클래스를 생성한다.
 
     => @Configuration annotation 추가
+
+    (일반 Spring project에서 web.xml 역할)
 
   - WebMvcConfigurer 인터페이스를 구현하여 addInterceptors 메소드를 오버라이드한다.
 
@@ -1079,3 +1184,46 @@ npm install --save axios vue-session
 - 참고 : https://alwayspr.tistory.com/8
 
   ​           https://galid1.tistory.com/638
+
+- Vue component에서 API 호출
+
+  - 인증 토큰 발급(create)
+
+    - /user/login, /user/signup API 호출 후 response 데이터에서 인증토큰을 받아 저장한다.
+
+      ```js
+      axios
+          .post('http://127.0.0.1:8080/user/login', loginData)
+          .then(response => {
+            if (response.data.data !== 'not success') {
+              this.$store.state.userToken = response.data.data
+              this.$store.state.userId = this.id
+              this.$router.push('/')
+            } else {
+              alert('login fail')
+            }
+          })
+      ```
+
+  - 인증 토큰 검사(verify)
+    - API 호출시 request data의 header에 인증토큰을 넣어 전송한다.
+
+      ```js
+      axios
+        .get('http://localhost:8080/user/' + this.$store.state.userId, {
+          headers: {
+            'Authorization': token
+          }
+        })
+        .then(response => {
+          // token verifying이 성공했을 때 수행
+        })
+        .catch(() => {
+          // spring server단에서 token verifying이 실패하면 exception 던짐
+          // => vue client단에서 catch 함수로 받아 처리함
+        })
+      ```
+
+      
+
+    

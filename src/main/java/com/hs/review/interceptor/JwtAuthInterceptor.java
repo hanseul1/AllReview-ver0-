@@ -14,9 +14,6 @@ import com.hs.review.util.JwtUtil;
 import com.hs.review.util.JwtUtil;
 
 public class JwtAuthInterceptor implements HandlerInterceptor {
-//	@Autowired
-//	private JwtUtil jwtUtil;
-	
 	private String HEADER_TOKEN_KEY = "authorization";
 	
 	@Override
