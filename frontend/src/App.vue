@@ -15,9 +15,9 @@
         prepend-inner-icon="search"
       />
       <v-spacer />
-      <v-btn v-if="userToken == ''" text color="black" @click="login">Login</v-btn>
+      <v-btn v-if="userToken == undefined" text color="black" @click="login">Login</v-btn>
       <v-btn v-else text color="black" @click='logout'>Logout</v-btn>
-      <v-btn v-if="userToken == ''" text color="black" @click='signup'>Sign up</v-btn>
+      <v-btn v-if="userToken == undefined" text color="black" @click='signup'>Sign up</v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -106,7 +106,7 @@ export default {
     userToken: ''
   }),
   mounted () {
-    this.userToken = this.$store.state.userToken
+    this.userToken = this.$session.get('userToken')
     router.push('/')
   },
   methods: {
@@ -114,8 +114,7 @@ export default {
       router.push('/user/login')
     },
     logout () {
-      this.$store.state.userId = ''
-      this.$store.state.userToken = ''
+      this.$session.destroy()
       window.location.reload()
     },
     signup () {

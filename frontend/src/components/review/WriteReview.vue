@@ -126,9 +126,9 @@ export default {
   },
   mounted () {
     // Authorization token validating
-    var token = this.$store.state.userToken
+    var token = this.$session.get('userToken')
     axios
-      .get('http://localhost:8080/user/' + this.$store.state.userId, {
+      .get('http://localhost:8080/user/' + this.$session.get('userId'), {
         headers: {
           'Authorization': token
         }
@@ -147,8 +147,6 @@ export default {
       })
       .catch(() => {
         alert('로그인이 필요한 서비스입니다.')
-        this.$store.state.userToken = ''
-        this.$store.state.userId = ''
         this.$router.push('/user/login')
       })
   },
@@ -165,7 +163,7 @@ export default {
           .post('http://localhost:8080/review/files', fileData, {
             headers: {
               'enctype': 'multipart/form-data',
-              'Authorization': this.$store.state.userToken
+              'Authorization': this.$session.get('userToken')
             }
           })
           .then(response => {
@@ -183,7 +181,7 @@ export default {
     saveReview (fileNames) {
       var reviewData = {
         'title': this.title,
-        'writer': this.$store.state.userId,
+        'writer': this.$session.get('userId'),
         'model': this.model,
         'category': this.category,
         'regDate': new Date(),
@@ -196,7 +194,7 @@ export default {
       axios
         .post('http://localhost:8080/review', reviewData, {
           headers: {
-            'Authorization': this.$store.state.userToken
+            'Authorization': this.$session.get('userToken')
           }
         })
         .then(response => {

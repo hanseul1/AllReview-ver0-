@@ -74,8 +74,8 @@ export default {
   },
   mounted () {
     // Authorization token validating
-    this.token = this.$store.state.userToken
-    this.user_id = this.$store.state.userId
+    this.token = this.$session.get('userToken')
+    this.user_id = this.$session.get('userId')
     axios
       .get('http://localhost:8080/user/' + this.user_id, {
         headers: {

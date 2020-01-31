@@ -56,9 +56,9 @@ export default {
         .post('http://127.0.0.1:8080/user/login', loginData)
         .then(response => {
           if (response.data.state === 'ok') {
-            this.$store.state.userToken = response.data.data
-            this.$store.state.userId = this.id
-            this.$router.push('/')
+            this.$session.set('userToken', response.data.data)
+            this.$session.set('userId', this.id)
+            window.location.reload()
           } else {
             alert('login fail')
           }
