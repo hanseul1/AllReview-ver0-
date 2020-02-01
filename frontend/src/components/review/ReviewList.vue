@@ -75,7 +75,7 @@
 
         <template v-slot:item.action="{ item }">
           <v-icon
-            v-if="item.writer == $session.get('id')"
+            v-if="item.writer == $session.get('userId')"
             small
             class="mr-2"
             @click="editReview(item)"
@@ -83,7 +83,7 @@
             edit
           </v-icon>
           <v-icon
-            v-if="item.writer == $session.get('id')"
+            v-if="item.writer == $session.get('userId')"
             small
             @click="deleteReview(item)"
           >
@@ -149,6 +149,7 @@
 
 <script>
 import axios from 'axios'
+import userApi from '../../api/user'
 export default {
   name: 'ReviewList',
   props: ['category'],
@@ -179,6 +180,9 @@ export default {
     }
   },
   mounted () {
+    if (this.category === 'my') {
+      this.validating()
+    }
     // 카테고리에 해당하는 리뷰 불러오기
     this.getReviewList()
 
@@ -187,9 +191,8 @@ export default {
   },
   watch: {
     category: function (v) {
-      if (v === 'my' && this.$session.get('id') == null) {
-        alert('로그인이 필요한 서비스입니다.')
-        this.$router.push('/user/login')
+      if (v === 'my') {
+        this.validating()
       }
       this.reviewList = []
       this.getReviewList()
@@ -223,11 +226,23 @@ export default {
     }
   },
   methods: {
+    validating () {
+      // Authorization token validating
+      var token = this.$session.get('userToken')
+      var userId = this.$session.get('userId')
+      var component = this
+      userApi.validateUser(token, userId,
+        function success (response) {},
+        function error () {
+          alert('로그인이 필요한 서비스입니다.')
+          component.$router.push('/user/login')
+        }
+      )
+    },
     clickHeart (index) {
       console.log(this.reviewList[index].title)
     },
     dialogOpen (value) {
-      console.log(value)
       this.dialog = true
       this.review = value
     },
@@ -242,8 +257,9 @@ export default {
     getReviewList () {
       // 카테고리에 해당하는 리뷰 불러오기
       var url = ''
-      if (this.category !== 'all') url = '/category/' + this.category
-      if (this.category === 'my') url = '/writer/' + this.$store.state.userId
+      if (this.category === 'all') url = '/all'
+      else url = '/category/' + this.category
+      if (this.category === 'my') url = '/writer/' + this.$session.get('userId')
 
       axios
         .get('http://localhost:8080/review' + url)
@@ -257,13 +273,21 @@ export default {
     },
     deleteReview (review) {
       axios
-        .delete('http://localhost:8080/review/' + review._id)
+        .delete('http://localhost:8080/review/' + review._id, {
+          headers: {
+            'Authorization': this.$session.get('userToken')
+          }
+        })
         .then(response => {
           if (response.data.data === 'success') {
             alert('삭제되었습니다.')
             // 리뷰 리스트 다시 검색
             this.getReviewList()
           }
+        })
+        .catch(() => {
+          alert('로그인이 필요한 서비스입니다.')
+          this.$router.push('/user/login')
         })
     }
   }

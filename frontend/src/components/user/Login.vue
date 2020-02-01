@@ -55,7 +55,7 @@ export default {
       axios
         .post('http://127.0.0.1:8080/user/login', loginData)
         .then(response => {
-          if (response.data.state === 'ok') {
+          if (response.data.data !== 'not success') {
             this.$session.set('userToken', response.data.data)
             this.$session.set('userId', this.id)
             window.location.reload()

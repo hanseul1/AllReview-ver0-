@@ -13,13 +13,13 @@ public class WebConfig implements WebMvcConfigurer {
 			"/user/signup/**",
 			"/user/login/**",
 			"/user/idcheck/**",
-			"/"
+			"/review/all"
 	};
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new JwtAuthInterceptor())
-				.addPathPatterns("/*")
+				.addPathPatterns("/user/*", "/review")
 				.excludePathPatterns(whiteList);
 	}
 }

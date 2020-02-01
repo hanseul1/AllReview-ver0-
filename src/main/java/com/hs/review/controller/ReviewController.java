@@ -40,7 +40,7 @@ public class ReviewController {
 		return RestUtil.handleSuccess(reviewService.getReviewsByModel(model));
 	}
 	
-	@GetMapping("/review")
+	@GetMapping("/review/all")
 	public ResponseEntity<Map<String,Object>> getReviews(){
 		return RestUtil.handleSuccess(reviewService.getReviews());
 	}

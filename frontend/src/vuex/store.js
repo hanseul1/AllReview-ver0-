@@ -9,7 +9,8 @@ Vue.use(Vuex)
 const state = {
   color: 'rgb(203, 203, 77)',
   review: {},
-  userImage: ''
+  userImage: '',
+  serverIP: 'http://localhost:8080'
 }
 
 export default new Vuex.Store({
