@@ -131,9 +131,9 @@ export default {
           .then(response => {
             if (response.data.state === 'ok') {
               alert('회원 가입 완료')
-              this.$store.state.userToken = response.data.data
-              this.$store.state.userId = this.id
-              this.$router.push('/login')
+              this.$session.set('userToken', response.data.data)
+              this.$session.set('userId', this.id)
+              window.location.reload()
             } else {
               alert('회원 가입 실패ㅜ.ㅜ 다시 시도해 주세요')
             }

@@ -18,7 +18,7 @@
 	<select id="login" parameterType="user" resultType="user">
 		select *
 		from user
-		where id = #{id} and pw = #{pw}
+		where id = #{id}
 	</select>
 	
 	<update id="update" parameterType="user">

@@ -20,6 +20,7 @@
               <v-text-field
                 prepend-icon="lock"
                 v-model="pw"
+                type="password"
                 placeholder="Password"
                 v-on:keyup.enter="login"
               />
