@@ -31,28 +31,7 @@
         class="grey lighten-4"
       >
         <template v-for="(item, i) in items">
-          <v-row
-            v-if="item.heading"
-            :key="i"
-            align="center"
-          >
-            <v-col cols="6">
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-col>
-            <v-col
-              cols="6"
-              class="text-right"
-            >
-              <v-btn
-                small
-                text
-              >edit</v-btn>
-            </v-col>
-          </v-row>
           <v-list-item
-            v-else
             :key="i"
             link
             :to="item.link"
@@ -91,17 +70,12 @@ export default {
       { icon: 'restaurant', text: '식품', link: '/review/list?category=food' },
       { icon: 'filter_vintage', text: '화장품/미용', link: '/review/list?category=beauty' },
       { icon: 'desktop_mac', text: '디지털/가전', link: '/review/list?category=digital' },
+      { icon: 'home', text: '가구/인테리어', link: '/review/list?category=interior' },
+      { icon: 'sports', text: '스포츠/레저', link: '/review/list?category=sports' },
+      { icon: 'face', text: '출산/육아', link: '/review/list?category=infant' },
       { icon: 'how_to_reg', text: 'My Review', link: '/review/list?category=my' },
       { icon: 'account_circle', text: 'User Info', link: '/user/info' },
-      { heading: 'Labels' },
-      { icon: 'add', text: 'Create new label' },
-      { divider: true },
-      { icon: 'archive', text: 'Archive' },
-      { icon: 'delete', text: 'Trash' },
-      { divider: true },
-      { icon: 'settings', text: 'Settings' },
-      { icon: 'chat_bubble', text: 'Trash' },
-      { icon: 'help', text: 'Help' }
+      { icon: 'settings', text: 'Settings' }
     ],
     userToken: ''
   }),

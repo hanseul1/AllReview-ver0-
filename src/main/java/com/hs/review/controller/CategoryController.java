@@ -27,7 +27,7 @@ public class CategoryController {
 		return RestUtil.handleSuccess(service.searchAll());
 	}
 	
-	@PostMapping("/category/insert")
+	@PostMapping("/category")
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Category category){
 		service.insert(category);
 		return RestUtil.handleSuccess("success");

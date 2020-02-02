@@ -78,7 +78,7 @@
             v-if="item.writer == $session.get('userId')"
             small
             class="mr-2"
-            @click="editReview(item)"
+            @click="updateReview(item)"
           >
             edit
           </v-icon>
@@ -112,11 +112,21 @@
             </v-list-item-content>
             </v-list-item>
 
-            <v-img
+            <v-carousel
+              hide-delimiters
+              style="height:194px"
+              v-if="review.files !== null">
+              <v-carousel-item
+                v-for="(item,i) in review.files"
+                :key="i"
+                :src="'http://localhost:8080/static/img/' + item"
+              ></v-carousel-item>
+            </v-carousel>
+            <!-- <v-img
             v-if="review.files !== null"
             :src="'http://localhost:8080/static/img/' + review.files[0]"
             height="194"
-            ></v-img>
+            ></v-img> -->
             <v-img
             v-else
             :src="noImage"
@@ -267,7 +277,7 @@ export default {
           this.reviewList = response.data.data
         })
     },
-    editReview (review) {
+    updateReview (review) {
       this.$store.state.review = review
       this.$router.push('/review/update')
     },
