@@ -548,20 +548,21 @@
        ```
 
      - Cross Origin을 허용해주는 filter는 JWT 인증 토큰을 검사하는 filter보다 먼저 수행되어야 한다.(순서에 주의)
-       - Spring boot에서는 Filter가 interceptor보다 먼저 수행되므로 순서를 지정해 줄 필요는 없다.
-
-   - 또 다른 에러 발생
-
-     - 위의 cors에러는 해결되었지만 HttpStatus OK response를 받지 못했다는 에러가 발생함
-
-     - server에서 preflighted의 OPTIONS 메소드 요청에 대해서 Cross Origin을 허용해 주었지만, 200 OK라는 response를 돌려주지 않아 발생한 에러이다.
-
-       (Filter 통과 후 interceptor로 요청이 넘어가는데, interceptor에서 요구하는 'Authorization' 헤더를 preflighted 요청은 가지고 있지 않아 Exception이 발생함)
-
-     - client가 OPTIONS 요청을 보내는 경우, 이 요청에 대한 결과로 서버에서 정상 상태(2xx)가 아닌 경우 error로 간주하여 catch() 상황으로 넘기기 때문이다.
-
-     - interceptor에서 OPTIONS 요청은 바로 200 OK response를 client에게 전송하도록 수정하였다.
-
+       
+    - Spring boot에서는 Filter가 interceptor보다 먼저 수행되므로 순서를 지정해 줄 필요는 없다.
+   
+- 또 다른 에러 발생
+   
+  - 위의 cors에러는 해결되었지만 HttpStatus OK response를 받지 못했다는 에러가 발생함
+   
+  - server에서 preflighted의 OPTIONS 메소드 요청에 대해서 Cross Origin을 허용해 주었지만, 200 OK라는 response를 돌려주지 않아 발생한 에러이다.
+   
+    (Filter 통과 후 interceptor로 요청이 넘어가는데, interceptor에서 요구하는 'Authorization' 헤더를 preflighted 요청은 가지고 있지 않아 Exception이 발생함)
+   
+  - client가 OPTIONS 요청을 보내는 경우, 이 요청에 대한 결과로 서버에서 정상 상태(2xx)가 아닌 경우 error로 간주하여 catch() 상황으로 넘기기 때문이다.
+   
+  - interceptor에서 OPTIONS 요청은 바로 200 OK response를 client에게 전송하도록 수정하였다.
+   
        ```java
        
        public boolean preHandle(HttpServletRequest request, HttpServletResponse 	response, Object handler) throws Exception {
@@ -573,10 +574,10 @@
        
            return true;
        }
-       ```
-
-   - 참고 : [https://www.popit.kr/cors-preflight-%EC%9D%B8%EC%A6%9D-%EC%B2%98%EB%A6%AC-%EA%B4%80%EB%A0%A8-%EC%82%BD%EC%A7%88/](https://www.popit.kr/cors-preflight-인증-처리-관련-삽질/)
-
+    ```
+   
+- 참고 : [https://www.popit.kr/cors-preflight-%EC%9D%B8%EC%A6%9D-%EC%B2%98%EB%A6%AC-%EA%B4%80%EB%A0%A8-%EC%82%BD%EC%A7%88/](https://www.popit.kr/cors-preflight-인증-처리-관련-삽질/)
+   
      
 
 #### Vue.js 연동
@@ -1226,4 +1227,14 @@ npm install --save axios vue-session
 
       
 
-    
+#### MongoDB MapReduce
+
+- 다양한 모델들의 대량 리뷰 데이터를 분산처리(리뷰평점 평균 계산 등)를 위해 MongoDB에서 제공하는 MapReduce 기능을 사용한다.
+
+- MongoDB의 MapReduce는 내부적으로 자바스크립트 엔진을 이용한다.
+
+  => Map과 Reduce function을 자바스크립트 문법으로 구현한다.
+
+  - 직접 js 파일을 만들어 map, reduce function을 구현하고 classpath에 위치시켜 불러오는 방법
+  - String 타입으로 map, reduce fundction을 작성하여 실행하는 방법
+
