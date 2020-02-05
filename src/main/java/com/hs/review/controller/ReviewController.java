@@ -1,6 +1,7 @@
 package com.hs.review.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hs.review.dto.Review;
 import com.hs.review.service.FileService;
+import com.hs.review.service.MapReduceService;
 import com.hs.review.service.ReviewService;
 import com.hs.review.util.RestUtil;
 
@@ -29,6 +31,8 @@ public class ReviewController {
 	private ReviewService reviewService;
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private MapReduceService mapReduceService;
 	
 	@PostMapping("/review/{id}")
 	public ResponseEntity<Map<String, Object>> getReview(@PathVariable ObjectId id){
@@ -84,5 +88,11 @@ public class ReviewController {
 	public ResponseEntity<Map<String,Object>> getReviewsByKeywords
 									(@RequestBody Map<String, Object> requestData){
 		return RestUtil.handleSuccess(reviewService.getReviewsByKeywords(requestData));
+	}
+	
+	@PostMapping("/review/graph/rating")
+	public ResponseEntity<Map<String,Object>> getRatingAvgByModel
+									(@RequestBody List<String> models){
+		return RestUtil.handleSuccess(mapReduceService.getRatingAvgByModel(models));
 	}
 }
