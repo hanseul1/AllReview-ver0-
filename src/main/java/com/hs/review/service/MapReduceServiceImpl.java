@@ -19,11 +19,28 @@ public class MapReduceServiceImpl implements MapReduceService {
 	 * @param models 사용자가 선택한 model 리스트
 	 */
 	public Map<String,Object> getRatingAvgByModel(List<String> models){
+		String mapFunction = "classpath:/mongoDB/ratingAvgMapFunction.js";
+		String reduceFunction = "classpath:/mongoDB/ratingAvgReduceFunction.js";
+		
 		if(models.size() != 0) {
 			// {"model": {"$in": [model list, ...] }}
 			Query query = new Query(Criteria.where("model").in(models));
-			return mapReduceUtil.calculateAvgByModel(query);
+			return mapReduceUtil.mapReduce(query, mapFunction, reduceFunction);
 		}
-		return mapReduceUtil.calculateAvgByModel(null);
+		return mapReduceUtil.mapReduce(null, mapFunction, reduceFunction);
+	}
+	
+	/** model 리스트에 대한 리뷰 총 개수 리턴
+	 * @param models 사용자가 선택한 model 리스트
+	 */
+	public Map<String,Object> getReviewTotalByModel(List<String> models){
+		String mapFunction = "classpath:/mongoDB/reviewTotalMapFunction.js";
+		String reduceFunction = "classpath:/mongoDB/reviewTotalReduceFunction.js";
+		
+		if(models.size() != 0) {
+			Query query = new Query(Criteria.where("model").in(models));
+			return mapReduceUtil.mapReduce(query, mapFunction, reduceFunction);
+		}
+		return mapReduceUtil.mapReduce(null, mapFunction, reduceFunction);
 	}
 }

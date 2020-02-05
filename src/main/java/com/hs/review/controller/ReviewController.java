@@ -95,4 +95,10 @@ public class ReviewController {
 									(@RequestBody List<String> models){
 		return RestUtil.handleSuccess(mapReduceService.getRatingAvgByModel(models));
 	}
+	
+	@PostMapping("/review/graph/total")
+	public ResponseEntity<Map<String,Object>> getReviewTotalByModel
+									(@RequestBody List<String> models) {
+		return RestUtil.handleSuccess(mapReduceService.getReviewTotalByModel(models));
+	}
 }

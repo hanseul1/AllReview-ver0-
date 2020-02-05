@@ -10,4 +10,8 @@ public interface MapReduceService {
 	 */
 	Map<String, Object> getRatingAvgByModel(List<String> models);
 
+	/** model 리스트에 대한 리뷰 총 개수 리턴
+	 * @param models 사용자가 선택한 model 리스트
+	 */
+	Map<String,Object> getReviewTotalByModel(List<String> models);
 }

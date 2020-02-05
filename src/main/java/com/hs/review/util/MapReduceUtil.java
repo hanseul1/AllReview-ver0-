@@ -16,21 +16,18 @@ public class MapReduceUtil {
 	@Autowired
 	private MongoTemplate template;
 	
-	private static final String mapJsPath = "classpath:/mongoDB/mapFunction.js";
-	private static final String ReduceJsPath = "classpath:/mongoDB/reduceFunction.js";
-	
-	public Map<String, Object> calculateAvgByModel(Query query) {
-		MapReduceResults<ValueObject> results = performMapReduce(query);
+	public Map<String, Object> mapReduce(Query query, String mapJsPath, String reduceJsPath) {
+		MapReduceResults<ValueObject> results = performMapReduce(query, mapJsPath, reduceJsPath);
 		return makeMap(results);
 	}
 	
 	/** 실제 map function, reduce function 실행해 결과 산출하는 함수 */
-	private MapReduceResults<ValueObject> performMapReduce(Query query){
+	private MapReduceResults<ValueObject> performMapReduce(Query query, String mapJsPath, String reduceJsPath){
 		if(query == null) 
 			return template.mapReduce("review", mapJsPath, 
-										ReduceJsPath, ValueObject.class);
+									reduceJsPath, ValueObject.class);
 		return template.mapReduce(query, "review", 
-									mapJsPath, ReduceJsPath, ValueObject.class);
+									mapJsPath, reduceJsPath, ValueObject.class);
 	}
 	
 	/** mapreduce 결과값을 Map 형태로 변환해주는 함수 */
