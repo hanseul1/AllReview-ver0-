@@ -1,3 +1,3 @@
-var reduceFunction = function (key, values) {
-    return Array.sum(values)
+function (key, values) { 
+    return Array.avg(values); 
 }

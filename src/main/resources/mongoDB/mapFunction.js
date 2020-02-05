@@ -1,3 +1,3 @@
-var mapFunction = function () {
-    emit(this.model, this.rating)
+function () { 
+    emit(this.model, this.rating); 
 }
