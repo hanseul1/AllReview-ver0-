@@ -29,8 +29,8 @@
 		where id = #{id}
 	</update>
 	
-	<delete id="delete" parameterType="user">
+	<delete id="delete" parameterType="string">
 		delete from user
-		where id = #{id} and pw = #{pw}
+		where id = #{id}
 	</delete>
 </mapper>

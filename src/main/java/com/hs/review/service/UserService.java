@@ -21,6 +21,6 @@ public interface UserService {
 	/** 회원 탈퇴 
 	 * 	return 탈퇴 성공 여부
 	 */
-	boolean deleteUser(User user);
+	boolean deleteUser(String id);
 
 }

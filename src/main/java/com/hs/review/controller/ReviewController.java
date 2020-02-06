@@ -34,11 +34,6 @@ public class ReviewController {
 	@Autowired
 	private MapReduceService mapReduceService;
 	
-	@PostMapping("/review/{id}")
-	public ResponseEntity<Map<String, Object>> getReview(@PathVariable ObjectId id){
-		return RestUtil.handleSuccess(reviewService.getReview(id));
-	}
-	
 	@GetMapping("/review/model/{model}")
 	public ResponseEntity<Map<String,Object>> getReviewsByModel(@PathVariable String model){
 		return RestUtil.handleSuccess(reviewService.getReviewsByModel(model));

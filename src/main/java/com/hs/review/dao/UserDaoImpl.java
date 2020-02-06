@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 	/** 회원 정보 삭제 기능 
 	 	return 삭제된 회원 수
 	 */
-	public int delete(User user) {
-		return session.delete("sql.user.delete", user);
+	public int delete(String id) {
+		return session.delete("sql.user.delete", id);
 	}
 }

@@ -19,6 +19,6 @@ public interface UserDao {
 	/** 회원 정보 삭제 기능 
 	 	return 삭제된 회원 수
 	 */
-	int delete(User user);
+	int delete(String id);
 
 }

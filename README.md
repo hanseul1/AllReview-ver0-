@@ -93,6 +93,62 @@
   | context  | String           | 리뷰 내용                    | text index    |
   | files    | String[]         | 리뷰 사진 파일 이름          | sFileName     |
 
+
+
+
+#### REST API
+
+- `User API`
+
+  | Method | URI                | Definition                          |
+  | ------ | ------------------ | ----------------------------------- |
+  | GET    | /user/{id}         | 해당 id에 해당하는 사용자 정보 검색 |
+  | GET    | /user/idcheck/{id} | id 중복 확인                        |
+  | POST   | /user/signup       | 사용자 정보 등록(회원가입)          |
+  | POST   | /user/login        | 사용자 로그인                       |
+  | PUT    | /user              | 사용자 정보 수정                    |
+  | DELETE | /user/{id}         | 사용자 정보 삭제                    |
+
+- `Category API`
+
+  | Method | URI       | Definition              |
+  | ------ | --------- | ----------------------- |
+  | GET    | /category | 모든 카테고리 목록 검색 |
+  | POST   | /category | 카테고리 정보 등록      |
+
+- `Keyword API`
+
+  | Method | URI                 | Definition                          |
+  | ------ | ------------------- | ----------------------------------- |
+  | GET    | /keyword            | 모든 키워드 목록 검색               |
+  | GET    | /keyword/{category} | 해당 카테고리 id의 키워드 목록 검색 |
+
+- `Product API`
+
+  | Method | URI                 | Definition                        |
+  | ------ | ------------------- | --------------------------------- |
+  | GET    | /product            | 모든 모델 목록 검색               |
+  | GET    | /product/{category} | 해당 카테고리 id의 모델 목록 검색 |
+  | POST   | /product            | 모델 정보 등록                    |
+  | PUT    | /product            | 모델 정보 수정                    |
+  | DELETE | /product/{id}       | 모델 정보 삭제                    |
+
+- `Review API`
+
+  | Method | URI                         | Definition                                                |
+  | ------ | --------------------------- | --------------------------------------------------------- |
+  | GET    | /review/all                 | 모든 리뷰 목록 검색                                       |
+  | GET    | /review/category/{category} | 해당 카테고리의 리뷰 목록 검색                            |
+  | GET    | /review/model/{model}       | 해당 모델의 리뷰 목록 검색                                |
+  | GET    | /review/writer/{writer}     | 해당 사용자 id의 리뷰 목록 검색                           |
+  | POST   | /review                     | 리뷰 정보 등록                                            |
+  | POST   | /review/files               | 리뷰 이미지 파일 등록(MultipartFile)                      |
+  | POST   | /review/keyword             | 해당 키워드를 포함하고 있는 리뷰 목록 검색(해당 카테고리) |
+  | POST   | /review/graph/rating        | 해당 모델의 모델별 리뷰 평점 평균 목록 검색               |
+  | POST   | /review/graph/total         | 해당 모델의 모델별 리뷰 합계 목록 검색                    |
+  | PUT    | /review                     | 리뷰 정보 수정                                            |
+  | DELETE | /review/{id}                | 리뷰 정보 삭제                                            |
+
   
 
 #### Problem & Solving

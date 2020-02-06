@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService{
 	/** 회원 탈퇴 
 	 * 	return 탈퇴 성공 여부
 	 */
-	public boolean deleteUser(User user) {
-		return (userDao.delete(user) != 0);
+	public boolean deleteUser(String id) {
+		return (userDao.delete(id) != 0);
 	}
 }
