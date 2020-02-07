@@ -1,6 +1,6 @@
-# AllReview.com - 올리브유 닷컴
+# `AllReview.com - 올리브유 닷컴
 
-#### 서비스 소개
+## 서비스 소개
 
 ```
 각종 제품이나 서비스에 대해 실제 고객(사용자)들이 직접 사용한 리뷰를 공유하는 커뮤니티
@@ -18,7 +18,7 @@
 
 ## Spring Boot 프로젝트 (With Vue.js)
 
-#### 프로젝트 생성
+### 프로젝트 생성
 
 ```
 - Spring starter project : 2.2.2 ver
@@ -26,15 +26,15 @@
 - maven library
 - DB : mysql
 - Persistence framework : mybatis
+- vue : 2.5.2 
+- vuetify : 2.2.1
 ```
 
+### Database tables
 
+#### MySQL
 
-#### Database tables
-
-##### MySQL
-
-- User 테이블
+- `User` 테이블
 
   | Column | Type         | Definition             | Remark      |
   | ------ | ------------ | ---------------------- | ----------- |
@@ -43,14 +43,14 @@
   | phone  | varchar(20)  | 사용자 전화번호        |             |
   | name   | varchar(10)  | 사용자 닉네임          |             |
 
-- Category 테이블
+- `Category` 테이블
 
   | Column | Type        | Definition           | Remark      |
   | ------ | ----------- | -------------------- | ----------- |
   | no     | int         | 카테고리 구분 아이디 | primary key |
   | name   | varchar(50) | 카테고리 이름        |             |
 
-- Keyword 테이블
+- `Keyword` 테이블
 
   | Column   | Type        | Definition           | Remark                      |
   | -------- | ----------- | -------------------- | --------------------------- |
@@ -58,14 +58,14 @@
   | word     | varchar(30) | 키워드               |                             |
   | category | int         | 카테고리 구분 아이디 | foreign key(category.no)    |
 
-- Company 테이블
+- `Company` 테이블
 
   | Column | Type        | Definition         | Remark                      |
   | ------ | ----------- | ------------------ | --------------------------- |
   | no     | int         | 제조사 구분 아이디 | primary key, auto_increment |
   | name   | varchar(50) | 제조사 이름        |                             |
 
-- Product 테이블
+- `Product` 테이블
 
   | Column   | Type        | Definition           | Remark                   |
   | -------- | ----------- | -------------------- | ------------------------ |
@@ -76,9 +76,9 @@
 
 
 
-##### MongoDB
+#### MongoDB
 
-- Reveiw Document
+- `Reveiw ` Document
 
   | Column   | Type             | Definition                   | Remark        |
   | -------- | ---------------- | ---------------------------- | ------------- |
@@ -149,464 +149,473 @@
   | PUT    | /review                     | 리뷰 정보 수정                                            |
   | DELETE | /review/{id}                | 리뷰 정보 삭제                                            |
 
+
+
+- Swagger UI
+
+  ![swagger](https://user-images.githubusercontent.com/33472435/73989115-0797f300-4988-11ea-800b-a55697d25e5a.PNG)
+
+  ![swagger2](https://user-images.githubusercontent.com/33472435/73989118-08c92000-4988-11ea-8269-ae369fa1dada.PNG)
+
+
+
+### Problem & Solving
+
+#### 1. spring starter project 생성 직후 pom.xml Line1 unknown error
+
+- 원인 : maven에서 프로젝트 빌드 및 컴파일 시 의존성이 맞지 않아 발생하는 오류라고 생각됨
+
+- 해결 방법
+
+  - project 우클릭 -> maven -> update project
+
+  - pom.xml의 프로젝트 의존성을 체크하는 필드인 spring-boot-starter-parent 수정
+    (version 정보 변경)
+
+  - pom.xml에서 property 추가
+
+    ```xml
+    <properties>
+    	<java.version>1.8</java.version>
+    	<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+    </properties>
+    ```
+
+- 참고 : [https://caileb.tistory.com/entry/pomxml-%ED%8C%8C%EC%9D%BC%EC%9D%98-line-1%EB%B2%88-Unknown-Error](https://caileb.tistory.com/entry/pomxml-파일의-line-1번-Unknown-Error)
+
   
 
-#### Problem & Solving
+#### 2. jsp 연동 오류 (index.jsp 404 error)
 
-1. spring starter project 생성 직후 pom.xml Line1 unknown error
+- 원인 
 
-   - 원인 : maven에서 프로젝트 빌드 및 컴파일 시 의존성이 맞지 않아 발생하는 오류라고 생각됨
+  - spring boot 프로젝트의 jar 패키징 후 내장 톰캣 사용할 시 jsp를 web template으로 사용할 수 없다.
 
-   - 해결 방법
+    (spring boot에서는 jsp의 사용을 지양하고 있다.)
 
-     - project 우클릭 -> maven -> update project
+  - jsp를 사용하기 위해서는 war 패키징하여야 한다.
 
-     - pom.xml의 프로젝트 의존성을 체크하는 필드인 spring-boot-starter-parent 수정
-       (version 정보 변경)
+- 해결 방법
 
-     - pom.xml에서 property 추가
+  - pom.xml의 packaging 방식 변경(없으면 추가)
 
-       ```xml
-       <properties>
-       	<java.version>1.8</java.version>
-       	<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
-       </properties>
-       ```
+    ```xml
+    <packaging>war</packaging>
+    ```
 
-   - 참고 : [https://caileb.tistory.com/entry/pomxml-%ED%8C%8C%EC%9D%BC%EC%9D%98-line-1%EB%B2%88-Unknown-Error](https://caileb.tistory.com/entry/pomxml-파일의-line-1번-Unknown-Error)
+  - pom.xml의 의존성 추가
 
-     
+    ```xml
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>jstl</groupId>
+    	<artifactId>jstl</artifactId>
+    	<version>1.2</version>
+    </dependency>
+    ```
 
-2. jsp 연동 오류 (index.jsp 404 error)
+  - jsp 파일을 view template으로 사용하기 위해서 jsp 파일은 src/main/webapp 아래에 위치한다.
 
-   - 원인 
+  - controller 작성
 
-     - spring boot 프로젝트의 jar 패키징 후 내장 톰캣 사용할 시 jsp를 web template으로 사용할 수 없다.
+    ```java
+    @RequestMapping("/")
+    public String index() {
+    	return "/jsp/index";
+    }
+    ```
 
-       (spring boot에서는 jsp의 사용을 지양하고 있다.)
+- JAR 와 WAR 
 
-     - jsp를 사용하기 위해서는 war 패키징하여야 한다.
+  - JAR : Java Archive. 압축된 .class파일, 컴파일된 java 라이브러리, 어플리케이션 리소스 등을 포함하는 압축파일
 
-   - 해결 방법
+    => 자바 플랫폼에 응용 소프트웨어나 라이브러리를 배포하기 위한 소프트웨어 패키지 파일 포맷
 
-     - pom.xml의 packaging 방식 변경(없으면 추가)
+    => 추가 소프트웨어를 사용하지 않고 바로 실행 가능(embedded tomcat)
 
-       ```xml
-       <packaging>war</packaging>
-       ```
+  - WAR : Web application Archive. 모든 servlet/ JSP 컨테이너에 배치할 수 있는 웹 어플리케이션을 압축한 파일
 
-     - pom.xml의 의존성 추가
+    => 실행시 별도의 서버가 필요함
 
-       ```xml
-       <dependency>
-           <groupId>org.apache.tomcat.embed</groupId>
-           <artifactId>tomcat-embed-jasper</artifactId>
-       </dependency>
-       <dependency>
-       	<groupId>jstl</groupId>
-       	<artifactId>jstl</artifactId>
-       	<version>1.2</version>
-       </dependency>
-       ```
+    
 
-     - jsp 파일을 view template으로 사용하기 위해서 jsp 파일은 src/main/webapp 아래에 위치한다.
+#### 3. HTTP 요청 CORS 에러
 
-     - controller 작성
+- 원인
 
-       ```java
-       @RequestMapping("/")
-       public String index() {
-       	return "/jsp/index";
-       }
-       ```
+  - CORS : Cross Origin Resource Sharing
 
-   - JAR 와 WAR 
+  - domain 또는 port가 다른 서버의 자원을 요청하는 방식을 뜻한다.
 
-     - JAR : Java Archive. 압축된 .class파일, 컴파일된 java 라이브러리, 어플리케이션 리소스 등을 포함하는 압축파일
+  - 브라우저에서는 동일 출처 정책(same-origin policy)으로 인해 외부 서버에 요청한 데이터를 보안 목적으로 차단한다.
 
-       => 자바 플랫폼에 응용 소프트웨어나 라이브러리를 배포하기 위한 소프트웨어 패키지 파일 포맷
+    - 동일 출처 정책
 
-       => 추가 소프트웨어를 사용하지 않고 바로 실행 가능(embedded tomcat)
+      : 다른 출처에서 가져온 리소스와 현재 가지고 있는 리소스가 상호작용 하는 것을 제한하는 보안 방식
 
-     - WAR : Web application Archive. 모든 servlet/ JSP 컨테이너에 배치할 수 있는 웹 어플리케이션을 압축한 파일
+      => 잠재적 악성 문서를 격리하여 공격 경로를 줄인다.
 
-       => 실행시 별도의 서버가 필요함
+  - 즉, localhost:8081(Vue 서버)에서 localhost:8080(spring boot 서버)로 자원을 요청하였기 때문에 발생한 에러이다.
 
-       
+- 해결방법
 
-3. HTTP 요청 CORS 에러
+  - Spring boot 프로젝트의 controller에 CrossOrigin annotation 추가
 
-   - 원인
+    ```java
+    @CrossOrigin(origins = {"*"}, maxAge = 6000)
+    ```
 
-     - CORS : Cross Origin Resource Sharing
+  - node.js의 미들웨어 CORS 추가(Express 사용할 경우)
 
-     - domain 또는 port가 다른 서버의 자원을 요청하는 방식을 뜻한다.
+    ```
+    npm install --save cors
+    ```
 
-     - 브라우저에서는 동일 출처 정책(same-origin policy)으로 인해 외부 서버에 요청한 데이터를 보안 목적으로 차단한다.
+    => 이 경우 모든 외부 서버에 대한 요청에 대해 허가를 하게 되어 보안이 취약해진다.
 
-       - 동일 출처 정책
+- 참고 : https://velog.io/@wlsdud2194/cors
 
-         : 다른 출처에서 가져온 리소스와 현재 가지고 있는 리소스가 상호작용 하는 것을 제한하는 보안 방식
+  
 
-         => 잠재적 악성 문서를 격리하여 공격 경로를 줄인다.
+#### 4. Vue data-table expand 오류
 
-     - 즉, localhost:8081(Vue 서버)에서 localhost:8080(spring boot 서버)로 자원을 요청하였기 때문에 발생한 에러이다.
+- 상황 및 원인
 
-   - 해결방법
+  - v-data-table에서 expand 옵션을 추가했을 때, expand 버튼 클릭시 해당 리뷰 내용만 보여지는 것이 아니라 모든 리뷰 내용이 expand 되었다.
 
-     - Spring boot 프로젝트의 controller에 CrossOrigin annotation 추가
+    (즉, 모든 expand 버튼이 동기화됨)
 
-       ```java
-       @CrossOrigin(origins = {"*"}, maxAge = 6000)
-       ```
+  - 이는 v-data-table에서 item을 반복시켜 렌더링할 때 반복되는 item들을 구분해줄 고유 key값을 부여하지 않아서 생기는 문제이다.
 
-     - node.js의 미들웨어 CORS 추가(Express 사용할 경우)
+- 해결방법
 
-       ```
-       npm install --save cors
-       ```
+  - v-data-table 태그에 key 옵션을 추가하여 지정해준다.
 
-       => 이 경우 모든 외부 서버에 대한 요청에 대해 허가를 하게 되어 보안이 취약해진다.
-
-   - 참고 : https://velog.io/@wlsdud2194/cors
-   
-     
-   
-4. Vue data-table expand 오류
-
-   - 상황 및 원인
-
-     - v-data-table에서 expand 옵션을 추가했을 때, expand 버튼 클릭시 해당 리뷰 내용만 보여지는 것이 아니라 모든 리뷰 내용이 expand 되었다.
-
-       (즉, 모든 expand 버튼이 동기화됨)
-
-     - 이는 v-data-table에서 item을 반복시켜 렌더링할 때 반복되는 item들을 구분해줄 고유 key값을 부여하지 않아서 생기는 문제이다.
-
-   - 해결방법
-
-     - v-data-table 태그에 key 옵션을 추가하여 지정해준다.
-
-       ```html
-       <v-data-table
-          ...
-          item-key="title"
-          ...
-       >
-       ```
-
-       - 각 review data의 고유 키값인 _id 값을 설정하려고 했으나, 모두 같은 Object로 인식되어 duplicate key 에러가 발생하였다.
-       - 임의로 title 값을 고유 키 값으로 설정해 주었다.
-
-5. RESTful API의 구현
-
-   - 이전
-
-     - Front-end와 HTTP통신을 하는 API를 구성할 때 controller에서  GET / POST 방식의 메소드만 정의하여 사용하였다.
-
-       ```java
-       @GetMapping("/review")
+    ```html
+    <v-data-table
        ...
-       @PostMapping("/review/save")
+       item-key="title"
        ...
-       @PostMapping("/review/update")
-       ...
-       @DeleteMapping("/review/delete")
-       ...
-       ```
-
-       - 이는 REST API 설계 규칙에 맞지 않는다.
-
-         (REST API의 URI 구성 시 자원에 대한 행위(동사 형태) 보다는 자원(명사 형태)을 표현하는 데 중점을 두어야 한다.)
-
-   - 이후
-
-     - update 작업을 하는 메소드는 PUT 방식으로, delete 작업을 하는 메소드는 DELETE 방식으로 정의하였다.
-
-     - 에러 발생
-
-       - DeleteMapping시 @RequestBody를 선언하여 요청 데이터를 받는 경우,
-
-         클라이언트에서 해당 API를 호출하면 400(Bad Request) 에러가 발생하였다.
-
-       - 이는 Spring boot의 내장 톰캣이 POST 요청에 대해서만 Request body의 parsing 작업을 수행하기 때문이다.
-
-         => 톰캣 서버의 parseBodyMethods 설정을 POST 뿐만 아니라 PUT, DELETE도 추가해주는 방법도 있으나, Spring boot에서 내장 톰캣 서버 설정을 바꾸는 방법을 찾지 못함
-
-         - Delete 작업 요청시 review 데이터 전체를 요청 데이터에 넣어 전달하지 않고, review의 고유 키 값인 _id만 @PathVariable 로 전달하는 방법으로 개선하였다.
-
-         - 기존 ObjectId 타입의 _id값이 타입 문제로 spring boot와 vue에서 collection의 고유 키 값 역할을 하지 못하는 문제가 있어 String 타입으로 수정
-
-           ```java
-           @Document("review")
-           public class Review {
-           	@Id
-           	private   String _id; 
-               ...
-           }
-           ```
-
-         - controller 클래스의 method 수정
-
-           ```java
-           @DeleteMapping("/review/{id}")
-           public ResponseEntity<Map<String,Object>> removeReview(@PathVariable String id){
-               ...
-           }
-           	
-           @PutMapping("/review")
-           public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
-               ...
-           }
-           ```
-
-         - service 클래스의 MongoTemplate 메소드 호출 수정
-
-           ```java
-           /** 리뷰 삭제 */
-           public void removeReview(String id) {
-               // _id 값으로 Document 찾은 후 삭제
-           	Query query = new Query(new Criteria("_id").is(id));
-           	mongoTemplate.remove(query, "review");
-           }
-           	
-           /** 리뷰 수정 */
-           public void updateReview(Review review) {
-           	Update update = new Update();
-           	update.set("title", review.getTitle());
-           	...
-           	
-               // _id 값으로 Document 찾은 후 업데이트 정보 반영
-           	Query query = new Query(new Criteria("_id").is(review.get_id()));
-           		
-           	mongoTemplate.updateFirst(query, update, Review.class);
-           }
-           ```
-
-   
-   
-6. MultipartFile 업로드
-
-   - Spring boot에서의 REST API 구현
-
-     - pom.xml에 dependency 추가
-
-       ```xml
-       <dependency>
-       	<groupId>commons-io</groupId>
-       	<artifactId>commons-io</artifactId>
-       	<version>2.5</version>
-       </dependency>
-       <dependency>
-       	<groupId>commons-fileupload</groupId>
-       	<artifactId>commons-fileupload</artifactId>
-       	<version>1.3.1</version>
-       </dependency>
-       ```
-
-     - Controller 클래스에 MultipartFile 타입 요청 데이터를 받는 API 정의
-
-       ```java
-       @PostMapping("/review/files")
-       public ResponseEntity<Map<String,Object>> saveReviewFiles
-       							(@RequestParam("files") MultipartFile[] files) 										throws IllegalStateException, IOException{
-       	reviewService.insertFiles(files);
-       	return RestUtil.handleSuccess("success");
-       }
-       ```
-
-     - 일반 Spring 프로젝트에서는 파일 처리를 위해 MultipartResolver 빈을 등록해주어야 한다.
-
-       ```xml
-       <!-- mvc-config.xml 설정파일에 선언 -->
-       <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-       ```
-
-       - Spring Boot에서는 기본 MultipartResolver를 StandardServletMultipartResolver로 사용하고 있다.
-
-         => 따라서 직접 MultipartResolver bean을 주입해주지 않아도 된다.
-
-         - 그러나 CommonsMultipartResolver를 MultipartResolver로 사용하고 싶다면 자동 설정을 제외하고 해당 리졸버를 등록해주어야 한다.
-
-           ```java
-           @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
-           @Configuration
-           public class MultipartConfig {
-           
-               @Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
-               public MultipartResolver multipartResolver() {
-                   CommonsMultipartResolver multipartResolver = new 															CommonsMultipartResolver();
-                   return multipartResolver;
-               }
-           
-               @Bean
-               @Order(0)
-               public MultipartFilter multipartFilter() {
-                   MultipartFilter multipartFilter = new MultipartFilter();
-                   																		multipartFilter.setMultipartResolverBeanName                                      (DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME);
-                   return multipartFilter;
-               }
-           }
-           ```
-
-           - configuration annotation의 우선순위 때문에 
-
-             `@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})`
-
-             해당 annotation이 없으면 MultipartAutoConfiguration이 활성화되어 StandardServletMultipartResolver가 자동 설정되므로 주의해야 한다.
-
-         - 참고 : https://gist.github.com/dlxotn216/18622dd08ee430f0cb9610fb0e60c5ba
-
-   - Vue component에서의 axios 구현
-
-     ```js
-     if (this.files.length > 0) {
-     	var fileData = new FormData()
-         for (var i = 0; i < this.files.length; i++) {
-         	fileData.append('files', this.files[i])
-             fileNames.push(this.files[i].name)
-         }
-     
-         axios
-           .post('http://localhost:8080/review/files', fileData, {
-           	headers: {
-               'enctype': 'multipart/form-data'
-             }
-           })
-           .then(response => {
-             if (response.data.data === 'success') {
-               console.log('file upload')
-             } else {
-               alert('파일 업로드에 실패했습니다.')
-             }
-           })
-     }
-     ```
-
-     - FormData : <form> 태그를 직접 HTML에서 사용하지 않고도 ajax 방식으로 데이터를 key-value 쌍으로 서버에서 전송할 수 있는 api
-
-       => multipart/form-data 인코딩이 가능함
-
-     - `fileData.append('files', this.files)` 로 배열 전체를 하나의 key 값 안에 넣으면 server에서 MultipartFile[] 타입으로 받을 수 없음 - 타입 오류로 null 값이 됨
-
-     - `fileData.append('review', reviewData)` 코드를 추가하여 리뷰 데이터와 파일 데이터를 한번에 전송하려고 하였으나 server에서 두개 이상의 requestParam을 받지 못함 - 500 에러 발생
-
-     - 파일 데이터와 리뷰 데이터를 각각 API 호출하여 전송하여 server의 service 단에서 함께 처리하도록 구현하였다.
-
-   - Spring boot Service 클래스에서의 파일 업로드 구현
-   
-     ```java
-     public List<String> insertFiles(MultipartFile[] files) 
-         						throws IllegalStateException, IOException {
-     	// 각 파일들의 새로 생성된 이름을 저장할 리스트(뷰 컴포넌트에 다시 전달)
-     	List<String> fileNames = new ArrayList<>();
-         
-         for(MultipartFile file: files) {
-     		String rfileName = file.getOriginalFilename();
-             // 중복된 이름의 파일이 서버에 이미 있을 경우를 대비해 
-     		// 파일 이름 앞에 현재 시간을 붙여 새로운 파일 이름을 생성한다.
-     		String sfileName = String.format("%d%s"
-   											, System.currentTimeMillis()
-     											, rfileName);
-           
-     		File realFile = 
-               new File(new ClassPathResource("application.properties") 										.getURI().getPath()
-     							+ "/../static/static/img/" + sfileName);
-   		file.transferTo(realFile);
-             fileNames.add(sfileName);
-   	}
-         return fileNames;
-     }
-     ```
-     
-     - `new ClassPathResource("application.properties").getURI().getPath()`
-     
-       : 프로젝트의 classpath(resource 경로)를 찾기위해 target 폴더 하위에 있는 application.properties의 경로를 반환받는다.
-     
-     - 파일은 '프로젝트 경로\target\classes\static\static\img' 에 저장된다.
-     
-       => 'http://{server_ip:port}/static/img/{filename} 으로 해당 파일에 접근 가능하다.
-     
-       
-
-7. Vue API request 데이터에 header 추가 시 CORS 에러
-
-   - 상황
-
-     - JWT를 활용한 user authorization을 위해 인증 토큰을 API 호출 시 요청 데이터의 header에 넣어 보낸다.
-
-       ```js
-       axios
-         .get('http://localhost:8080/user', {
-           headers: {
-             'Authorization': token
-           }
-         })
-       ```
-
-     - spring boot 서버단에서 @CrossOrigin annotation을 이용해 cors 설정을 해준 상태
-
-       => 기존의 header가 없는 요청이나 header에 content-type만 넣은 요청은 cors 에러가 발생하지 않음
-
-   - 원인
-
-     - preflighted 요청에 대한 cors 에러가 발생한 것
-
-     - preflighted 요청
-
-       - 일반적인 요청인 경우, server에 바로 접근하여 servlet container에 의해 해당 controller로 mapping되어 처리된다.
-
-         => 일반적인 요청
-
-         - request header에 다음 이름의 속성만 추가되는 경우
-
-           `Accept` `Accept-Language` `Content-Language` `Content-Type`
-
-         - `Content-Type`의 경우 다음 value만 허용
-
-           `application/x-www-form-urlencoded` `multipart/form-data`  `text/plain`
-
-       - 일반적인 request가 아닌경우 server에 먼저 preflighted 요청을 보낸다.
-
-         1. server에 OPTIONS method 방식으로 요청을 보냄
-
-         2. OPTIONS 요청을 받은 server에서는 서버가 허용할 option을 response header에 담아 응답함
-         3. client는 server가 보낸 response header에 포함된 server 허용 정보를 이용하여 허용되지 않은 request인 경우 에러를 발생시키고, 실제 API 요청은 server로 전송하지 않음
-         4. 허용된 request이면 server로 실제 API 요청을 보냄
-
-     - preflighted 요청의 요청 방식인 OPTIONS method에 대해 '*Access-Control-Allow-Origin*' 이 허용되지 않아 CORS 에러가 발생한 것이다.
-
-       ![cors_error_list_01](http://www.popit.kr/wp-content/uploads/2017/12/cors_error_list_01-600x52.png)
-
-   - 해결 방법
-
-     - CorsFilter 클래스를 생성하여 server로 들어오는 모든 request에 대해서 response header에 '*Access-Control-Allow-Origin*'을 허용해주었다.
-
-       ```java
-       @Component
-       public class CorsFilter implements Filter {
-       	 public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-       	        HttpServletResponse response = (HttpServletResponse) servletResponse;
-       	        HttpServletRequest request= (HttpServletRequest) servletRequest;
-       
-       	        response.setHeader("Access-Control-Allow-Origin", "*");
-       	        response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
-       	        response.setHeader("Access-Control-Allow-Headers", "*");
-       	        response.setHeader("Access-Control-Allow-Credentials", "true");
-       	        response.setIntHeader("Access-Control-Max-Age", 3600);
-       	        filterChain.doFilter(servletRequest, servletResponse);
-       	    }
-       
-       
-       	    public void init(FilterConfig filterConfig) {}
-       
-       	    public void destroy() {}
-       }
-       ```
-
-     - Cross Origin을 허용해주는 filter는 JWT 인증 토큰을 검사하는 filter보다 먼저 수행되어야 한다.(순서에 주의)
-     
-    - Spring boot에서는 Filter가 interceptor보다 먼저 수행되므로 순서를 지정해 줄 필요는 없다.
-   
+    >
+    ```
+
+    - 각 review data의 고유 키값인 _id 값을 설정하려고 했으나, 모두 같은 Object로 인식되어 duplicate key 에러가 발생하였다.
+    
+    - 임의로 title 값을 고유 키 값으로 설정해 주었다.
+    
+      
+
+#### 5. RESTful API의 구현
+
+- 이전
+
+  - Front-end와 HTTP통신을 하는 API를 구성할 때 controller에서  GET / POST 방식의 메소드만 정의하여 사용하였다.
+
+    ```java
+    @GetMapping("/review")
+    ...
+    @PostMapping("/review/save")
+    ...
+    @PostMapping("/review/update")
+    ...
+    @DeleteMapping("/review/delete")
+    ...
+    ```
+
+    - 이는 REST API 설계 규칙에 맞지 않는다.
+
+      (REST API의 URI 구성 시 자원에 대한 행위(동사 형태) 보다는 자원(명사 형태)을 표현하는 데 중점을 두어야 한다.)
+
+- 이후
+
+  - update 작업을 하는 메소드는 PUT 방식으로, delete 작업을 하는 메소드는 DELETE 방식으로 정의하였다.
+
+  - 에러 발생
+
+    - DeleteMapping시 @RequestBody를 선언하여 요청 데이터를 받는 경우,
+
+      클라이언트에서 해당 API를 호출하면 400(Bad Request) 에러가 발생하였다.
+
+    - 이는 Spring boot의 내장 톰캣이 POST 요청에 대해서만 Request body의 parsing 작업을 수행하기 때문이다.
+
+      => 톰캣 서버의 parseBodyMethods 설정을 POST 뿐만 아니라 PUT, DELETE도 추가해주는 방법도 있으나, Spring boot에서 내장 톰캣 서버 설정을 바꾸는 방법을 찾지 못함
+
+      - Delete 작업 요청시 review 데이터 전체를 요청 데이터에 넣어 전달하지 않고, review의 고유 키 값인 _id만 @PathVariable 로 전달하는 방법으로 개선하였다.
+
+      - 기존 ObjectId 타입의 _id값이 타입 문제로 spring boot와 vue에서 collection의 고유 키 값 역할을 하지 못하는 문제가 있어 String 타입으로 수정
+
+        ```java
+        @Document("review")
+        public class Review {
+        	@Id
+        	private   String _id; 
+            ...
+        }
+        ```
+
+      - controller 클래스의 method 수정
+
+        ```java
+        @DeleteMapping("/review/{id}")
+        public ResponseEntity<Map<String,Object>> removeReview(@PathVariable String id){
+            ...
+        }
+        	
+        @PutMapping("/review")
+        public ResponseEntity<Map<String,Object>> updateReview(@RequestBody Review review){
+            ...
+        }
+        ```
+
+      - service 클래스의 MongoTemplate 메소드 호출 수정
+
+        ```java
+        /** 리뷰 삭제 */
+        public void removeReview(String id) {
+            // _id 값으로 Document 찾은 후 삭제
+        	Query query = new Query(new Criteria("_id").is(id));
+        	mongoTemplate.remove(query, "review");
+        }
+        	
+        /** 리뷰 수정 */
+        public void updateReview(Review review) {
+        	Update update = new Update();
+        	update.set("title", review.getTitle());
+        	...
+        	
+            // _id 값으로 Document 찾은 후 업데이트 정보 반영
+        	Query query = new Query(new Criteria("_id").is(review.get_id()));
+        		
+        	mongoTemplate.updateFirst(query, update, Review.class);
+        }
+        ```
+
+
+
+#### 6. MultipartFile 업로드
+
+- Spring boot에서의 REST API 구현
+
+  - pom.xml에 dependency 추가
+
+    ```xml
+    <dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>2.5</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-fileupload</groupId>
+    	<artifactId>commons-fileupload</artifactId>
+    	<version>1.3.1</version>
+    </dependency>
+    ```
+
+  - Controller 클래스에 MultipartFile 타입 요청 데이터를 받는 API 정의
+
+    ```java
+    @PostMapping("/review/files")
+    public ResponseEntity<Map<String,Object>> saveReviewFiles
+    							(@RequestParam("files") MultipartFile[] files) 										throws IllegalStateException, IOException{
+    	reviewService.insertFiles(files);
+    	return RestUtil.handleSuccess("success");
+    }
+    ```
+
+  - 일반 Spring 프로젝트에서는 파일 처리를 위해 MultipartResolver 빈을 등록해주어야 한다.
+
+    ```xml
+    <!-- mvc-config.xml 설정파일에 선언 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    ```
+
+    - Spring Boot에서는 기본 MultipartResolver를 StandardServletMultipartResolver로 사용하고 있다.
+
+      => 따라서 직접 MultipartResolver bean을 주입해주지 않아도 된다.
+
+      - 그러나 CommonsMultipartResolver를 MultipartResolver로 사용하고 싶다면 자동 설정을 제외하고 해당 리졸버를 등록해주어야 한다.
+
+        ```java
+        @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+        @Configuration
+        public class MultipartConfig {
+        
+            @Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
+            public MultipartResolver multipartResolver() {
+                CommonsMultipartResolver multipartResolver = new 															CommonsMultipartResolver();
+                return multipartResolver;
+            }
+        
+            @Bean
+            @Order(0)
+            public MultipartFilter multipartFilter() {
+                MultipartFilter multipartFilter = new MultipartFilter();
+                																		multipartFilter.setMultipartResolverBeanName                                      (DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME);
+                return multipartFilter;
+            }
+        }
+        ```
+
+        - configuration annotation의 우선순위 때문에 
+
+          `@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})`
+
+          해당 annotation이 없으면 MultipartAutoConfiguration이 활성화되어 StandardServletMultipartResolver가 자동 설정되므로 주의해야 한다.
+
+      - 참고 : https://gist.github.com/dlxotn216/18622dd08ee430f0cb9610fb0e60c5ba
+
+- Vue component에서의 axios 구현
+
+  ```js
+  if (this.files.length > 0) {
+  	var fileData = new FormData()
+      for (var i = 0; i < this.files.length; i++) {
+      	fileData.append('files', this.files[i])
+          fileNames.push(this.files[i].name)
+      }
+  
+      axios
+        .post('http://localhost:8080/review/files', fileData, {
+        	headers: {
+            'enctype': 'multipart/form-data'
+          }
+        })
+        .then(response => {
+          if (response.data.data === 'success') {
+            console.log('file upload')
+          } else {
+            alert('파일 업로드에 실패했습니다.')
+          }
+        })
+  }
+  ```
+
+  - FormData : <form> 태그를 직접 HTML에서 사용하지 않고도 ajax 방식으로 데이터를 key-value 쌍으로 서버에서 전송할 수 있는 api
+
+    => multipart/form-data 인코딩이 가능함
+
+  - `fileData.append('files', this.files)` 로 배열 전체를 하나의 key 값 안에 넣으면 server에서 MultipartFile[] 타입으로 받을 수 없음 - 타입 오류로 null 값이 됨
+
+  - `fileData.append('review', reviewData)` 코드를 추가하여 리뷰 데이터와 파일 데이터를 한번에 전송하려고 하였으나 server에서 두개 이상의 requestParam을 받지 못함 - 500 에러 발생
+
+  - 파일 데이터와 리뷰 데이터를 각각 API 호출하여 전송하여 server의 service 단에서 함께 처리하도록 구현하였다.
+
+- Spring boot Service 클래스에서의 파일 업로드 구현
+
+  ```java
+  public String[] insertFiles(MultipartFile[] files) throws IllegalStateException, IOException {
+      // 각 파일들의 새로 생성된 이름을 저장할 리스트
+      String[] fileNames = new String[files.length];
+      int i = 0;
+      for(MultipartFile file: files) {
+          String rfileName = file.getOriginalFilename();
+  
+          // 중복된 이름의 파일이 서버에 이미 있을 경우를 대비해 
+          // 파일 이름 앞에 현재 시간을 붙여 새로운 파일 이름을 생성한다.
+          String sfileName = String.format("%d%s"
+	                                        , System.currentTimeMillis()
+                                          , rfileName);
+          File realFile = new File(new ClassPathResource("application.properties").getURI().getPath()
+                                              +"/../static/static/img/"+ sfileName);
+          file.transferTo(realFile);
+          fileNames[i++] = sfileName;
+	    }
+      return fileNames;
+	}
+  ```
+  
+  - `new ClassPathResource("application.properties").getURI().getPath()`
+  
+    : 프로젝트의 classpath(resource 경로)를 찾기위해 target 폴더 하위에 있는 application.properties의 경로를 반환받는다.
+  
+  - 파일은 '프로젝트 경로\target\classes\static\static\img' 에 저장된다.
+  
+    => 'http://{server_ip:port}/static/img/{filename} 으로 해당 파일에 접근 가능하다.
+  
+    
+
+#### 7. Vue API request 데이터에 header 추가 시 CORS 에러
+
+- 상황
+
+  - JWT를 활용한 user authorization을 위해 인증 토큰을 API 호출 시 요청 데이터의 header에 넣어 보낸다.
+
+    ```js
+    axios
+      .get('http://localhost:8080/user', {
+        headers: {
+          'Authorization': token
+        }
+      })
+    ```
+
+  - spring boot 서버단에서 @CrossOrigin annotation을 이용해 cors 설정을 해준 상태
+
+    => 기존의 header가 없는 요청이나 header에 content-type만 넣은 요청은 cors 에러가 발생하지 않음
+
+- 원인
+
+  - preflighted 요청에 대한 cors 에러가 발생한 것
+
+  - preflighted 요청
+
+    - 일반적인 요청인 경우, server에 바로 접근하여 servlet container에 의해 해당 controller로 mapping되어 처리된다.
+
+      => 일반적인 요청
+
+      - request header에 다음 이름의 속성만 추가되는 경우
+
+        `Accept` `Accept-Language` `Content-Language` `Content-Type`
+
+      - `Content-Type`의 경우 다음 value만 허용
+
+        `application/x-www-form-urlencoded` `multipart/form-data`  `text/plain`
+
+    - 일반적인 request가 아닌경우 server에 먼저 preflighted 요청을 보낸다.
+
+      1. server에 OPTIONS method 방식으로 요청을 보냄
+
+      2. OPTIONS 요청을 받은 server에서는 서버가 허용할 option을 response header에 담아 응답함
+      3. client는 server가 보낸 response header에 포함된 server 허용 정보를 이용하여 허용되지 않은 request인 경우 에러를 발생시키고, 실제 API 요청은 server로 전송하지 않음
+      4. 허용된 request이면 server로 실제 API 요청을 보냄
+
+  - preflighted 요청의 요청 방식인 OPTIONS method에 대해 '*Access-Control-Allow-Origin*' 이 허용되지 않아 CORS 에러가 발생한 것이다.
+
+    ![cors_error_list_01](http://www.popit.kr/wp-content/uploads/2017/12/cors_error_list_01-600x52.png)
+
+- 해결 방법
+
+  - CorsFilter 클래스를 생성하여 server로 들어오는 모든 request에 대해서 response header에 '*Access-Control-Allow-Origin*'을 허용해주었다.
+
+    ```java
+    @Component
+    public class CorsFilter implements Filter {
+    	 public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    	        HttpServletResponse response = (HttpServletResponse) servletResponse;
+    	        HttpServletRequest request= (HttpServletRequest) servletRequest;
+    
+    	        response.setHeader("Access-Control-Allow-Origin", "*");
+    	        response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+    	        response.setHeader("Access-Control-Allow-Headers", "*");
+    	        response.setHeader("Access-Control-Allow-Credentials", "true");
+    	        response.setIntHeader("Access-Control-Max-Age", 3600);
+    	        filterChain.doFilter(servletRequest, servletResponse);
+    	    }
+    
+    
+    	    public void init(FilterConfig filterConfig) {}
+    
+    	    public void destroy() {}
+    }
+    ```
+
+  - Cross Origin을 허용해주는 filter는 JWT 인증 토큰을 검사하는 filter보다 먼저 수행되어야 한다.(순서에 주의)
+  
+ - Spring boot에서는 Filter가 interceptor보다 먼저 수행되므로 순서를 지정해 줄 필요는 없다.
+
 - 또 다른 에러 발생
   
   - 위의 cors에러는 해결되었지만 HttpStatus OK response를 받지 못했다는 에러가 발생함
@@ -620,7 +629,6 @@
   - interceptor에서 OPTIONS 요청은 바로 200 OK response를 client에게 전송하도록 수정하였다.
   
        ```java
-       
        public boolean preHandle(HttpServletRequest request, HttpServletResponse 	response, Object handler) throws Exception {
            // request의 method가 OPTIONS이면 바로 다음 controller로 전달
            if(request.getMethod().equals("OPTIONS")) return true;
@@ -630,11 +638,15 @@
        
            return true;
        }
-    ```
+       ```
   
 - 참고 : [https://www.popit.kr/cors-preflight-%EC%9D%B8%EC%A6%9D-%EC%B2%98%EB%A6%AC-%EA%B4%80%EB%A0%A8-%EC%82%BD%EC%A7%88/](https://www.popit.kr/cors-preflight-인증-처리-관련-삽질/)
   
-     
+  
+
+## 추가 Study 내용
+
+### Vue.js
 
 #### Vue.js 연동
 
@@ -719,6 +731,159 @@ npm install --save axios vue-session
   - npm install : 프로젝트에 포함된 package.json의 설정에 맞게 모듈을 설치하는 명령어
 
 
+
+#### Vuex 라이브러리
+
+- 복잡한 어플리케이션의 컴포넌트들을 관리하는 '상태 관리 라이브러리'
+
+- React.js의 Flux 패턴에서 기인한 상태관리 패턴
+
+  => MVC 패턴의 복잡한 데이터 흐름 관리 문제를 해결하는 개발 패턴으로, 단일 방향 Flow를 가진다.
+
+  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/07.PNG?raw=true)
+
+  ```
+  1. actions : view에서 발생하는 이벤트 또는 사용자 입력
+  2. dispatcher : 데이터를 변경하는 방법, 메서드 (model 데이터를 변경하는 역할)
+  3. model : 화면에 표시할 데이터
+  4. view : 사용자에게 비춰지는 화면.(즉, 이 화면에서 다시 actions을 호출한다.)
+  ```
+
+  - MVC 패턴의 문제점
+
+    - view와 model이 양방향 통신이 가능하다.
+
+      => 하나의 view가 model을 변경하면, 해당 model이 연관된 view를 업데이트 한다.
+
+      ​	(view에서 model을 이용하기 때문에 view와 model은 의존적이게 됨)
+
+      ​	=> 업데이트된 view가 연관된 model을 다시 업데이트하고,... ----> 반복 -> 복잡한 업데이트 루프
+
+    ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/06.PNG?raw=true)
+
+
+
+- 컴포넌트간 데이터 전달 역할 수행
+
+  - 부모-자식 관계의 컴포넌트의 경우 props도 가능하지만 컴포넌트가 많아질 경우 props를 하위 컴포넌트로 계속해서 전달해야하는 경우가 생길 수 있다.
+
+  - 이벤트 버스도 사용 가능하지만 역시 컴포넌트가 많아질 경우 어디서 이벤트를 보내고 받는지 찾기 어려운 문제가 생긴다.
+
+    => 즉, 컴포넌트 간 데이터 전달이 명시적이거나 효율적이지 않다.
+
+- 컨셉
+
+  - State : 컴포넌트 간 공유하는 데이터 - data()
+  - View : 데이터를 표시하는 화면 - template
+  - Actions : 사용자의 입력에 따라 데이터를 변경하는 함수 - methods
+
+- 구조
+
+  ```
+  Vue component => 비동기 로직(Actions) => 동기 로직(Mutations) => State
+  ```
+
+  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/10.PNG?raw=true)
+
+  - Vue 컴포넌트에서 비동기 로직(methods에서 API 콜하는 함수 등)인 Actions를 수행한다.
+  - Actions는 비동기 로직만 처리할 뿐 State(data)를 직접 변경하지 않는다.
+  - Actions에서 동기 로직(data를 변경하는 역할)인 Mutations를 호출한다.
+
+- Vuex 개념 정리 참고 : https://ict-nroo.tistory.com/106
+
+- 설치
+
+  ```
+  npm install --save vuex
+  ```
+
+- 모듈화 
+
+  - src/store.js 파일 생성
+
+  ```js
+  import Vue from 'vue'
+  import Vuex from 'vuex'
+  
+  Vue.use(Vuex)
+  
+  export const store = new Vuex.Store({
+    state: {
+      color: 'rgb(203, 203, 77)'
+    },
+    getter: {
+      // state를 화면에 바인딩하는 함수  
+    },
+    mutations: {
+      // state 값을 업데이트하는 함수(동기 로직)
+    },
+    actions: {
+      // 비동기 로직을 처리하는 함수
+    }
+  })
+  ```
+
+  - main.js에 모듈 추가
+
+  ```js
+  import {store} from './store'
+  
+  new Vue({
+      el: '#app',
+      router,
+      store,
+      ...
+  })
+  ```
+
+  => 다른 컴포넌트에서 this.$store.state.color로 데이터를 사용할 수 있다.
+
+  - 참고 : [https://kamang-it.tistory.com/entry/Vue14vuex-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0](https://kamang-it.tistory.com/entry/Vue14vuex-사용하기)
+
+
+
+#### Vue Router
+
+- SPA(Single Page Application)를 구성하기 위해 서버에서 URI에 따라 해당하는 정적 파일을 연결해주는 방식
+
+  => 요청 URI에 따라 브라우저에서 DOM을 변경하는 방식
+
+- vue-router 라이브러리
+
+  ```
+  npm install --save vue-router
+  ```
+
+- Vue router 컴포넌트에 props 전달
+
+  - 같은 '/review/list' 링크이더라도 사용자가 선택한 카테고리에 따라 다른 리뷰 데이터를 조회하고 싶다.
+
+    => 사용자가 선택한 카테고리에 대한 값을 같이 전달해야함
+
+  - 해당 컴포넌트를 router에 등록할 때 props 옵션을 추가한다.
+
+    ```js
+    new Router({
+        routes:[
+            ...
+         	{
+              path: '/review/list',
+              name: 'ReviewList',
+              component: ReviewList,
+              props: (route) => ({category: route.query.c})
+            },
+            ...
+        ]
+    })
+    ```
+
+    - '/review/list?c=all' 이라는 URL로 접속하면 ReviewList 컴포넌트에 {category: 'all'} 값의 props가 설정된다.
+
+  - 참고 : https://beomy.tistory.com/73
+
+
+
+### MongoDB
 
 #### MongoDB 연동
 
@@ -839,192 +1004,6 @@ npm install --save axios vue-session
 
 - 참고 : https://mkyong.com/mongodb/spring-data-mongodb-query-document/
 
-  
-
-#### Vuex 라이브러리
-
-- 복잡한 어플리케이션의 컴포넌트들을 관리하는 '상태 관리 라이브러리'
-
-- React.js의 Flux 패턴에서 기인한 상태관리 패턴
-
-  => MVC 패턴의 복잡한 데이터 흐름 관리 문제를 해결하는 개발 패턴으로, 단일 방향 Flow를 가진다.
-
-  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/07.PNG?raw=true)
-
-  ```
-  1. actions : view에서 발생하는 이벤트 또는 사용자 입력
-  2. dispatcher : 데이터를 변경하는 방법, 메서드 (model 데이터를 변경하는 역할)
-  3. model : 화면에 표시할 데이터
-  4. view : 사용자에게 비춰지는 화면.(즉, 이 화면에서 다시 actions을 호출한다.)
-  ```
-
-  - MVC 패턴의 문제점
-
-    - view와 model이 양방향 통신이 가능하다.
-
-      => 하나의 view가 model을 변경하면, 해당 model이 연관된 view를 업데이트 한다.
-
-      ​	(view에서 model을 이용하기 때문에 view와 model은 의존적이게 됨)
-
-      ​	=> 업데이트된 view가 연관된 model을 다시 업데이트하고,... ----> 반복 -> 복잡한 업데이트 루프
-
-    ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/06.PNG?raw=true)
-
-
-
-- 컴포넌트간 데이터 전달 역할 수행
-
-  - 부모-자식 관계의 컴포넌트의 경우 props도 가능하지만 컴포넌트가 많아질 경우 props를 하위 컴포넌트로 계속해서 전달해야하는 경우가 생길 수 있다.
-
-  - 이벤트 버스도 사용 가능하지만 역시 컴포넌트가 많아질 경우 어디서 이벤트를 보내고 받는지 찾기 어려운 문제가 생긴다.
-
-    => 즉, 컴포넌트 간 데이터 전달이 명시적이거나 효율적이지 않다.
-
-- 컨셉
-
-  - State : 컴포넌트 간 공유하는 데이터 - data()
-  - View : 데이터를 표시하는 화면 - template
-  - Actions : 사용자의 입력에 따라 데이터를 변경하는 함수 - methods
-
-- 구조
-
-  ```
-  Vue component => 비동기 로직(Actions) => 동기 로직(Mutations) => State
-  ```
-
-  ![img](https://github.com/namjunemy/TIL/blob/master/Vue/img/10.PNG?raw=true)
-
-  - Vue 컴포넌트에서 비동기 로직(methods에서 API 콜하는 함수 등)인 Actions를 수행한다.
-  - Actions는 비동기 로직만 처리할 뿐 State(data)를 직접 변경하지 않는다.
-  - Actions에서 동기 로직(data를 변경하는 역할)인 Mutations를 호출한다.
-
-- Vuex 개념 정리 참고 : https://ict-nroo.tistory.com/106
-
-- 설치
-
-  ```
-  npm install --save vuex
-  ```
-
-- 모듈화 
-
-  - src/store.js 파일 생성
-
-  ```js
-  import Vue from 'vue'
-  import Vuex from 'vuex'
-  
-  Vue.use(Vuex)
-  
-  export const store = new Vuex.Store({
-    state: {
-      color: 'rgb(203, 203, 77)'
-    },
-    getter: {
-      // state를 화면에 바인딩하는 함수  
-    },
-    mutations: {
-      // state 값을 업데이트하는 함수(동기 로직)
-    },
-    actions: {
-      // 비동기 로직을 처리하는 함수
-    }
-  })
-  ```
-
-  - main.js에 모듈 추가
-
-  ```js
-  import {store} from './store'
-  
-  new Vue({
-      el: '#app',
-      router,
-      store,
-      ...
-  })
-  ```
-
-  => 다른 컴포넌트에서 this.$store.state.color로 데이터를 사용할 수 있다.
-
-  - 참고 : [https://kamang-it.tistory.com/entry/Vue14vuex-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0](https://kamang-it.tistory.com/entry/Vue14vuex-사용하기)
-
-
-
-#### Lombok 라이브러리
-
-- 자바에서 DTO를 생성할 때 멤버 필드에 대한 Getter/Setter, ToString, Constructor 코드를 annotation을 통해 자동으로 생성해주는 라이브러리
-
-- Annotation - DTO 클래스에 추가해주어야 함
-
-  ```
-  @ToString
-  @Getter
-  @Setter
-  @EqualsAndHashCode  : equals(..), hashcode() 메소드 생성
-  @RequiredArgsConstructor : 필수 인자만 있는 Constructor 생성
-  @NoArgsConstructor : 인자 없는 constructor 생성
-  @AllArgsConstructor : 모든 인자를 가진 constructor 생성
-  @Data : 위의 모든 annotation 처리
-  ```
-
-- 라이브러리 추가 - pom.xml 수정
-
-  ```xml
-  <dependency>
-  	<groupId>org.projectlombok</groupId>
-  	<artifactId>lombok</artifactId>
-  	<optional>true</optional>
-  </dependency>
-  ```
-
-- 설치
-
-  - Lombok 파일 설치 후 STS 재시작이 필요하다.
-  - 참고 : https://countryxide.tistory.com/16
-
-- 참고 : https://goddaehee.tistory.com/95
-
-
-
-#### Vue Router
-
-- SPA(Single Page Application)를 구성하기 위해 서버에서 URI에 따라 해당하는 정적 파일을 연결해주는 방식
-
-  => 요청 URI에 따라 브라우저에서 DOM을 변경하는 방식
-
-- vue-router 라이브러리
-
-  ```
-  npm install --save vue-router
-  ```
-
-- Vue router 컴포넌트에 props 전달
-
-  - 같은 '/review/list' 링크이더라도 사용자가 선택한 카테고리에 따라 다른 리뷰 데이터를 조회하고 싶다.
-
-    => 사용자가 선택한 카테고리에 대한 값을 같이 전달해야함
-
-  - 해당 컴포넌트를 router에 등록할 때 props 옵션을 추가한다.
-
-    ```js
-    new Router({
-        routes:[
-            ...
-         	{
-              path: '/review/list',
-              name: 'ReviewList',
-              component: ReviewList,
-              props: (route) => ({category: route.query.c})
-            },
-            ...
-        ]
-    })
-    ```
-
-    - '/review/list?c=all' 이라는 URL로 접속하면 ReviewList 컴포넌트에 {category: 'all'} 값의 props가 설정된다.
-
-  - 참고 : https://beomy.tistory.com/73
 
 
 
@@ -1133,6 +1112,57 @@ npm install --save axios vue-session
     (and 조건으로 지정하기 위해 andOperator(...) 사용)
   
   - 참고 : https://spring.io/blog/2014/07/17/text-search-your-documents-with-spring-data-mongodb
+
+
+
+#### MongoDB MapReduce
+
+- 다양한 모델들의 대량 리뷰 데이터를 분산처리(리뷰평점 평균 계산 등)를 위해 MongoDB에서 제공하는 MapReduce 기능을 사용한다.
+
+- MongoDB의 MapReduce는 내부적으로 자바스크립트 엔진을 이용한다.
+
+  => Map과 Reduce function을 자바스크립트 문법으로 구현한다.
+
+  - 직접 js 파일을 만들어 map, reduce function을 구현하고 classpath에 위치시켜 불러오는 방법
+  - String 타입으로 map, reduce fundction을 작성하여 실행하는 방법
+
+
+
+### Spring Boot
+
+#### Lombok 라이브러리
+
+- 자바에서 DTO를 생성할 때 멤버 필드에 대한 Getter/Setter, ToString, Constructor 코드를 annotation을 통해 자동으로 생성해주는 라이브러리
+
+- Annotation - DTO 클래스에 추가해주어야 함
+
+  ```
+  @ToString
+  @Getter
+  @Setter
+  @EqualsAndHashCode  : equals(..), hashcode() 메소드 생성
+  @RequiredArgsConstructor : 필수 인자만 있는 Constructor 생성
+  @NoArgsConstructor : 인자 없는 constructor 생성
+  @AllArgsConstructor : 모든 인자를 가진 constructor 생성
+  @Data : 위의 모든 annotation 처리
+  ```
+
+- 라이브러리 추가 - pom.xml 수정
+
+  ```xml
+  <dependency>
+  	<groupId>org.projectlombok</groupId>
+  	<artifactId>lombok</artifactId>
+  	<optional>true</optional>
+  </dependency>
+  ```
+
+- 설치
+
+  - Lombok 파일 설치 후 STS 재시작이 필요하다.
+  - 참고 : https://countryxide.tistory.com/16
+
+- 참고 : https://goddaehee.tistory.com/95
 
 
 
@@ -1331,17 +1361,4 @@ npm install --save axios vue-session
           // => vue client단에서 catch 함수로 받아 처리함
         })
       ```
-
-      
-
-#### MongoDB MapReduce
-
-- 다양한 모델들의 대량 리뷰 데이터를 분산처리(리뷰평점 평균 계산 등)를 위해 MongoDB에서 제공하는 MapReduce 기능을 사용한다.
-
-- MongoDB의 MapReduce는 내부적으로 자바스크립트 엔진을 이용한다.
-
-  => Map과 Reduce function을 자바스크립트 문법으로 구현한다.
-
-  - 직접 js 파일을 만들어 map, reduce function을 구현하고 classpath에 위치시켜 불러오는 방법
-  - String 타입으로 map, reduce fundction을 작성하여 실행하는 방법
 
