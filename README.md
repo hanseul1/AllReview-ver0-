@@ -1113,6 +1113,20 @@ npm install --save axios vue-session
   
   - 참고 : https://spring.io/blog/2014/07/17/text-search-your-documents-with-spring-data-mongodb
 
+- 키워드 추출 결과 화면
+
+  - `디지털` 카테고리 키워드 목록
+
+  <img width="631" alt="keyword1" src="https://user-images.githubusercontent.com/33472435/74100597-425e7e80-4b74-11ea-85a6-0b0ce63e2426.PNG">
+
+  - `화장품` 카테고리 키워드 목록
+
+    <img width="627" alt="keyword2" src="https://user-images.githubusercontent.com/33472435/74100599-42f71500-4b74-11ea-9f89-7d523430597f.PNG">
+
+  - `디지털` 카테고리 키워드 중 `무게` 키워드 선택 시 리뷰 목록
+
+    <img width="692" alt="keyword3" src="https://user-images.githubusercontent.com/33472435/74100600-438fab80-4b74-11ea-9db2-6845032b4da9.PNG">
+
 
 
 #### MongoDB MapReduce
