@@ -1,6 +1,5 @@
 package com.hs.review.service;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +24,14 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/** 로그인 기능
-	 * 	return 로그인 성공 여부
+	 * 	return 로그인한 유저 정보
 	 */
-	public boolean login(User user) {
+	public User login(User user) {
 		User result = userDao.login(user);
 		if(result == null || 
 				!BcryptUtil.matches(user.getPw(), result.getPw())) 
-			return false;
-		return true;
+			return null;
+		return result;
 	}
 	
 	/** 회원 정보 수정 */

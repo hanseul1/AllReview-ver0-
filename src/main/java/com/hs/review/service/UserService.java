@@ -11,9 +11,9 @@ public interface UserService {
 	void signup(User user);
 
 	/** 로그인 기능
-	 * 	return 로그인 성공 여부
+	 * 	return 로그인한 유저 정보
 	 */
-	boolean login(User user);
+	User login(User user);
 
 	/** 회원 정보 수정 */
 	void updateUser(User user);

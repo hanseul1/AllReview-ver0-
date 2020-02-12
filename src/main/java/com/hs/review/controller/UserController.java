@@ -1,5 +1,6 @@
 package com.hs.review.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,13 @@ public class UserController {
 	
 	@PostMapping("/user/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
-		if(userService.login(user) == true) {
+		User result = userService.login(user);
+		if(result != null) {
 			String token = JwtUtil.CreateToken();
-			return RestUtil.handleSuccess(token);
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("user", result);
+			data.put("token", token);
+			return RestUtil.handleSuccess(data);
 		}
 		else return RestUtil.handleSuccess("not success");
 	}
