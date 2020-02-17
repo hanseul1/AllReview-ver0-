@@ -1,4 +1,4 @@
-# `AllReview.com - 올리브유 닷컴
+# AllReview.com - 올리브유 닷컴
 
 ## 서비스 소개
 
@@ -236,11 +236,19 @@
 
     => 추가 소프트웨어를 사용하지 않고 바로 실행 가능(embedded tomcat)
 
-  - WAR : Web application Archive. 모든 servlet/ JSP 컨테이너에 배치할 수 있는 웹 어플리케이션을 압축한 파일
-
+    - Java 어플리케이션으로써 비즈니스 레이어를 담당하는 부분을 묶은 패키지
+  - Spring으로 Backend 부분만 구현하고, Vue.js나 React 등을 통해 Frontend를 따로 구현했다면 jar 파일로 패키징하여 배포
+  
+- WAR : Web application Archive. 모든 servlet/ JSP 컨테이너에 배치할 수 있는 웹 어플리케이션을 압축한 파일
+  
     => 실행시 별도의 서버가 필요함
-
-    
+  
+    - Web 어플리케이션으로써 비즈니스 레이어와 프레젠테이션 레이어(WebContent)를 함께 묶은 패키지
+    - Spring 내에서 jsp나 html, css 등 정적 자원을(WEB-Content에 속함) 활용하여 Frontend까지 함께 구현했다면 war 파일로 패키징하여 배포
+  
+  ![img](https://t1.daumcdn.net/cfile/tistory/999071445C4661422E)
+  
+  
 
 #### 3. HTTP 요청 CORS 에러
 
