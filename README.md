@@ -245,6 +245,7 @@
   
     - Web 어플리케이션으로써 비즈니스 레이어와 프레젠테이션 레이어(WebContent)를 함께 묶은 패키지
     - Spring 내에서 jsp나 html, css 등 정적 자원을(WEB-Content에 속함) 활용하여 Frontend까지 함께 구현했다면 war 파일로 패키징하여 배포
+    
   
   ![img](https://t1.daumcdn.net/cfile/tistory/999071445C4661422E)
   
@@ -650,7 +651,91 @@
   
 - 참고 : [https://www.popit.kr/cors-preflight-%EC%9D%B8%EC%A6%9D-%EC%B2%98%EB%A6%AC-%EA%B4%80%EB%A0%A8-%EC%82%BD%EC%A7%88/](https://www.popit.kr/cors-preflight-인증-처리-관련-삽질/)
   
-  
+
+
+
+#### 8. Spring Container의 DI 과정 문제
+
+- 상황
+
+  - JwtAuthInterceptor클래스에서 @Autowired 어노테이션으로 bean 주입시 객체가 주입되지 않는 에러가 발생하였다.
+
+  - WebConfig 클래스에서 intercepter 설정하는 부분
+
+    ```java
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+    	// ...
+        
+    	@Override
+    	public void addInterceptors(InterceptorRegistry registry) {
+    		registry.addInterceptor(new JwtAuthInterceptor())
+    				.addPathPatterns("/*")
+    				.excludePathPatterns(whiteList);
+    	}
+    }
+    ```
+
+    - addIntercepters(...) 메소드에서 JwtAuthInterceptor 객체 생성시 bean 주입이 아니라 new 연산자로 직접 생성하였다.
+
+    - 이는 Spring container에서 해당 클래스를 관리할 수 없기 때문에 생기는 문제이다.
+
+      
+
+- Spring의 DI(Dependency Injection)
+
+  - Java Bean VS Spring Bean
+    - Java Bean은 데이터를 표현하는 것을 목적으로 하는 자바 클래스
+      - 생성자, getter/setter 를 가지고, 직렬화가 가능한 클래스
+    - Spring Bean은 Spring container에 의해 등록, 생성, 조회, 관계 설정이 되는 객체
+      - 즉, IoC 방식으로 관리되는 객체를 말한다.
+
+  - 일반적인 의존 관계와 의존 역전 원칙
+    - 일반적인 의존 관계
+      - 일반적인 프로그램의 흐름에 따라 객체 내에서 필요한 객체가 있을 때, 필요한 객체를 직접 생성하고, 직접 객체의 메소드를 호출한다.
+      - 즉, 모든 작업은 사용하는 쪽에서 제어한다.
+    - 의존 역전 원칙(DIP, Dependency Inversion Principle)
+      - 객체 내에서 필요한 객체가 있을 때, 직접 객체를 생성하는 것이 아니라, 생성된 객체를 받아서 사용한다.
+      - 또한 사용할 객체의 구현 클래스가 아닌 인터페이스를 사용함으로써 실제 객체가 어떤 타입이든 관계없이 같은 코드를 사용할 수 있다.
+      - 즉, 객체간의 의존 관계가 뒤집어진 의존 역전 원칙이 되는 것이다.
+
+  - BeanFactory & ApplicationContext
+    - BeanFactory
+      - Bean을 생성하고 관리하는 인터페이스
+      - 클라이언트의 요청이 있을 때 객체를 생성한다.(lazy-init)
+    - ApplicationContext
+      - BeanFactory 인터페이스를 상속받은 인터페이스
+      - 컨테이너가 구동되는 시점에 등록된 Bean 객체들을 모두 스캔하여 생성한다.(eager init)
+
+  - Annotation
+    - bean 등록 annotation
+      - `@Bean` : 개발자가 컨트롤할 수 없는 외부 라이브러리 bean을 등록하고 싶은 경우
+      - `@Component` : 개발자가 직접 만든 클래스를 bean으로 등록하고 싶은 경우
+      - `@Controller` `@Service` `@Repository` : 클래스의 기능에 따라 명칭을 다르게 부여한 bean
+    - bean 주입 annotation
+      - `@Autowired` : 타입으로 참조할 bean을 찾아 주입
+        - `@Qualifier` : 같은 인터페이스를 구현한 클래스가 여러개 일때, 이름으로 구별해주기 위한 annotation
+      - `@Resource` : 이름으로 참조할 bean을 찾아 주입
+
+  - Bean 생성 순서
+    - 의존 관계가 있는 경우
+
+      - 각 Bean들이 순서대로 생성, 초기화된다.
+
+        - Spring에서는 web.xml에 선언된 순서대로
+        - Spring boot 에서는 패키지 순서대로
+
+      - Bean 생성 중 의존하고 있는 Bean이 존재할 때
+
+        - 의존하는 Bean이 아직 생성되지 않은 경우 먼저 해당 Bean을 생성 및 초기화 한다.
+
+        - Spring Container에 등록되지 않은 bean(xml 설정 파일이나 어노테이션이 없는 bean)은 Spring Container가 spring bean으로써 관리할 수 없기 때문에, 해당 bean을 생성하는 시점에 의존하고 있는 bean이 생성되지 않아도 먼저 생성해주지 않는다.
+
+          => 의존하는 bean이 null 값이 되는 경우가 발생할 수 있다.
+
+- 참고 : https://sehun-kim.github.io/sehun/springbean-lifecycle/
+
+
 
 ## 추가 Study 내용
 
@@ -1463,4 +1548,6 @@ public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse re
     @ControllerAdvice(assignableTypes = {ControllerInterface.class})
     ```
 
-    
+
+
+
