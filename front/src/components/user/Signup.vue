@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import userApi from '@/api/user'
 export default {
   name: 'Signup',
   data () {
@@ -126,33 +126,27 @@ export default {
           'phone': this.phone
         }
 
-        axios
-          .post('http://localhost:8080/user/signup', formData)
-          .then(response => {
-            if (response.data.state === 'ok') {
-              alert('회원 가입 완료')
-              this.$session.set('userToken', response.data.data)
-              this.$session.set('userId', this.id)
-              window.location.reload()
-            } else {
-              alert('회원 가입 실패ㅜ.ㅜ 다시 시도해 주세요')
-            }
-          })
+        userApi.requestSignup(formData, () => {
+          alert('Allreview.com 회원 가입을 축하드립니다!')
+          window.location.reload()
+        }, () => {
+          alert('회원 가입 중 오류가 발생했습니다.')
+        })
       }
     },
     checkId () {
       // id 중복 확인
-      axios
-        .get('http://localhost:8080/user/idcheck/' + this.id)
-        .then(response => {
-          if (response.data.data === 'not ok') {
-            alert('사용할 수 없는 아이디 입니다.')
-            this.id = ''
-          } else {
-            this.idCheck = true
-            alert('사용할 수 있는 아이디 입니다.')
-          }
-        })
+      userApi.requestIdCheck(this.id, response => {
+        if (response === 'not ok') {
+          alert('이미 존재하는 아이디 입니다.')
+          this.id = ''
+        } else {
+          this.idCheck = true
+          alert('사용할 수 있는 아이디 입니다.')
+        }
+      }, () => {
+        alert('아이디 중복 확인 중 오류가 발생했습니다.')
+      })
     }
   }
 }

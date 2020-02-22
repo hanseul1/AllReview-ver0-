@@ -68,8 +68,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import userApi from '../../api/user'
+import userApi from '@/api/user'
 export default {
   name: 'Userinfo',
   data () {
@@ -89,10 +88,8 @@ export default {
   },
   mounted () {
     // Authorization token validating
-    var token = this.$session.get('userToken')
-    this.user_id = this.$session.get('userId')
     var component = this
-    userApi.validateUser(token, this.user_id,
+    userApi.validateUser(
       function success (response) {
         component.name = response.data.name
         component.phone = response.data.phone
@@ -113,19 +110,12 @@ export default {
           'phone': this.phone
         }
 
-        var token = this.$session.get('userToken')
-        axios
-          .put('http://localhost:8080/user', requestData, {
-            headers: {
-              'Authorization': token
-            }
-          })
-          .then(response => {
-            if (response.data.data === 'success') {
-              alert('수정 완료되었습니다.')
-              this.$router.push('/')
-            }
-          })
+        userApi.requestUpdateUser(requestData, () => {
+          alert('수정 완료되었습니다.')
+          this.$router.push('/')
+        }, () => {
+          alert('회원 정보 수정 중 오류가 발생했습니다.')
+        })
       }
     }
   }

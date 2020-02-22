@@ -80,7 +80,7 @@ export default {
     userToken: ''
   }),
   mounted () {
-    this.userToken = this.$session.get('userToken')
+    this.userToken = sessionStorage.getItem('token')
     router.push('/')
   },
   methods: {
@@ -88,7 +88,7 @@ export default {
       router.push('/user/login')
     },
     logout () {
-      this.$session.destroy()
+      sessionStorage.clear()
       window.location.reload()
     },
     signup () {

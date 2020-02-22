@@ -159,7 +159,8 @@
 
 <script>
 import axios from 'axios'
-import userApi from '../../api/user'
+import userApi from '@/api/user'
+import reviewApi from '@/api/review'
 export default {
   name: 'ReviewList',
   props: ['category'],
@@ -238,10 +239,8 @@ export default {
   methods: {
     validating () {
       // Authorization token validating
-      var token = this.$session.get('userToken')
-      var userId = this.$session.get('userId')
       var component = this
-      userApi.validateUser(token, userId,
+      userApi.validateUser(
         function success (response) {},
         function error () {
           alert('로그인이 필요한 서비스입니다.')
@@ -265,40 +264,23 @@ export default {
         })
     },
     getReviewList () {
-      // 카테고리에 해당하는 리뷰 불러오기
-      var url = ''
-      if (this.category === 'all') url = '/all'
-      else url = '/category/' + this.category
-      if (this.category === 'my') url = '/writer/' + this.$session.get('userId')
-
-      axios
-        .get('http://localhost:8080/review' + url)
-        .then(response => {
-          this.reviewList = response.data.data
-        })
+      reviewApi.requestReviewListByCategory(this.category, response => {
+        this.reviewList = response
+      })
     },
     updateReview (review) {
       this.$store.state.review = review
       this.$router.push('/review/update')
     },
     deleteReview (review) {
-      axios
-        .delete('http://localhost:8080/review/' + review._id, {
-          headers: {
-            'Authorization': this.$session.get('userToken')
-          }
-        })
-        .then(response => {
-          if (response.data.data === 'success') {
-            alert('삭제되었습니다.')
-            // 리뷰 리스트 다시 검색
-            this.getReviewList()
-          }
-        })
-        .catch(() => {
-          alert('로그인이 필요한 서비스입니다.')
-          this.$router.push('/user/login')
-        })
+      reviewApi.requestDeleteReview(review._id, () => {
+        alert('리뷰가 삭제되었습니다.')
+        // 리뷰 리스트 다시 검색
+        this.getReviewList()
+      }, () => {
+        alert('로그인이 필요한 서비스입니다.')
+        this.$router.push('/user/login')
+      })
     }
   }
 }

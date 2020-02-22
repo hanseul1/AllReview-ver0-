@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import userApi from '@/api/user'
 export default {
   name: 'Login',
   data () {
@@ -53,17 +53,11 @@ export default {
         'pw': this.pw
       }
 
-      axios
-        .post('http://127.0.0.1:8080/user/login', loginData)
-        .then(response => {
-          if (response.data.data !== 'not success') {
-            this.$session.set('userToken', response.data.data)
-            this.$session.set('userId', this.id)
-            window.location.reload()
-          } else {
-            alert('login fail')
-          }
-        })
+      userApi.requestLogin(loginData, () => {
+        window.location.reload()
+      }, () => {
+        alert('로그인 중 오류가 발생했습니다.')
+      })
     }
   }
 }

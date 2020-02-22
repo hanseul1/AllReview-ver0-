@@ -109,6 +109,7 @@
 
 <script>
 import axios from 'axios'
+import reviewApi from '@/api/review'
 export default {
   name: 'UpdateReview',
   data () {
@@ -160,16 +161,14 @@ export default {
         'files': this.files
       }
 
-      axios
-        .put('http://localhost:8080/review', reviewData)
-        .then(response => {
-          if (response.data.data === 'success') {
-            alert('리뷰가 수정되었습니다.')
-            this.$router.push('/review/list?category=my')
-          } else {
-            alert('리뷰 수정에 실패했습니다.')
-          }
-        })
+      reviewApi.requestUpdateReview(reviewData, response => {
+        if (response === 'success') {
+          alert('리뷰가 수정되었습니다.')
+          this.$router.push('/review/list?category=my')
+        } else {
+          alert('리뷰 수정에 실패했습니다.')
+        }
+      })
     }
   }
 }

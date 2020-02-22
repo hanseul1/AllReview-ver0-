@@ -119,7 +119,8 @@
 
 <script>
 import axios from 'axios'
-import userApi from '../../api/user'
+import userApi from '@/api/user'
+import reviewApi from '@/api/review'
 export default {
   name: 'WriteReview',
   data () {
@@ -150,16 +151,14 @@ export default {
   },
   mounted () {
     // Authorization token validating
-    var token = this.$session.get('userToken')
-    var userId = this.$session.get('userId')
     var component = this
-    userApi.validateUser(token, userId,
+    userApi.validateUser(
       function success (response) {
         // 카테고리 리스트 검색
         axios
           .get('http://localhost:8080/category', {
             headers: {
-              'Authorization': token
+              'Authorization': sessionStorage.getItem('token')
             }
           })
           .then(response => {
@@ -177,24 +176,15 @@ export default {
       if (this.$refs.form.validate()) {
         if (this.files.length > 0) {
           // image file 있으면 file api 호출해서 먼저 저장
-          var fileData = new FormData()
-          for (var i = 0; i < this.files.length; i++) {
-            fileData.append('files', this.files[i])
-          }
-          axios
-            .post('http://localhost:8080/review/files', fileData, {
-              headers: {
-                'enctype': 'multipart/form-data',
-                'Authorization': this.$session.get('userToken')
-              }
-            })
-            .then(response => {
-              if (response.data.state === 'ok') {
-                this.saveReview(response.data.data)
-              } else {
-                alert('파일 업로드에 실패했습니다.')
-              }
-            })
+          reviewApi.requestInsertFiles(this.files, response => {
+            if (response.data.state === 'ok') {
+              this.saveReview(response.data.data)
+            } else {
+              alert('파일 업로드에 실패했습니다.')
+            }
+          }, () => {
+            alert('파일 업로드 중 오류가 발생했습니다.')
+          })
         } else {
           // image file 없으면 리뷰 내용만 저장
           this.saveReview([])
@@ -214,20 +204,16 @@ export default {
         'files': fileNames
       }
 
-      axios
-        .post('http://localhost:8080/review', reviewData, {
-          headers: {
-            'Authorization': this.$session.get('userToken')
-          }
-        })
-        .then(response => {
-          if (response.data.data === 'success') {
-            alert('리뷰가 등록되었습니다.')
-            this.$router.push('/')
-          } else {
-            alert('리뷰 등록에 실패했습니다.')
-          }
-        })
+      reviewApi.requestInsertReview(reviewData, response => {
+        if (response === 'success') {
+          alert('리뷰가 등록되었습니다.')
+          this.$router.push('/')
+        } else {
+          alert('리뷰 등록에 실패했습니다.')
+        }
+      }, () => {
+        alert('리뷰 등록 중 오류가 발생했습니다.')
+      })
     }
   }
 }
