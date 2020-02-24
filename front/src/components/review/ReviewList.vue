@@ -159,6 +159,7 @@
 
 <script>
 import axios from 'axios'
+import '@/assets/style/css/review.css'
 import userApi from '@/api/user'
 import reviewApi from '@/api/review'
 export default {
@@ -285,24 +286,3 @@ export default {
   }
 }
 </script>
-
-<style>
-  .list-table {
-    width: 1000px;
-  }
-  .context {
-    display: block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .text-left {
-    max-width: 300px;
-  }
-  .model {
-    max-width: 100px;
-  }
-  .v-data-table td {
-    padding : 20px;
-  }
-</style>
