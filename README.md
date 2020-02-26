@@ -10,9 +10,9 @@
 
 3. [Problem & Solving](#problem-&-solving)
 
-   - [spring starter project 생성 직후 pom.xml Line1 unknown error](#spring-starter-project-생성-직후-pom.xml-line1-unknown-error)
+   - [spring starter project 생성 직후 pom.xml Line1 unknown error](#1.-spring-starter-project-생성-직후-pom.xml-line1-unknown-error)
    - [jsp 연동 오류 (index.jsp 404 error)](#jsp-연동-오류-(index.jsp-404-error))
-   - [HTTP 요청 CORS 에러](#http-요청-cors-에러)
+   - [HTTP 요청 CORS 에러](#3.-http-요청-cors-에러)
    - [Vue data-table expand 오류](#vue-data-table-expand-오류)
    - [RESTful API의 구현](#restful-api의-구현)
    - [MultipartFile 업로드](#multipartfile-업로드)
