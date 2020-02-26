@@ -186,7 +186,7 @@
 
 
 
-### Problem & Solving
+### Problem&Solving
 
 #### 1. spring starter project 생성 직후 pom.xml Line1 unknown error
 
