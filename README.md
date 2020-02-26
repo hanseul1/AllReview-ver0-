@@ -16,7 +16,7 @@
    - [Vue data-table expand 오류](#vue-data-table-expand-오류)
    - [RESTful API의 구현](#restful-api의-구현)
    - [MultipartFile 업로드](#multipartfile-업로드)
-   - [Vue API request 데이터에 header 추가 시 CORS 에러](#vue-api-request-데이터에-header-추가 시-cors-에러)
+   - [Vue API request 데이터에 header 추가 시 CORS 에러](#vue-api-request-데이터에-header-추가-시-cors-에러)
    - [Spring Container의 DI 과정 문제](#spring-container의-di-과정-문제)
 
 4. [추가 Study 내용](#추가-study-내용)
