@@ -8,7 +8,7 @@
    - [Database tables](#database-tables)
    - [REST API](#rest-api)
 
-3. [Problem & Solving](#problem-&-solving)
+3. [Problem & Solving](#problem&solving)
 
    - [spring starter project 생성 직후 pom.xml Line1 unknown error](#1.-spring-starter-project-생성-직후-pom.xml-line1-unknown-error)
    - [jsp 연동 오류 (index.jsp 404 error)](#jsp-연동-오류-(index.jsp-404-error))
